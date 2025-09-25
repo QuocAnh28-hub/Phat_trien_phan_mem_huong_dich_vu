@@ -1,0 +1,30 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Node.js
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+
+# Java
+target/
+*.class
+
+# Logs
+*.log
+
+# Hỗ trợ cho OS
+.DS_Store
+Thumbs.db
+
+# Tùy theo dự án
+build/
+dist/
+.env
+.env.*   # bỏ qua các biến môi trường nếu có
