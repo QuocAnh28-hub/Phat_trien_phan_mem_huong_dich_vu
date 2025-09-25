@@ -1,0 +1,18 @@
+# Visual Studio
+.vs/
+Project_QuanLyBanLe/.vs/
+*.user
+*.suo
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Dd]ebug/
+[Rr]elease/
+[Tt]emp/
+
+# Others
+*.cache
+*.db
+*.bak
