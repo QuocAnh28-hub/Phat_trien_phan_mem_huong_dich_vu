@@ -453,9 +453,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\Project_QuanLyBanLe\\API.Admin\\API.Admin.csproj",
-      "projectName": "API.Admin",
-      "projectPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\Project_QuanLyBanLe\\API.Admin\\API.Admin.csproj",
+      "projectUniqueName": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\Project_QuanLyBanLe\\API.Admin\\API.KhuyenMai.csproj",
+      "projectName": "API.KhuyenMai",
+      "projectPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\Project_QuanLyBanLe\\API.Admin\\API.KhuyenMai.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
       "outputPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\Project_QuanLyBanLe\\API.Admin\\obj\\",
       "projectStyle": "PackageReference",
