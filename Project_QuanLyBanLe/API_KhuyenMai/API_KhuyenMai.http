@@ -1,0 +1,6 @@
+@API_KhuyenMai_HostAddress = http://localhost:5187
+
+GET {{API_KhuyenMai_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
