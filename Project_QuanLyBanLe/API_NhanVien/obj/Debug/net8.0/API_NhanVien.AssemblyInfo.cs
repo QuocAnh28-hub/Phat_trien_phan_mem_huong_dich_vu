@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API_NhanVien")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b6879815e3fea882f8b8397b6cdcbd0562cfde9e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+652fa59db1781d11492e7c98c6cadda1ee617470")]
 [assembly: System.Reflection.AssemblyProductAttribute("API_NhanVien")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API_NhanVien")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
