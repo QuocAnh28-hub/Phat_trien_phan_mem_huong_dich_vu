@@ -15,5 +15,6 @@ namespace Models
         public decimal TONGTIENHANG { get; set; }
         public decimal THUEVAT { get; set; }
         public decimal GIAMGIA { get; set; }
+        public List<ChiTietBan> listjson_chitietban { get; set; }
     }
 }
