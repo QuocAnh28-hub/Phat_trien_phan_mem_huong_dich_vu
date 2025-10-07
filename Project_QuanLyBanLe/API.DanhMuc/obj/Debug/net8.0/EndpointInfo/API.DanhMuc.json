@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/DanhMuc_": {
+    "/api/DanhMuc_/get-all-danhmuc": {
       "get": {
         "tags": [
           "DanhMuc_"
@@ -15,7 +15,30 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/DanhMuc_/get-byID-danhmuc": {
+      "get": {
+        "tags": [
+          "DanhMuc_"
+        ],
+        "parameters": [
+          {
+            "name": "madanhmuc",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/DanhMuc_/insert-danhmuc": {
       "post": {
         "tags": [
           "DanhMuc_"

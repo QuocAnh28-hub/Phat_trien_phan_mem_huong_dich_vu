@@ -2,7 +2,7 @@
   {
     "ContainingType": "API.DanhMuc.Controllers.DanhMuc_Controller",
     "Method": "GetAll",
-    "RelativePath": "api/DanhMuc_",
+    "RelativePath": "api/DanhMuc_/get-all-danhmuc",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -11,8 +11,24 @@
   },
   {
     "ContainingType": "API.DanhMuc.Controllers.DanhMuc_Controller",
+    "Method": "GetByID",
+    "RelativePath": "api/DanhMuc_/get-byID-danhmuc",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "madanhmuc",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API.DanhMuc.Controllers.DanhMuc_Controller",
     "Method": "Create",
-    "RelativePath": "api/DanhMuc_",
+    "RelativePath": "api/DanhMuc_/insert-danhmuc",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,

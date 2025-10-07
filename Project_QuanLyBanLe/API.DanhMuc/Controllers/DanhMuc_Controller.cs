@@ -28,9 +28,35 @@ namespace API.DanhMuc.Controllers
             dm_bll = new DanhMuc_BLL(configuration);
         }
 
+        [Route("get-all-danhmuc")]
         [HttpGet]
-        public IActionResult GetAll() => Ok(dm_bll.LayTatCa());
+        public IActionResult GetAll()
+        {
+            var list = dm_bll.LayTatCa();
 
+            if (list == null || !list.Any())
+            {
+                return NoContent();
+            }
+
+            return Ok(list); 
+        }
+
+        [Route("get-byID-danhmuc")]
+        [HttpGet]
+        public IActionResult GetByID(string madanhmuc)
+        {
+            var danhmuc = dm_bll.LayTheoID(madanhmuc);
+
+            if (danhmuc == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(danhmuc);
+        }
+
+        [Route("insert-danhmuc")]
         [HttpPost]
         public IActionResult Create(Models.DanhMuc model)
         {

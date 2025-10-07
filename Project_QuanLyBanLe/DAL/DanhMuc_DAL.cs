@@ -38,6 +38,25 @@ namespace DAL
             return list;
         }
 
+        public List<DanhMuc> GetbyID(string madanhmuc)
+        {
+            List<DanhMuc> list = new List<DanhMuc>();
+            string sql = "SELECT MADANHMUC, TENDANHMUC, MOTA FROM DANHMUC WHERE MADANHMUC ='" + madanhmuc + "'";
+            var dt = _dbHelper.ExecuteQuery(sql);
+
+            foreach (System.Data.DataRow row in dt.Rows)
+            {
+                list.Add(new DanhMuc
+                {
+                    MADANHMUC = row["MADANHMUC"].ToString(),
+                    TENDANHMUC = row["TENDANHMUC"].ToString(),
+                    MOTA = row["MOTA"].ToString()
+                });
+            }
+
+            return list;
+        }
+
         public bool Insert(DanhMuc dm)
         {
             string sql = "INSERT INTO DANHMUC (MADANHMUC, TENDANHMUC, MOTA) VALUES (@ma, @ten, @mota)";
