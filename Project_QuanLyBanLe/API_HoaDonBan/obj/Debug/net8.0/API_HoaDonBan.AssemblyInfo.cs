@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API_HoaDonBan")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+760b7c237773f00a56374d5b813d9009d7fa6298")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12d11063a6c236c1e8a8a883080a66d01ba3bd79")]
 [assembly: System.Reflection.AssemblyProductAttribute("API_HoaDonBan")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API_HoaDonBan")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
