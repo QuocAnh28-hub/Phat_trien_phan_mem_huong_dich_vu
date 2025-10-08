@@ -63,5 +63,21 @@ namespace API.DanhMuc.Controllers
             bool result = dm_bll.ThemMoi(model);
             return result ? Ok("Thêm thành công") : BadRequest("Thêm thất bại");
         }
+
+        [Route("update-danhmuc")]
+        [HttpPost]
+        public IActionResult Update(Models.DanhMuc model)
+        {
+            bool result = dm_bll.CapNhat(model);
+            return result ? Ok("Sửa thành công") : BadRequest("Sửa thất bại");
+        }
+
+        [Route("delete-danhmuc")]
+        [HttpDelete]
+        public IActionResult Delete(string maDanhMuc)
+        {
+            bool result = dm_bll.Xoa(maDanhMuc);
+            return result ? Ok("Xóa thành công") : BadRequest("Xóa thất bại");
+        }
     }
 }

@@ -33,21 +33,46 @@ namespace BLL
             if (string.IsNullOrEmpty(madanhmuc))
                 return null;
 
-            var danhmuc = dm_dal.GetbyID(madanhmuc);
+            if (!dm_dal.KiemTraTonTai(madanhmuc))
+                return null; 
 
+            var danhmuc = dm_dal.GetbyID(madanhmuc);
             return danhmuc;
         }
 
-        public bool ThemMoi(DanhMuc dm)
+        public bool ThemMoi(DanhMuc danhmuc)
         {
-            if (dm == null)
+            if (danhmuc == null)
                 return false;
 
-            if (string.IsNullOrEmpty(dm.MADANHMUC) || string.IsNullOrEmpty(dm.TENDANHMUC))
+            if (string.IsNullOrEmpty(danhmuc.MADANHMUC) || string.IsNullOrEmpty(danhmuc.TENDANHMUC))
                 return false;
 
-            var result = dm_dal.Insert(dm);
+            if (dm_dal.KiemTraTonTai(danhmuc.MADANHMUC))
+                return false;
 
+            var result = dm_dal.Insert(danhmuc);
+            return result;
+        }
+
+        public bool CapNhat(DanhMuc danhmuc)
+        {
+            if (danhmuc == null)
+                return false;
+
+            if (string.IsNullOrEmpty(danhmuc.MADANHMUC) || string.IsNullOrEmpty(danhmuc.TENDANHMUC))
+                return false;
+
+            var result = dm_dal.Update(danhmuc);
+            return result;
+        }
+
+        public bool Xoa(string maDanhMuc)
+        {
+            if (string.IsNullOrEmpty(maDanhMuc))
+                return false;
+
+            var result = dm_dal.Delete(maDanhMuc);
             return result;
         }
     }

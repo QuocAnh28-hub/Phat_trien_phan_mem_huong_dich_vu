@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "API.DanhMuc.Controllers.DanhMuc_Controller",
+    "Method": "Delete",
+    "RelativePath": "api/DanhMuc_/delete-danhmuc",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maDanhMuc",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API.DanhMuc.Controllers.DanhMuc_Controller",
     "Method": "GetAll",
     "RelativePath": "api/DanhMuc_/get-all-danhmuc",
     "HttpMethod": "GET",
@@ -29,6 +45,22 @@
     "ContainingType": "API.DanhMuc.Controllers.DanhMuc_Controller",
     "Method": "Create",
     "RelativePath": "api/DanhMuc_/insert-danhmuc",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "Models.DanhMuc",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API.DanhMuc.Controllers.DanhMuc_Controller",
+    "Method": "Update",
+    "RelativePath": "api/DanhMuc_/update-danhmuc",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
