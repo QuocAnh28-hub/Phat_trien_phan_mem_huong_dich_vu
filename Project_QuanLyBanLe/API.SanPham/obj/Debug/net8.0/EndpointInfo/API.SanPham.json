@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/SanPham_/get-all": {
+    "/api/SanPham_/get-all-sanpham": {
       "get": {
         "tags": [
           "SanPham_"
@@ -17,7 +17,7 @@
         }
       }
     },
-    "/api/SanPham_/get-by-id": {
+    "/api/SanPham_/get-sanpham-by-id": {
       "get": {
         "tags": [
           "SanPham_"
@@ -100,7 +100,7 @@
         }
       }
     },
-    "/api/SanPham_/update-soluong": {
+    "/api/SanPham_/update-soluong-sanpham": {
       "patch": {
         "tags": [
           "SanPham_"

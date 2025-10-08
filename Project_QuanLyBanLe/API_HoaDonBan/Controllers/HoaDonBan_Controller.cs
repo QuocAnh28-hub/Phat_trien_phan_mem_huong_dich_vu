@@ -28,7 +28,7 @@ namespace API_HoaDonBan.Controllers
             hdb_bll = new HoaDonBan_BLL(configuration);
         }
 
-        [Route("get-all")]
+        [Route("get-all-hoadonban")]
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -36,7 +36,7 @@ namespace API_HoaDonBan.Controllers
             return Ok(result);
         }
 
-        [Route("get-by-id")]
+        [Route("get-hoadonban-by-id")]
         [HttpGet]
         public IActionResult GetByID(string maHoaDon)
         {

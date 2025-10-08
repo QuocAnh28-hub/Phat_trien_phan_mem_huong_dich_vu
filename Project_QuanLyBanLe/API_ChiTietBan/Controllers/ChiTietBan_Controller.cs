@@ -28,7 +28,7 @@ namespace API_ChiTietBan.Controllers
             ctb_bll = new ChiTietBan_BLL(configuration);
         }
 
-        [Route("get-all")]
+        [Route("get-all-chitietban")]
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -36,7 +36,7 @@ namespace API_ChiTietBan.Controllers
             return Ok(result);
         }
 
-        [Route("get-by-hoadon")]
+        [Route("get-chitietban-by-IDhoadon")]
         [HttpGet]
         public IActionResult GetByHoaDon(string maHDB)
         {

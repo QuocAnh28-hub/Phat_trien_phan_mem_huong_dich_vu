@@ -18,7 +18,7 @@
   {
     "ContainingType": "API_HoaDonBan.Controllers.HoaDonBan_Controller",
     "Method": "GetAll",
-    "RelativePath": "api/HoaDonBan_/get-all",
+    "RelativePath": "api/HoaDonBan_/get-all-hoadonban",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -28,7 +28,7 @@
   {
     "ContainingType": "API_HoaDonBan.Controllers.HoaDonBan_Controller",
     "Method": "GetByID",
-    "RelativePath": "api/HoaDonBan_/get-by-id",
+    "RelativePath": "api/HoaDonBan_/get-hoadonban-by-id",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

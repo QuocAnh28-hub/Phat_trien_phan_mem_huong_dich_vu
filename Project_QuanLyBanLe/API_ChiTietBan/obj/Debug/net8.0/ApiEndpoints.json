@@ -23,7 +23,7 @@
   {
     "ContainingType": "API_ChiTietBan.Controllers.ChiTietBan_Controller",
     "Method": "GetAll",
-    "RelativePath": "api/ChiTietBan_/get-all",
+    "RelativePath": "api/ChiTietBan_/get-all-chitietban",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -33,7 +33,7 @@
   {
     "ContainingType": "API_ChiTietBan.Controllers.ChiTietBan_Controller",
     "Method": "GetByHoaDon",
-    "RelativePath": "api/ChiTietBan_/get-by-hoadon",
+    "RelativePath": "api/ChiTietBan_/get-chitietban-by-IDhoadon",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

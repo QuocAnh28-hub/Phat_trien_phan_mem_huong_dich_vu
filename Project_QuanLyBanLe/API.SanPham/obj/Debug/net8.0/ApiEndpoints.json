@@ -18,7 +18,7 @@
   {
     "ContainingType": "API.SanPham.Controllers.SanPham_Controller",
     "Method": "GetAll",
-    "RelativePath": "api/SanPham_/get-all",
+    "RelativePath": "api/SanPham_/get-all-sanpham",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -28,7 +28,7 @@
   {
     "ContainingType": "API.SanPham.Controllers.SanPham_Controller",
     "Method": "GetByID",
-    "RelativePath": "api/SanPham_/get-by-id",
+    "RelativePath": "api/SanPham_/get-sanpham-by-id",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -76,7 +76,7 @@
   {
     "ContainingType": "API.SanPham.Controllers.SanPham_Controller",
     "Method": "UpdateSoLuong",
-    "RelativePath": "api/SanPham_/update-soluong",
+    "RelativePath": "api/SanPham_/update-soluong-sanpham",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,

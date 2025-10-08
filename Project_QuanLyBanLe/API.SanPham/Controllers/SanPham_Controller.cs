@@ -28,14 +28,14 @@ namespace API.SanPham.Controllers
             sp_bll = new SanPham_BLL(configuration);
         }
 
-        [HttpGet("get-all")]
+        [HttpGet("get-all-sanpham")]
         public IActionResult GetAll()
         {
             var result = sp_bll.LayTatCa();
             return Ok(result);
         }
 
-        [HttpGet("get-by-id")]
+        [HttpGet("get-sanpham-by-id")]
         public IActionResult GetByID(string id)
         {
             var result = sp_bll.LayTheoID(id);
@@ -61,7 +61,7 @@ namespace API.SanPham.Controllers
             return result ? Ok("Cập nhật thành công") : BadRequest("Cập nhật thất bại");
         }
 
-        [Route("update-soluong")]
+        [Route("update-soluong-sanpham")]
         [HttpPatch]
         public IActionResult UpdateSoLuong(string maSP, int soLuongMoi)
         {

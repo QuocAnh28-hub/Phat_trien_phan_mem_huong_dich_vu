@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/ChiTietBan_/get-all": {
+    "/api/ChiTietBan_/get-all-chitietban": {
       "get": {
         "tags": [
           "ChiTietBan_"
@@ -17,7 +17,7 @@
         }
       }
     },
-    "/api/ChiTietBan_/get-by-hoadon": {
+    "/api/ChiTietBan_/get-chitietban-by-IDhoadon": {
       "get": {
         "tags": [
           "ChiTietBan_"

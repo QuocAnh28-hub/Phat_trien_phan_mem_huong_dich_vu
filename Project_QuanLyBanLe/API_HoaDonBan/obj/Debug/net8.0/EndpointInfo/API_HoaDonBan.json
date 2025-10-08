@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/HoaDonBan_/get-all": {
+    "/api/HoaDonBan_/get-all-hoadonban": {
       "get": {
         "tags": [
           "HoaDonBan_"
@@ -17,7 +17,7 @@
         }
       }
     },
-    "/api/HoaDonBan_/get-by-id": {
+    "/api/HoaDonBan_/get-hoadonban-by-id": {
       "get": {
         "tags": [
           "HoaDonBan_"
