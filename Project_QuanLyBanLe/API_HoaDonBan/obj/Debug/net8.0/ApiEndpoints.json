@@ -1,0 +1,76 @@
+[
+  {
+    "ContainingType": "API_HoaDonBan.Controllers.HoaDonBan_Controller",
+    "Method": "Delete",
+    "RelativePath": "api/HoaDonBan_/delete-hoadonban",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maHoaDon",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HoaDonBan.Controllers.HoaDonBan_Controller",
+    "Method": "GetAll",
+    "RelativePath": "api/HoaDonBan_/get-all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HoaDonBan.Controllers.HoaDonBan_Controller",
+    "Method": "GetByID",
+    "RelativePath": "api/HoaDonBan_/get-byID",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maHoaDon",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HoaDonBan.Controllers.HoaDonBan_Controller",
+    "Method": "Create",
+    "RelativePath": "api/HoaDonBan_/insert-hoadonban",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "Models.HoaDonBan",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HoaDonBan.Controllers.HoaDonBan_Controller",
+    "Method": "Update",
+    "RelativePath": "api/HoaDonBan_/update-hoadonban",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "Models.HoaDonBan",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

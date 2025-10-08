@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API.SanPham")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a1c367cbfff38baf006a7a08a175b41c975c38a1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d05ef8a3a111d7a0bfa040b5eecc20f08ba5a7f5")]
 [assembly: System.Reflection.AssemblyProductAttribute("API.SanPham")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API.SanPham")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
