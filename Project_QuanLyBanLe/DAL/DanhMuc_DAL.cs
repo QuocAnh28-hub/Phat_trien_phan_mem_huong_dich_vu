@@ -112,6 +112,26 @@ namespace DAL
             return rows > 0;
         }
 
+        public bool CoSanPhamThuocDanhMuc(string maDanhMuc)
+        {
+            string sql = "SELECT COUNT(*) AS SoLuong FROM SANPHAM WHERE MADANHMUC = @MADANHMUC";
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+            new SqlParameter("@MADANHMUC", maDanhMuc)
+            };
+
+            var dt = _dbHelper.ExecuteQuery(sql, parameters);
+
+            if (dt.Rows.Count > 0)
+            {
+                int count = Convert.ToInt32(dt.Rows[0]["SoLuong"]);
+                return count > 0;
+            }
+
+            return false;
+        }
+
         public bool Delete(string maDanhMuc)
         {
             if (string.IsNullOrEmpty(maDanhMuc))

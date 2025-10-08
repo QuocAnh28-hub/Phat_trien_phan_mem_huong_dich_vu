@@ -72,6 +72,12 @@ namespace BLL
             if (string.IsNullOrEmpty(maDanhMuc))
                 return false;
 
+            if (!dm_dal.KiemTraTonTai(maDanhMuc))
+                return false;
+
+            if (dm_dal.CoSanPhamThuocDanhMuc(maDanhMuc))
+                return false;
+
             var result = dm_dal.Delete(maDanhMuc);
             return result;
         }
