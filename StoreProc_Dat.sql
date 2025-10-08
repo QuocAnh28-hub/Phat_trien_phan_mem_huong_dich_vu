@@ -9,7 +9,7 @@ BEGIN
 END
 EXEC sp_GetKhachHang
 -------------------------------------------------------------------------------------------------
-CREATE OR ALTER PROCEDURE sp_GetByIDKhachHang(@MAKH CHAR(15))
+CREATE OR ALTER PROC sp_GetByIDKhachHang(@MAKH CHAR(15))
 AS
 BEGIN
     SELECT MaKH, TenKH, SDT, DiaChi
@@ -73,3 +73,61 @@ BEGIN
     WHERE 
         MANCC IS NOT NULL AND MANCC <> ''
 END
+EXEC sp_GetNhaCungCap
+-------------------------------------------------------------------------------------------------
+CREATE OR ALTER PROCEDURE sp_GetByIDNhaCungCap(@MANCC CHAR(15))
+AS
+BEGIN
+    SELECT MaNCC, TENNCC, DiaChi, SDT, EMAIL
+    FROM NHACUNGCAP
+    WHERE 
+        MANCC = @MANCC
+END
+EXEC sp_GetByIDNhaCungCap'NCC001'
+-------------------------------------------------------------------------------------------------
+--XÓA THÔNG TIN CỦA NCC CÓ MÃ BẤT KỲ
+CREATE OR ALTER PROC SP_XOANCC(@MANCC CHAR(15))
+AS
+BEGIN
+	IF(NOT EXISTS(SELECT * FROM NHACUNGCAP WHERE MANCC = @MANCC)) 
+		RETURN -1
+	IF(EXISTS(SELECT * FROM NHACUNGCAP WHERE MANCC = @MANCC))
+	DELETE FROM NHACUNGCAP
+	WHERE MANCC = @MANCC
+END
+EXEC SP_XOANCC'SV100'--KHÔNG XÓA ĐƯỢC
+EXEC SP_XOANCC'KH005'--XÓA ĐƯỢC
+-------------------------------------------------------------------------------------------------
+--THÊM THÔNG TIN CỦA NCC
+CREATE OR ALTER PROC SP_THEMNCC
+	@MANCC CHAR(15),
+	@TENNCC NVARCHAR(300),
+	@DIACHI NVARCHAR(500),
+	@SDT VARCHAR(12),
+	@EMAIL NVARCHAR(320)
+AS
+BEGIN
+	IF(EXISTS(SELECT * FROM NHACUNGCAP WHERE MANCC = @MANCC)) 
+		RETURN -1
+	IF(NOT EXISTS(SELECT * FROM NHACUNGCAP WHERE MANCC = @MANCC))
+		INSERT INTO NHACUNGCAP VALUES (@MANCC, @TENNCC, @DIACHI, @SDT, @EMAIL)
+END
+EXEC SP_THEMNCC'NCC005', N'Việt Tiến', N'Hà Nội', '0905678901', 'viettien@gmail.com'
+EXEC SP_THEMNCC'NCC006', N'Việt Tiến 2', N'Hà Nội', '0905678901', 'viettien@gmail.com'
+-------------------------------------------------------------------------------------------------
+--SỬA THÔNG TIN CỦA NCC CÓ MÃ BẤT KỲ
+CREATE OR ALTER PROC SP_SUANCC(@MANCC CHAR(15),
+	@TENNCC NVARCHAR(300),
+	@DIACHI NVARCHAR(500),
+	@SDT VARCHAR(12),
+	@EMAIL NVARCHAR(320))
+AS
+BEGIN
+	IF(NOT EXISTS(SELECT * FROM NHACUNGCAP WHERE MANCC = @MANCC)) 
+		RETURN -1
+	IF(EXISTS(SELECT * FROM NHACUNGCAP WHERE MANCC = @MANCC))
+	UPDATE NHACUNGCAP SET TENNCC = @TENNCC, SDT = @SDT, DIACHI = @DIACHI, EMAIL = @EMAIL 
+	WHERE MANCC = @MANCC
+END
+EXEC SP_SUANCC'NCC006', N'Việt Tiến 2', N'Hà Nội', '0905678901', 'viettien@gmail.com'
+EXEC SP_SUANCC'NCC007', N'Việt Tiến 2', N'Hà Nội', '0905678901', 'viettien@gmail.com'
