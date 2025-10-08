@@ -46,6 +46,15 @@ namespace BLL
             if (hdb_dal.KiemTraTonTai(hd.MAHDBAN))
                 return false;
 
+            if (hd.listjson_chitietban == null || hd.listjson_chitietban.Count == 0)
+                return false;
+
+            foreach (var ct in hd.listjson_chitietban)
+            {
+                if (string.IsNullOrEmpty(ct.MASP) || ct.SOLUONG <= 0 || ct.DONGIA <= 0)
+                    return false;
+            }
+
             return hdb_dal.Insert(hd);
         }
 
@@ -59,6 +68,15 @@ namespace BLL
 
             if (!hdb_dal.KiemTraTonTai(hd.MAHDBAN))
                 return false;
+
+            if (hd.listjson_chitietban == null || hd.listjson_chitietban.Count == 0)
+                return false;
+
+            foreach (var ct in hd.listjson_chitietban)
+            {
+                if (string.IsNullOrEmpty(ct.MASP) || ct.SOLUONG <= 0 || ct.DONGIA <= 0)
+                    return false;
+            }
 
             return hdb_dal.Update(hd);
         }

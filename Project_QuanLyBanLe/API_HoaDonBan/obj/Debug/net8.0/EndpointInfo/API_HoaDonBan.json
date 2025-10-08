@@ -17,7 +17,7 @@
         }
       }
     },
-    "/api/HoaDonBan_/get-byID": {
+    "/api/HoaDonBan_/get-by-id": {
       "get": {
         "tags": [
           "HoaDonBan_"

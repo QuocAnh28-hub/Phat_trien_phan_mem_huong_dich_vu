@@ -36,7 +36,7 @@ namespace API_HoaDonBan.Controllers
             return Ok(result);
         }
 
-        [Route("get-byID")]
+        [Route("get-by-id")]
         [HttpGet]
         public IActionResult GetByID(string maHoaDon)
         {
@@ -49,7 +49,7 @@ namespace API_HoaDonBan.Controllers
 
         [Route("insert-hoadonban")]
         [HttpPost]
-        public IActionResult Create(HoaDonBan model)
+        public IActionResult Create([FromBody] HoaDonBan model)
         {
             bool result = hdb_bll.ThemMoi(model);
             return result ? Ok("Thêm hóa đơn thành công") : BadRequest("Thêm hóa đơn thất bại");
@@ -57,7 +57,7 @@ namespace API_HoaDonBan.Controllers
 
         [Route("update-hoadonban")]
         [HttpPut]
-        public IActionResult Update(HoaDonBan model)
+        public IActionResult Update([FromBody] HoaDonBan model)
         {
             bool result = hdb_bll.Sua(model);
             return result ? Ok("Cập nhật hóa đơn thành công") : BadRequest("Cập nhật hóa đơn thất bại");
