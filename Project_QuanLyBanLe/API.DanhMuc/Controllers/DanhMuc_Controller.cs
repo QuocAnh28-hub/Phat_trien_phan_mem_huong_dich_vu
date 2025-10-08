@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Threading.Tasks;
-using BLL;
+﻿using BLL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Threading.Tasks;
 
 namespace API.DanhMuc.Controllers
@@ -48,10 +49,8 @@ namespace API.DanhMuc.Controllers
         {
             var danhmuc = dm_bll.LayTheoID(madanhmuc);
 
-            if (danhmuc == null)
-            {
-                return NoContent();
-            }
+            if (danhmuc == null || danhmuc.Count == 0)
+                return NotFound("Không tìm thấy danh mục.");
 
             return Ok(danhmuc);
         }
@@ -65,7 +64,7 @@ namespace API.DanhMuc.Controllers
         }
 
         [Route("update-danhmuc")]
-        [HttpPost]
+        [HttpPut]
         public IActionResult Update(Models.DanhMuc model)
         {
             bool result = dm_bll.CapNhat(model);

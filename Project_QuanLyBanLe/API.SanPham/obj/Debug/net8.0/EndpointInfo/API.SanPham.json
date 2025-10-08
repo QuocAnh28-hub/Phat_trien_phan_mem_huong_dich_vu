@@ -1,0 +1,202 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API.SanPham",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/SanPham_/get-all": {
+      "get": {
+        "tags": [
+          "SanPham_"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/SanPham_/get-by-id": {
+      "get": {
+        "tags": [
+          "SanPham_"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/SanPham_/insert-sanpham": {
+      "post": {
+        "tags": [
+          "SanPham_"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SanPham"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SanPham"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SanPham"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/SanPham_/update-sanpham": {
+      "put": {
+        "tags": [
+          "SanPham_"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SanPham"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SanPham"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SanPham"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/SanPham_/update-soluong": {
+      "patch": {
+        "tags": [
+          "SanPham_"
+        ],
+        "parameters": [
+          {
+            "name": "maSP",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "soLuongMoi",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/SanPham_/delete-sanpham": {
+      "delete": {
+        "tags": [
+          "SanPham_"
+        ],
+        "parameters": [
+          {
+            "name": "maSP",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SanPham": {
+        "type": "object",
+        "properties": {
+          "masp": {
+            "type": "string",
+            "nullable": true
+          },
+          "tensp": {
+            "type": "string",
+            "nullable": true
+          },
+          "mavach": {
+            "type": "string",
+            "nullable": true
+          },
+          "mota": {
+            "type": "string",
+            "nullable": true
+          },
+          "madanhmuc": {
+            "type": "string",
+            "nullable": true
+          },
+          "dongia": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "thuoctinh": {
+            "type": "string",
+            "nullable": true
+          },
+          "thue": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "soluongton": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

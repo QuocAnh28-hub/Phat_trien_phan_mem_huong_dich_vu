@@ -61,7 +61,7 @@
     "ContainingType": "API.DanhMuc.Controllers.DanhMuc_Controller",
     "Method": "Update",
     "RelativePath": "api/DanhMuc_/update-danhmuc",
-    "HttpMethod": "POST",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
