@@ -1,0 +1,162 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API_ChiTietBan",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/ChiTietBan_/get-all": {
+      "get": {
+        "tags": [
+          "ChiTietBan_"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ChiTietBan_/get-by-hoadon": {
+      "get": {
+        "tags": [
+          "ChiTietBan_"
+        ],
+        "parameters": [
+          {
+            "name": "maHDB",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ChiTietBan_/insert-chitietban": {
+      "post": {
+        "tags": [
+          "ChiTietBan_"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChiTietBan"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChiTietBan"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChiTietBan"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ChiTietBan_/update-chitietban": {
+      "put": {
+        "tags": [
+          "ChiTietBan_"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChiTietBan"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChiTietBan"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChiTietBan"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ChiTietBan_/delete-chitietban": {
+      "delete": {
+        "tags": [
+          "ChiTietBan_"
+        ],
+        "parameters": [
+          {
+            "name": "maHDB",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maSP",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ChiTietBan": {
+        "type": "object",
+        "properties": {
+          "mahdban": {
+            "type": "string",
+            "nullable": true
+          },
+          "masp": {
+            "type": "string",
+            "nullable": true
+          },
+          "soluong": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dongia": {
+            "type": "number",
+            "format": "double"
+          },
+          "tongtien": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API_ChiTietBan")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12d11063a6c236c1e8a8a883080a66d01ba3bd79")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d8368e04ba50302858307ca1b3ce84c5e8016305")]
 [assembly: System.Reflection.AssemblyProductAttribute("API_ChiTietBan")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API_ChiTietBan")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
