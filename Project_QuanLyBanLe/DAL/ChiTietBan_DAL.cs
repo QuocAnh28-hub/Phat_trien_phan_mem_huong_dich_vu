@@ -22,129 +22,171 @@ namespace DAL
 
         public List<ChiTietBan> GetAll()
         {
-            List<ChiTietBan> list = new List<ChiTietBan>();
-            string sql = "SELECT MAHDBAN, MASP, SOLUONG, DONGIA, TONGTIEN FROM CT_HDB";
-
-            var dt = _dbHelper.ExecuteQuery(sql);
-
-            foreach (DataRow row in dt.Rows)
+            try
             {
-                list.Add(new ChiTietBan
-                {
-                    MAHDBAN = row["MAHDBAN"].ToString(),
-                    MASP = row["MASP"].ToString(),
-                    SOLUONG = Convert.ToInt32(row["SOLUONG"]),
-                    DONGIA = Convert.ToDecimal(row["DONGIA"]),
-                    TONGTIEN = Convert.ToDecimal(row["TONGTIEN"])
-                });
-            }
+                List<ChiTietBan> list = new List<ChiTietBan>();
+                string sql = "SELECT MAHDBAN, MASP, SOLUONG, DONGIA, TONGTIEN FROM CT_HDB";
 
-            return list;
+                var dt = _dbHelper.ExecuteQuery(sql);
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    list.Add(new ChiTietBan
+                    {
+                        MAHDBAN = row["MAHDBAN"].ToString(),
+                        MASP = row["MASP"].ToString(),
+                        SOLUONG = Convert.ToInt32(row["SOLUONG"]),
+                        DONGIA = Convert.ToDecimal(row["DONGIA"]),
+                        TONGTIEN = Convert.ToDecimal(row["TONGTIEN"])
+                    });
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi: " + ex.Message);
+            }
         }
 
         public List<ChiTietBan> GetByHoaDon(string maHDB)
         {
-            List<ChiTietBan> list = new List<ChiTietBan>();
-            string sql = "SELECT MAHDBAN, MASP, SOLUONG, DONGIA, TONGTIEN FROM CT_HDB WHERE MAHDBAN = @MAHDBAN";
-
-            SqlParameter[] parameters = new SqlParameter[]
+            try
             {
-            new SqlParameter("@MAHDBAN", maHDB)
-            };
+                List<ChiTietBan> list = new List<ChiTietBan>();
+                string sql = "SELECT MAHDBAN, MASP, SOLUONG, DONGIA, TONGTIEN FROM CT_HDB WHERE MAHDBAN = @MAHDBAN";
 
-            var dt = _dbHelper.ExecuteQuery(sql, parameters);
-
-            foreach (DataRow row in dt.Rows)
-            {
-                list.Add(new ChiTietBan
+                SqlParameter[] parameters = new SqlParameter[]
                 {
-                    MAHDBAN = row["MAHDBAN"].ToString(),
-                    MASP = row["MASP"].ToString(),
-                    SOLUONG = Convert.ToInt32(row["SOLUONG"]),
-                    DONGIA = Convert.ToDecimal(row["DONGIA"]),
-                    TONGTIEN = Convert.ToDecimal(row["TONGTIEN"])
-                });
-            }
+                new SqlParameter("@MAHDBAN", maHDB)
+                };
 
-            return list;
+                var dt = _dbHelper.ExecuteQuery(sql, parameters);
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    list.Add(new ChiTietBan
+                    {
+                        MAHDBAN = row["MAHDBAN"].ToString(),
+                        MASP = row["MASP"].ToString(),
+                        SOLUONG = Convert.ToInt32(row["SOLUONG"]),
+                        DONGIA = Convert.ToDecimal(row["DONGIA"]),
+                        TONGTIEN = Convert.ToDecimal(row["TONGTIEN"])
+                    });
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi: " + ex.Message);
+            }
         }
 
         public bool KiemTraTonTai(string maHDB, string maSP)
         {
-            string sql = "SELECT COUNT(*) AS SoLuong FROM CT_HDB WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
-            SqlParameter[] parameters = new SqlParameter[]
+            try
             {
-                new SqlParameter("@MAHDBAN", maHDB),
-                new SqlParameter("@MASP", maSP)
-            };
+                string sql = "SELECT COUNT(*) AS SoLuong FROM CT_HDB WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@MAHDBAN", maHDB),
+                    new SqlParameter("@MASP", maSP)
+                };
 
-            var dt = _dbHelper.ExecuteQuery(sql, parameters);
-            if (dt.Rows.Count > 0)
-            {
-                int count = Convert.ToInt32(dt.Rows[0]["SoLuong"]);
-                return count > 0;
+                var dt = _dbHelper.ExecuteQuery(sql, parameters);
+                if (dt.Rows.Count > 0)
+                {
+                    int count = Convert.ToInt32(dt.Rows[0]["SoLuong"]);
+                    return count > 0;
+                }
+
+                return false;
             }
-
-            return false;
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi: " + ex.Message);
+            }
         }
 
         public bool Insert(ChiTietBan ct)
         {
-            if (KiemTraTonTai(ct.MAHDBAN, ct.MASP))
-                return false;
-
-            string sql = @"INSERT INTO CT_HDB (MAHDBAN, MASP, SOLUONG, DONGIA, TONGTIEN) VALUES (@MAHDBAN, @MASP, @SOLUONG, @DONGIA, @TONGTIEN)";
-
-            SqlParameter[] parameters = new SqlParameter[]
+            try
             {
-                new SqlParameter("@MAHDBAN", ct.MAHDBAN),
-                new SqlParameter("@MASP", ct.MASP),
-                new SqlParameter("@SOLUONG", ct.SOLUONG),
-                new SqlParameter("@DONGIA", ct.DONGIA),
-                new SqlParameter("@TONGTIEN", ct.TONGTIEN)
-            };
+                if (KiemTraTonTai(ct.MAHDBAN, ct.MASP))
+                    return false;
 
-            int rows = _dbHelper.ExecuteNonQuery(sql, parameters);
-            return rows > 0;
+                string sql = @"INSERT INTO CT_HDB (MAHDBAN, MASP, SOLUONG, DONGIA, TONGTIEN) VALUES (@MAHDBAN, @MASP, @SOLUONG, @DONGIA, @TONGTIEN)";
+
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@MAHDBAN", ct.MAHDBAN),
+                    new SqlParameter("@MASP", ct.MASP),
+                    new SqlParameter("@SOLUONG", ct.SOLUONG),
+                    new SqlParameter("@DONGIA", ct.DONGIA),
+                    new SqlParameter("@TONGTIEN", ct.TONGTIEN)
+                };
+
+                int rows = _dbHelper.ExecuteNonQuery(sql, parameters);
+                return rows > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi: " + ex.Message);
+            }
         }
 
         public bool Update(ChiTietBan ct)
         {
-            if (!KiemTraTonTai(ct.MAHDBAN, ct.MASP))
-                return false;
-
-            string sql = @"UPDATE CT_HDB
-                       SET SOLUONG = @SOLUONG,
-                           DONGIA = @DONGIA,
-                           TONGTIEN = @TONGTIEN
-                       WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
-            SqlParameter[] parameters = new SqlParameter[]
+            try
             {
-                new SqlParameter("@MAHDBAN", ct.MAHDBAN),
-                new SqlParameter("@MASP", ct.MASP),
-                new SqlParameter("@SOLUONG", ct.SOLUONG),
-                new SqlParameter("@DONGIA", ct.DONGIA),
-                new SqlParameter("@TONGTIEN", ct.TONGTIEN)
-            };
+                if (!KiemTraTonTai(ct.MAHDBAN, ct.MASP))
+                    return false;
 
-            int rows = _dbHelper.ExecuteNonQuery(sql, parameters);
-            return rows > 0;
+                string sql = @"UPDATE CT_HDB
+                           SET SOLUONG = @SOLUONG,
+                               DONGIA = @DONGIA,
+                               TONGTIEN = @TONGTIEN
+                           WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@MAHDBAN", ct.MAHDBAN),
+                    new SqlParameter("@MASP", ct.MASP),
+                    new SqlParameter("@SOLUONG", ct.SOLUONG),
+                    new SqlParameter("@DONGIA", ct.DONGIA),
+                    new SqlParameter("@TONGTIEN", ct.TONGTIEN)
+                };
+
+                int rows = _dbHelper.ExecuteNonQuery(sql, parameters);
+                return rows > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi: " + ex.Message);
+            }
         }
 
         public bool Delete(string maHDB, string maSP)
         {
-            if (!KiemTraTonTai(maHDB, maSP))
-                return false;
-
-            string sql = "DELETE FROM CT_HDB WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
-            SqlParameter[] parameters = new SqlParameter[]
+            try
             {
-                new SqlParameter("@MAHDBAN", maHDB),
-                new SqlParameter("@MASP", maSP)
-            };
+                if (!KiemTraTonTai(maHDB, maSP))
+                    return false;
 
-            int rows = _dbHelper.ExecuteNonQuery(sql, parameters);
-            return rows > 0;
+                string sql = "DELETE FROM CT_HDB WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@MAHDBAN", maHDB),
+                    new SqlParameter("@MASP", maSP)
+                };
+
+                int rows = _dbHelper.ExecuteNonQuery(sql, parameters);
+                return rows > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi: " + ex.Message);
+            }
         }
     }
 }

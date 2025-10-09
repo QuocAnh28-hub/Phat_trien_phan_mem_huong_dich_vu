@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API.DanhMuc")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d05ef8a3a111d7a0bfa040b5eecc20f08ba5a7f5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b0a21e5500105c3e2734dbba2210ef118446e94a")]
 [assembly: System.Reflection.AssemblyProductAttribute("API.DanhMuc")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API.DanhMuc")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
