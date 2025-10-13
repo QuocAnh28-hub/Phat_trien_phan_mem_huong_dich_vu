@@ -1,0 +1,76 @@
+[
+  {
+    "ContainingType": "API_NhaCungCap.Controllers.NhaCungCap_Controller",
+    "Method": "Create",
+    "RelativePath": "api/NhaCungCap_/create-nhacungcap",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "Models.NhaCungCap",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_NhaCungCap.Controllers.NhaCungCap_Controller",
+    "Method": "Delete",
+    "RelativePath": "api/NhaCungCap_/del-nhacungcap",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ma",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_NhaCungCap.Controllers.NhaCungCap_Controller",
+    "Method": "getAllNCC",
+    "RelativePath": "api/NhaCungCap_/get-all-nhacungcap",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_NhaCungCap.Controllers.NhaCungCap_Controller",
+    "Method": "GetById",
+    "RelativePath": "api/NhaCungCap_/get-byid-nhacungcap",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ma",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_NhaCungCap.Controllers.NhaCungCap_Controller",
+    "Method": "Update",
+    "RelativePath": "api/NhaCungCap_/update-khachhang",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "Models.NhaCungCap",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
