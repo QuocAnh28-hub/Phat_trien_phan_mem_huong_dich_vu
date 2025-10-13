@@ -1,0 +1,155 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API_NhaCungCap",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/NhaCungCap_/get-all-nhacungcap": {
+      "get": {
+        "tags": [
+          "NhaCungCap_"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NhaCungCap_/get-byid-nhacungcap": {
+      "get": {
+        "tags": [
+          "NhaCungCap_"
+        ],
+        "parameters": [
+          {
+            "name": "ma",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NhaCungCap_/del-nhacungcap": {
+      "delete": {
+        "tags": [
+          "NhaCungCap_"
+        ],
+        "parameters": [
+          {
+            "name": "ma",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NhaCungCap_/update-khachhang": {
+      "post": {
+        "tags": [
+          "NhaCungCap_"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhaCungCap"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhaCungCap"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhaCungCap"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NhaCungCap_/create-nhacungcap": {
+      "post": {
+        "tags": [
+          "NhaCungCap_"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhaCungCap"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhaCungCap"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhaCungCap"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NhaCungCap": {
+        "type": "object",
+        "properties": {
+          "maNCC": {
+            "type": "string",
+            "nullable": true
+          },
+          "tenNCC": {
+            "type": "string",
+            "nullable": true
+          },
+          "diaChi": {
+            "type": "string",
+            "nullable": true
+          },
+          "sdt": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

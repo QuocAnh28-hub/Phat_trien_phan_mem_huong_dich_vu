@@ -1,0 +1,151 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API_NhanVien",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/NhanVien_/get-all-nhanvien": {
+      "get": {
+        "tags": [
+          "NhanVien_"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NhanVien_/get-byid-nhanvien": {
+      "get": {
+        "tags": [
+          "NhanVien_"
+        ],
+        "parameters": [
+          {
+            "name": "manv",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NhanVien_/create-nhanvien": {
+      "post": {
+        "tags": [
+          "NhanVien_"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhanVien"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhanVien"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhanVien"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NhanVien_/update-nhanvien": {
+      "post": {
+        "tags": [
+          "NhanVien_"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhanVien"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhanVien"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NhanVien"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NhanVien_/delete-nhanvien": {
+      "delete": {
+        "tags": [
+          "NhanVien_"
+        ],
+        "parameters": [
+          {
+            "name": "manv",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NhanVien": {
+        "type": "object",
+        "properties": {
+          "manv": {
+            "type": "string",
+            "nullable": true
+          },
+          "tennv": {
+            "type": "string",
+            "nullable": true
+          },
+          "sdt": {
+            "type": "string",
+            "nullable": true
+          },
+          "diachi": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "ContainingType": "API_ChiTietNhap.Controllers.ChiTietNhap_Controller",
+    "Method": "Create",
+    "RelativePath": "api/ChiTietNhap_/create-chitietnhap",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ct",
+        "Type": "Models.ChiTietNhap",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_ChiTietNhap.Controllers.ChiTietNhap_Controller",
+    "Method": "Delete",
+    "RelativePath": "api/ChiTietNhap_/delete-chitietnhap",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maphieunhap",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "masp",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_ChiTietNhap.Controllers.ChiTietNhap_Controller",
+    "Method": "GetAll",
+    "RelativePath": "api/ChiTietNhap_/get-all-chitietnhap",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_ChiTietNhap.Controllers.ChiTietNhap_Controller",
+    "Method": "GetById",
+    "RelativePath": "api/ChiTietNhap_/get-byid-chitietnhap",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maphieunhap",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "masp",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_ChiTietNhap.Controllers.ChiTietNhap_Controller",
+    "Method": "GetByPhieu",
+    "RelativePath": "api/ChiTietNhap_/get-byphieu-chitietnhap",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maphieunhap",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_ChiTietNhap.Controllers.ChiTietNhap_Controller",
+    "Method": "Update",
+    "RelativePath": "api/ChiTietNhap_/update-chitietnhap",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ct",
+        "Type": "Models.ChiTietNhap",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

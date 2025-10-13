@@ -1,0 +1,76 @@
+[
+  {
+    "ContainingType": "API_NhanVien.Controllers.NhanVien_Controller",
+    "Method": "CreateNhanVien",
+    "RelativePath": "api/NhanVien_/create-nhanvien",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "nv",
+        "Type": "Models.NhanVien",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_NhanVien.Controllers.NhanVien_Controller",
+    "Method": "DeleteNhanVien",
+    "RelativePath": "api/NhanVien_/delete-nhanvien",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "manv",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_NhanVien.Controllers.NhanVien_Controller",
+    "Method": "GetAllNhanVien",
+    "RelativePath": "api/NhanVien_/get-all-nhanvien",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_NhanVien.Controllers.NhanVien_Controller",
+    "Method": "GetByIdNhanVien",
+    "RelativePath": "api/NhanVien_/get-byid-nhanvien",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "manv",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_NhanVien.Controllers.NhanVien_Controller",
+    "Method": "UpdateNhanVien",
+    "RelativePath": "api/NhanVien_/update-nhanvien",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "nv",
+        "Type": "Models.NhanVien",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

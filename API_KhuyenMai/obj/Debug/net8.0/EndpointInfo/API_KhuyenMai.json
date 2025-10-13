@@ -1,0 +1,155 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API_KhuyenMai",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/KhuyenMai_/get-all-khuyenmai": {
+      "get": {
+        "tags": [
+          "KhuyenMai_"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/KhuyenMai_/get-byid-khuyenmai": {
+      "get": {
+        "tags": [
+          "KhuyenMai_"
+        ],
+        "parameters": [
+          {
+            "name": "ma",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/KhuyenMai_/del-khuyenmai": {
+      "delete": {
+        "tags": [
+          "KhuyenMai_"
+        ],
+        "parameters": [
+          {
+            "name": "ma",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/KhuyenMai_/update-khuyenmai": {
+      "post": {
+        "tags": [
+          "KhuyenMai_"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KhuyenMai"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KhuyenMai"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/KhuyenMai"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/KhuyenMai_/create-khuyenmai": {
+      "post": {
+        "tags": [
+          "KhuyenMai_"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KhuyenMai"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KhuyenMai"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/KhuyenMai"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "KhuyenMai": {
+        "type": "object",
+        "properties": {
+          "maKM": {
+            "type": "string",
+            "nullable": true
+          },
+          "tenKM": {
+            "type": "string",
+            "nullable": true
+          },
+          "maSP": {
+            "type": "string",
+            "nullable": true
+          },
+          "ngayBD": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ngayKT": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

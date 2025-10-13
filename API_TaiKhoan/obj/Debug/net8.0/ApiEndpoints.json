@@ -1,0 +1,92 @@
+[
+  {
+    "ContainingType": "API_TaiKhoan.Controllers.TaiKhoan_Controller",
+    "Method": "CreateTaiKhoan",
+    "RelativePath": "api/TaiKhoan_/create-taikhoan",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tk",
+        "Type": "Models.TaiKhoan",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_TaiKhoan.Controllers.TaiKhoan_Controller",
+    "Method": "DeleteTaiKhoan",
+    "RelativePath": "api/TaiKhoan_/del-byID-taikhoan",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "mataikhoan",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_TaiKhoan.Controllers.TaiKhoan_Controller",
+    "Method": "GetAllTaiKhoan",
+    "RelativePath": "api/TaiKhoan_/get-all-taikhoan",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_TaiKhoan.Controllers.TaiKhoan_Controller",
+    "Method": "GetByIdTaiKhoan",
+    "RelativePath": "api/TaiKhoan_/get-byid-taikhoan",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "mataikhoan",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_TaiKhoan.Controllers.TaiKhoan_Controller",
+    "Method": "Login",
+    "RelativePath": "api/TaiKhoan_/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tk",
+        "Type": "Models.TaiKhoan",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_TaiKhoan.Controllers.TaiKhoan_Controller",
+    "Method": "UpdateTaiKhoan",
+    "RelativePath": "api/TaiKhoan_/update-byID-taikhoan",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tk",
+        "Type": "Models.TaiKhoan",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

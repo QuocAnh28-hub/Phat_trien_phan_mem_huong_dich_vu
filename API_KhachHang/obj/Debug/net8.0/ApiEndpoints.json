@@ -1,0 +1,76 @@
+[
+  {
+    "ContainingType": "API_KhachHang.Controllers.KhachHang_Controller",
+    "Method": "CreateKH",
+    "RelativePath": "api/KhachHang_/create-khachhang",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "kh",
+        "Type": "Models.KhachHang",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_KhachHang.Controllers.KhachHang_Controller",
+    "Method": "DeleteKH",
+    "RelativePath": "api/KhachHang_/del-byID-khachhang",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "makh",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_KhachHang.Controllers.KhachHang_Controller",
+    "Method": "getAllKH",
+    "RelativePath": "api/KhachHang_/get-all-khachhang",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_KhachHang.Controllers.KhachHang_Controller",
+    "Method": "GetByIdKH",
+    "RelativePath": "api/KhachHang_/get-byid-khachhang",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "makh",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_KhachHang.Controllers.KhachHang_Controller",
+    "Method": "UpdateByIdKH",
+    "RelativePath": "api/KhachHang_/update-byID-khachhang",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "kh",
+        "Type": "Models.KhachHang",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

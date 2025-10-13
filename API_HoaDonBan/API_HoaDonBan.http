@@ -1,0 +1,6 @@
+@API_HoaDonBan_HostAddress = http://localhost:5206
+
+GET {{API_HoaDonBan_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
