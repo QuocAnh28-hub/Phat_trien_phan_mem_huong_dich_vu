@@ -1,6 +1,0 @@
-@API_ThanhToan_HostAddress = http://localhost:5063
-
-GET {{API_ThanhToan_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
