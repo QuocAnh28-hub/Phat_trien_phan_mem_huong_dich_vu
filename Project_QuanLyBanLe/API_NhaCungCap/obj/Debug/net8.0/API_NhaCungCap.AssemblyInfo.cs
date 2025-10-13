@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API_NhaCungCap")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1983ff50e578a509bf50dacc072789b785bd6c07")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6ba2bba98f346dc6696b6312453b1d1b8c770aab")]
 [assembly: System.Reflection.AssemblyProductAttribute("API_NhaCungCap")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API_NhaCungCap")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
