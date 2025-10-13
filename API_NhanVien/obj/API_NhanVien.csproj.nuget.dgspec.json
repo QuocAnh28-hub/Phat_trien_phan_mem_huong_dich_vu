@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\API_NhanVien\\API_NhanVien.csproj": {}
+    "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\API_NhanVien\\API_NhanVien.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\API_NhanVien\\API_NhanVien.csproj": {
+    "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\API_NhanVien\\API_NhanVien.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\API_NhanVien\\API_NhanVien.csproj",
+        "projectUniqueName": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\API_NhanVien\\API_NhanVien.csproj",
         "projectName": "API_NhanVien",
-        "projectPath": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\API_NhanVien\\API_NhanVien.csproj",
-        "packagesPath": "C:\\Users\\hle11\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\API_NhanVien\\obj\\",
+        "projectPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\API_NhanVien\\API_NhanVien.csproj",
+        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\API_NhanVien\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\hle11\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,15 +26,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\BLL\\BLL.csproj": {
-                "projectPath": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\BLL\\BLL.csproj"
+              "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\BLL\\BLL.csproj": {
+                "projectPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\BLL\\BLL.csproj"
               }
             }
           }
@@ -83,24 +82,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\BLL\\BLL.csproj": {
+    "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\BLL\\BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\BLL\\BLL.csproj",
+        "projectUniqueName": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\BLL\\BLL.csproj",
         "projectName": "BLL",
-        "projectPath": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\BLL\\BLL.csproj",
-        "packagesPath": "C:\\Users\\hle11\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\BLL\\obj\\",
+        "projectPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\BLL\\BLL.csproj",
+        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\BLL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\hle11\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -109,15 +108,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\DAL\\DAL.csproj": {
-                "projectPath": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\DAL\\DAL.csproj"
+              "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\DAL\\DAL.csproj": {
+                "projectPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\DAL\\DAL.csproj"
               }
             }
           }
@@ -159,24 +157,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\DAL\\DAL.csproj": {
+    "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\DAL\\DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\DAL\\DAL.csproj",
+        "projectUniqueName": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\DAL\\DAL.csproj",
         "projectName": "DAL",
-        "projectPath": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\DAL\\DAL.csproj",
-        "packagesPath": "C:\\Users\\hle11\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\DAL\\obj\\",
+        "projectPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\DAL\\DAL.csproj",
+        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\hle11\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -185,15 +183,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\Models\\Models.csproj": {
-                "projectPath": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\Models\\Models.csproj"
+              "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\Models\\Models.csproj": {
+                "projectPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\Models\\Models.csproj"
               }
             }
           }
@@ -235,24 +232,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\Models\\Models.csproj": {
+    "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\Models\\Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\Models\\Models.csproj",
+        "projectUniqueName": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\Models\\Models.csproj",
         "projectName": "Models",
-        "projectPath": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\Models\\Models.csproj",
-        "packagesPath": "C:\\Users\\hle11\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hle11\\OneDrive\\Documents\\PTPM\\BTL\\Phat_trien_phan_mem_huong_dich_vu-main\\Project_QuanLyBanLe\\Models\\obj\\",
+        "projectPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\Models\\Models.csproj",
+        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Năm 3\\PTPM hướng dịch vụ\\Project_BTL\\Models\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\hle11\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -261,7 +258,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -307,7 +303,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
