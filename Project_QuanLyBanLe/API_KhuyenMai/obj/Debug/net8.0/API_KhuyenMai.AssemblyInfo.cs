@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API_KhuyenMai")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+272d4f36e10c84c740a14503409d4b18ab1f324e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a6a0dd23bb4d7cf9bb8a9ff3c567809c0731e118")]
 [assembly: System.Reflection.AssemblyProductAttribute("API_KhuyenMai")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API_KhuyenMai")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
