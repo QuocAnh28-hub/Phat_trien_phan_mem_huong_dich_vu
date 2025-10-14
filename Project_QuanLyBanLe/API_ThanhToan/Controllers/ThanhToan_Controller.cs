@@ -9,7 +9,11 @@ namespace API_ThanhToan.Properties
     [ApiController]
     public class ThanhToan_Controller : ControllerBase
     {
-        ThanhToan_BLL _BLL = new ThanhToan_BLL();
+        private readonly ThanhToan_BLL _BLL;
+        public ThanhToan_Controller(IConfiguration configuration)
+        {
+            _BLL = new ThanhToan_BLL(configuration);
+        }
 
 
         private List<object> ChuyenThanhList(DataTable dt)
