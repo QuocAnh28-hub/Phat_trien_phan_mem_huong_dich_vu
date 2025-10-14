@@ -1,4 +1,5 @@
 ﻿using DAL;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +12,12 @@ namespace BLL
 {
     public class NhaCungCap_BLL
     {
-        NhaCungCap_DAL NCC_DAL = new NhaCungCap_DAL();
+        private readonly NhaCungCap_DAL NCC_DAL;
+
+        public NhaCungCap_BLL(IConfiguration configuration)
+        {
+            NCC_DAL = new NhaCungCap_DAL(configuration);
+        }
 
         public DataTable getAllNCC()
         {

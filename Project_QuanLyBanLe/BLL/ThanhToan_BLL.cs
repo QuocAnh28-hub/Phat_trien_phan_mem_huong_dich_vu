@@ -1,4 +1,5 @@
 ﻿using DAL;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,12 @@ namespace BLL
 {
     public class ThanhToan_BLL
     {
-        ThanhToan_DAL _DAL = new ThanhToan_DAL();
+        private readonly ThanhToan_DAL _DAL;
+
+        public ThanhToan_BLL(IConfiguration configuration)
+        {
+            _DAL = new ThanhToan_DAL(configuration);
+        }
 
         public DataTable getAll()
         {

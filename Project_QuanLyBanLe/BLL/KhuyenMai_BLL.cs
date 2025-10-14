@@ -1,4 +1,5 @@
 ﻿using DAL;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,12 @@ namespace BLL
 {
     public class KhuyenMai_BLL
     {
-        KhuyenMai_DAL _DAL = new KhuyenMai_DAL();
+        private readonly KhuyenMai_DAL _DAL;
+
+        public KhuyenMai_BLL(IConfiguration configuration)
+        {
+            _DAL = new KhuyenMai_DAL(configuration);
+        }
 
         public DataTable getAll()
         {
