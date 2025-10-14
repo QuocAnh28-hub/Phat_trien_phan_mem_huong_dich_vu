@@ -1,17 +1,22 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models;
 
 namespace DAL
 {
     public class ThanhToan_DAL
     {
-        DataBase_Connect db = new DataBase_Connect();
+        private readonly DataBase_Connect db;
+        public ThanhToan_DAL(IConfiguration configuration)
+        {
+            db = new DataBase_Connect(configuration);
+        }
 
 
         public DataTable getAll()

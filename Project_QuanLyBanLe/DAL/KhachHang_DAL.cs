@@ -6,11 +6,17 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+
 namespace DAL
 {
     public class KhachHang_DAL
     {
-        DataBase_Connect db = new DataBase_Connect();
+        private readonly DataBase_Connect db;
+        public KhachHang_DAL(IConfiguration configuration)
+        {
+            db = new DataBase_Connect(configuration);
+        }
         public DataTable getAllKH()
         {
             try
