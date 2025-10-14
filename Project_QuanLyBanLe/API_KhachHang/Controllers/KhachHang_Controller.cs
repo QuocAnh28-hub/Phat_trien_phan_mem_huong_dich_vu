@@ -1,4 +1,5 @@
 ﻿using BLL;
+using DAL;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -8,7 +9,12 @@ namespace API_KhachHang.Controllers
     [ApiController]
     public class KhachHang_Controller : ControllerBase
     {
-        KhachHang_BLL KH_BLL = new KhachHang_BLL();
+        private readonly KhachHang_BLL KH_BLL;
+        public KhachHang_Controller(IConfiguration configuration)
+        {
+            KH_BLL = new KhachHang_BLL(configuration);
+        }
+
 
         [Route("get-all-khachhang")]
         [HttpGet]
