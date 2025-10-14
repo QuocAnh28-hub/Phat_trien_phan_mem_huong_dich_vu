@@ -9,7 +9,11 @@ namespace API_NhaCungCap.Controllers
     [ApiController]
     public class NhaCungCap_Controller : ControllerBase
     {
-        NhaCungCap_BLL NCC_BLL = new NhaCungCap_BLL();
+        private readonly NhaCungCap_BLL NCC_BLL;
+        public NhaCungCap_Controller(IConfiguration configuration)
+        {
+            NCC_BLL = new NhaCungCap_BLL(configuration);
+        }
 
         [Route("get-all-nhacungcap")]
         [HttpGet]
