@@ -1,0 +1,6 @@
+@API_ChiTietBan_HostAddress = http://localhost:5296
+
+GET {{API_ChiTietBan_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

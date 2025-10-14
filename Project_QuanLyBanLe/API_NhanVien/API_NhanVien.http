@@ -1,0 +1,6 @@
+@API_NhanVien_HostAddress = http://localhost:5015
+
+GET {{API_NhanVien_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
