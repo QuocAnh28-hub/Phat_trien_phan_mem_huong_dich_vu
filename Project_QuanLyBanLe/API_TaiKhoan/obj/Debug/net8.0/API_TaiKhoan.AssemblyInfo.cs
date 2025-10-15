@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API_TaiKhoan")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fa9d769ad5805673f4843687871c207259b8df89")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+beefc6527ebf2be00e45198c67295b86fde01bb1")]
 [assembly: System.Reflection.AssemblyProductAttribute("API_TaiKhoan")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API_TaiKhoan")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
