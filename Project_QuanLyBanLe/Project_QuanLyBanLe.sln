@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project_QuanLyBanLe", "Project_QuanLyBanLe\Project_QuanLyBanLe.csproj", "{309A2369-43F3-4794-83E5-1E10F4CCAD1E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{BC33FBC6-065C-49B0-BC9D-927047CA960B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{B6B37172-3727-4C14-818E-B9241E9BAC70}"
@@ -43,10 +41,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{309A2369-43F3-4794-83E5-1E10F4CCAD1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{309A2369-43F3-4794-83E5-1E10F4CCAD1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{309A2369-43F3-4794-83E5-1E10F4CCAD1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{309A2369-43F3-4794-83E5-1E10F4CCAD1E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BC33FBC6-065C-49B0-BC9D-927047CA960B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BC33FBC6-065C-49B0-BC9D-927047CA960B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC33FBC6-065C-49B0-BC9D-927047CA960B}.Release|Any CPU.ActiveCfg = Release|Any CPU

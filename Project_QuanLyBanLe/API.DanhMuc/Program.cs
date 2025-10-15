@@ -1,3 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using System;
+using BLL;
+using DAL;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
