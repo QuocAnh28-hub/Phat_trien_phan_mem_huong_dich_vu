@@ -16,18 +16,12 @@ namespace Task2_API_ThuNgan.Controllers
     {
             private readonly HoaDonBan_BLL hdb_bll;
             private readonly ChiTietBan_BLL ctb_bll;
-            private readonly KhachHang_BLL kh_bll;
-            private readonly DanhMuc_BLL dm_bll;
-            private readonly SanPham_BLL sp_bll;
             private readonly ThanhToan_BLL tt_bll;
 
             public QuanLyDoiTra_Controller(IConfiguration configuration)
             {
                 hdb_bll = new HoaDonBan_BLL(configuration);
                 ctb_bll = new ChiTietBan_BLL(configuration);
-                kh_bll = new KhachHang_BLL(configuration);
-                dm_bll = new DanhMuc_BLL(configuration);
-                sp_bll = new SanPham_BLL(configuration);
                 tt_bll = new ThanhToan_BLL(configuration);
             }
         [Route("get-all-hoadonban")]
@@ -221,3 +215,4 @@ namespace Task2_API_ThuNgan.Controllers
 
     }
 }
+
