@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
 using Models;
 using System;
 using System.Collections.Generic;
