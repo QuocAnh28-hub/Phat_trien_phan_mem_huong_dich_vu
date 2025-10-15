@@ -28,3 +28,23 @@ build/
 dist/
 .env
 .env.*   # bỏ qua các biến môi trường nếu có
+
+# Visual Studio build folders
+bin/
+obj/
+Debug/
+Release/
+
+# Build outputs
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+
+# User-specific
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
