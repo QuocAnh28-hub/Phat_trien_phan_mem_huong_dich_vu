@@ -1,6 +1,0 @@
-@API_ChiTietNhap_HostAddress = http://localhost:5205
-
-GET {{API_ChiTietNhap_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
