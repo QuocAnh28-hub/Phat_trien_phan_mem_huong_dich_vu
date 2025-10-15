@@ -32,43 +32,78 @@ namespace API_ChiTietBan.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var result = ctb_bll.LayTatCa();
-            return Ok(result);
+            try
+            {
+                var result = ctb_bll.LayTatCa();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("get-chitietban-by-IDhoadon")]
         [HttpGet]
         public IActionResult GetByHoaDon(string maHDB)
         {
-            var result = ctb_bll.LayTheoHoaDon(maHDB);
-            if (result == null || result.Count == 0)
-                return NotFound("Không tìm thấy chi tiết của hóa đơn.");
+            try
+            {
+                var result = ctb_bll.LayTheoHoaDon(maHDB);
+                if (result == null || result.Count == 0)
+                    return NotFound("Không tìm thấy chi tiết của hóa đơn.");
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("insert-chitietban")]
         [HttpPost]
         public IActionResult Create(ChiTietBan model)
         {
-            bool result = ctb_bll.ThemMoi(model);
-            return result ? Ok("Thêm chi tiết thành công") : BadRequest("Thêm thất bại");
+            try
+            {
+                bool result = ctb_bll.ThemMoi(model);
+                return result ? Ok("Thêm chi tiết thành công") : BadRequest("Thêm thất bại");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("update-chitietban")]
         [HttpPut]
         public IActionResult Update(ChiTietBan model)
         {
-            bool result = ctb_bll.Sua(model);
-            return result ? Ok("Cập nhật chi tiết thành công") : BadRequest("Cập nhật thất bại");
+            try
+            {
+                bool result = ctb_bll.Sua(model);
+                return result ? Ok("Cập nhật chi tiết thành công") : BadRequest("Cập nhật thất bại");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("delete-chitietban")]
         [HttpDelete]
         public IActionResult Delete(string maHDB, string maSP)
         {
-            bool result = ctb_bll.Xoa(maHDB, maSP);
-            return result ? Ok("Xóa chi tiết thành công") : BadRequest("Xóa thất bại");
+            try
+            {
+                bool result = ctb_bll.Xoa(maHDB, maSP);
+                return result ? Ok("Xóa chi tiết thành công") : BadRequest("Xóa thất bại");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
     }
 }

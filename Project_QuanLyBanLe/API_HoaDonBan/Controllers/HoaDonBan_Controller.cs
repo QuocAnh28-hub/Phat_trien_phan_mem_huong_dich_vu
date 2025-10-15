@@ -32,43 +32,78 @@ namespace API_HoaDonBan.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var result = hdb_bll.LayTatCa();
-            return Ok(result);
+            try
+            {
+                var result = hdb_bll.LayTatCa();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("get-hoadonban-by-id")]
         [HttpGet]
         public IActionResult GetByID(string maHoaDon)
         {
-            var result = hdb_bll.LayTheoID(maHoaDon);
-            if (result == null || result.Count == 0)
-                return NotFound("Không tìm thấy hóa đơn.");
+            try
+            {
+                var result = hdb_bll.LayTheoID(maHoaDon);
+                if (result == null || result.Count == 0)
+                    return NotFound("Không tìm thấy hóa đơn.");
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("insert-hoadonban")]
         [HttpPost]
         public IActionResult Create([FromBody] HoaDonBan model)
         {
-            bool result = hdb_bll.ThemMoi(model);
-            return result ? Ok("Thêm hóa đơn thành công") : BadRequest("Thêm hóa đơn thất bại");
+            try
+            {
+                bool result = hdb_bll.ThemMoi(model);
+                return result ? Ok("Thêm hóa đơn thành công") : BadRequest("Thêm hóa đơn thất bại");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("update-hoadonban")]
         [HttpPut]
         public IActionResult Update([FromBody] HoaDonBan model)
         {
-            bool result = hdb_bll.Sua(model);
-            return result ? Ok("Cập nhật hóa đơn thành công") : BadRequest("Cập nhật hóa đơn thất bại");
+            try
+            {
+                bool result = hdb_bll.Sua(model);
+                return result ? Ok("Cập nhật hóa đơn thành công") : BadRequest("Cập nhật hóa đơn thất bại");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("delete-hoadonban")]
         [HttpDelete]
         public IActionResult Delete(string maHoaDon)
         {
-            bool result = hdb_bll.Xoa(maHoaDon);
-            return result ? Ok("Xóa hóa đơn thành công") : BadRequest("Xóa hóa đơn thất bại");
+            try
+            {
+                bool result = hdb_bll.Xoa(maHoaDon);
+                return result ? Ok("Xóa hóa đơn thành công") : BadRequest("Xóa hóa đơn thất bại");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
     }
 }

@@ -33,50 +33,85 @@ namespace API.DanhMuc.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var list = dm_bll.LayTatCa();
-
-            if (list == null || !list.Any())
+            try
             {
-                return NoContent();
-            }
+                var list = dm_bll.LayTatCa();
 
-            return Ok(list); 
+                if (list == null || !list.Any())
+                {
+                    return NoContent();
+                }
+
+                return Ok(list); 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("get-byID-danhmuc")]
         [HttpGet]
         public IActionResult GetByID(string madanhmuc)
         {
-            var danhmuc = dm_bll.LayTheoID(madanhmuc);
+            try
+            {
+                var danhmuc = dm_bll.LayTheoID(madanhmuc);
 
-            if (danhmuc == null || danhmuc.Count == 0)
-                return NotFound("Không tìm thấy danh mục.");
+                if (danhmuc == null || danhmuc.Count == 0)
+                    return NotFound("Không tìm thấy danh mục.");
 
-            return Ok(danhmuc);
+                return Ok(danhmuc);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("insert-danhmuc")]
         [HttpPost]
         public IActionResult Create(Models.DanhMuc model)
         {
-            bool result = dm_bll.ThemMoi(model);
-            return result ? Ok("Thêm thành công") : BadRequest("Thêm thất bại");
+            try
+            {
+                bool result = dm_bll.ThemMoi(model);
+                return result ? Ok("Thêm thành công") : BadRequest("Thêm thất bại");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("update-danhmuc")]
         [HttpPut]
         public IActionResult Update(Models.DanhMuc model)
         {
-            bool result = dm_bll.CapNhat(model);
-            return result ? Ok("Sửa thành công") : BadRequest("Sửa thất bại");
+            try
+            {
+                bool result = dm_bll.CapNhat(model);
+                return result ? Ok("Sửa thành công") : BadRequest("Sửa thất bại");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("delete-danhmuc")]
         [HttpDelete]
         public IActionResult Delete(string maDanhMuc)
         {
-            bool result = dm_bll.Xoa(maDanhMuc);
-            return result ? Ok("Xóa thành công") : BadRequest("Xóa thất bại");
+            try
+            {
+                bool result = dm_bll.Xoa(maDanhMuc);
+                return result ? Ok("Xóa thành công") : BadRequest("Xóa thất bại");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
     }
 }
