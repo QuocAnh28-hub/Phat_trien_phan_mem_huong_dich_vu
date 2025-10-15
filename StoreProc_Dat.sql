@@ -131,3 +131,133 @@ BEGIN
 END
 EXEC SP_SUANCC'NCC006', N'Việt Tiến 2', N'Hà Nội', '0905678901', 'viettien@gmail.com'
 EXEC SP_SUANCC'NCC007', N'Việt Tiến 2', N'Hà Nội', '0905678901', 'viettien@gmail.com'
+
+
+
+-------------------------------------------------------------------------------------------------
+CREATE OR ALTER PROCEDURE sp_GetKhuyenMai
+AS
+BEGIN
+    SELECT * FROM KHUYENMAI
+    WHERE 
+        MAKM IS NOT NULL AND MAKM <> ''
+END
+EXEC sp_GetKhuyenMai
+-------------------------------------------------------------------------------------------------
+CREATE OR ALTER PROCEDURE sp_GetByIDKM(@MAkm CHAR(15))
+AS
+BEGIN
+    SELECT * FROM KHUYENMAI WHERE 
+        MAkm = @MAkm
+END
+EXEC sp_GetByIDKM'km001'
+-------------------------------------------------------------------------------------------------
+--XÓA THÔNG TIN CỦA KM CÓ MÃ BẤT KỲ
+CREATE OR ALTER PROC SP_XOAKM(@MAKM CHAR(15))
+AS
+BEGIN
+	IF(NOT EXISTS(SELECT * FROM KHUYENMAI WHERE MAKM= @MAKM)) 
+		RETURN -1
+	IF(EXISTS(SELECT * FROM KHUYENMAI WHERE MAKM= @MAKM))
+	DELETE FROM KHUYENMAI
+	WHERE MAKM = @MAKM
+END
+EXEC SP_XOAKM'KM100'
+-------------------------------------------------------------------------------------------------
+--THÊM THÔNG TIN CỦA KM
+CREATE OR ALTER PROC SP_THEMKM
+	@MAKM CHAR(15),
+    @TENKM NVARCHAR(300),
+    @MASP CHAR(15),
+    @NGAYBATDAU DATE,
+    @NGAYKETTHUC DATE
+AS
+BEGIN
+	IF(EXISTS(SELECT * FROM KHUYENMAI WHERE MAKM= @MAKM)) 
+		RETURN -1
+	IF(NOT EXISTS(SELECT * FROM KHUYENMAI WHERE MAKM= @MAKM))
+		INSERT INTO KHUYENMAI VALUES (@MAKM, @TENKM, @MASP, @NGAYBATDAU, @NGAYKETTHUC)
+END
+EXEC SP_THEMKM'KM005', N'Giảm 10% nồi cơm điện', 'SP005', '2025-05-01', '2025-05-15'
+-------------------------------------------------------------------------------------------------
+--SỬA THÔNG TIN CỦA KM CÓ MÃ BẤT KỲ
+CREATE OR ALTER PROC SP_SUAKM(
+	@MAKM CHAR(15),
+    @TENKM NVARCHAR(300),
+    @MASP CHAR(15),
+    @NGAYBATDAU DATE,
+    @NGAYKETTHUC DATE)
+AS
+BEGIN
+	IF(NOT EXISTS(SELECT * FROM KHUYENMAI WHERE MAKM = @MAKM)) 
+		RETURN -1
+	IF(EXISTS(SELECT * FROM KHUYENMAI WHERE MAKM= @MAKM))
+	UPDATE KHUYENMAI SET TENKM = @TENKM, MASP = @MASP, NGAYBATDAU = @NGAYBATDAU, NGAYKETTHUC = @NGAYKETTHUC 
+	WHERE MAKM = @MAKM
+END
+EXEC SP_SUAKM'KM005', N'Giảm 10% nồi cơm điện', 'SP005', '2025-05-01', '2025-05-15'
+EXEC SP_SUAKM'KM006', N'Giảm 10% nồi cơm điện', 'SP005', '2025-05-01', '2025-05-15'
+
+
+
+-------------------------------------------------------------------------------------------------
+CREATE OR ALTER PROCEDURE sp_GetThanhToan
+AS
+BEGIN
+    SELECT * FROM THANHTOAN
+    WHERE 
+        MATHANHTOAN IS NOT NULL AND MATHANHTOAN <> ''
+END
+EXEC sp_GetThanhToan
+-------------------------------------------------------------------------------------------------
+CREATE OR ALTER PROCEDURE sp_GetByIDTT(@MATHANHTOAN CHAR(15))
+AS
+BEGIN
+    SELECT * FROM THANHTOAN WHERE 
+        MATHANHTOAN = @MATHANHTOAN
+END
+EXEC sp_GetByIDTT'TT007'
+-------------------------------------------------------------------------------------------------
+--XÓA THÔNG TIN CỦA TT CÓ MÃ BẤT KỲ
+CREATE OR ALTER PROC SP_XOATT(@MATHANHTOAN CHAR(15))
+AS
+BEGIN
+	IF(NOT EXISTS(SELECT * FROM THANHTOAN WHERE MATHANHTOAN= @MATHANHTOAN)) 
+		RETURN -1
+	IF(EXISTS(SELECT * FROM THANHTOAN WHERE MATHANHTOAN= @MATHANHTOAN))
+	DELETE FROM THANHTOAN
+	WHERE MATHANHTOAN = @MATHANHTOAN
+END
+EXEC SP_XOATT'TT100'
+-------------------------------------------------------------------------------------------------
+--THÊM THÔNG TIN CỦA TT
+CREATE OR ALTER PROC SP_THEMTT
+	@MATHANHTOAN CHAR(15),
+	@MAHDBAN CHAR(15),
+	@PHUONGTHUC NVARCHAR(50),
+	@SOTIENTHANHTOAN FLOAT,
+	@NGAYTHANHTOAN DATETIME,
+	@TRANGTHAI NVARCHAR(50)
+AS
+BEGIN
+	IF(EXISTS(SELECT * FROM THANHTOAN WHERE MATHANHTOAN= @MATHANHTOAN)) 
+		RETURN -1
+	IF(NOT EXISTS(SELECT * FROM THANHTOAN WHERE MATHANHTOAN= @MATHANHTOAN))
+		INSERT INTO THANHTOAN VALUES (@MATHANHTOAN, @MAHDBAN, @PHUONGTHUC, @SOTIENTHANHTOAN, @NGAYTHANHTOAN, @TRANGTHAI)
+END
+EXEC SP_THEMTT'TT005', 'HD005', N'Chuyển khoản', 1400000, '2025-01-14', N'Chưa thanh toán'
+-------------------------------------------------------------------------------------------------
+--SỬA PHƯƠNG THỨC TT, TRẠNG THÁI CỦA TT CÓ MÃ BẤT KỲ
+CREATE OR ALTER PROC SP_SUATT(
+	@MATHANHTOAN CHAR(15),
+	@PHUONGTHUC NVARCHAR(50),
+	@TRANGTHAI NVARCHAR(50))
+AS
+BEGIN
+	IF(NOT EXISTS(SELECT * FROM THANHTOAN WHERE MATHANHTOAN= @MATHANHTOAN)) 
+		RETURN -1
+	IF(EXISTS(SELECT * FROM THANHTOAN WHERE MATHANHTOAN= @MATHANHTOAN))
+	UPDATE THANHTOAN SET PHUONGTHUC = @PHUONGTHUC, TRANGTHAI = @TRANGTHAI
+	WHERE MATHANHTOAN = @MATHANHTOAN
+END
+EXEC SP_SUATT'TT007', N'Chuyển khoản', N'Đã thanh toán'
