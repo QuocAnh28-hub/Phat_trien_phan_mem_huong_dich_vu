@@ -229,21 +229,6 @@ namespace Task2_API_ThuNgan.Controllers
             catch (Exception ex) { return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message }); }
         }
 
-        [Route("del-thanhtoan")]
-        [HttpDelete]
-        public IActionResult Delete(string ma)
-        {
-            try
-            {
-                DataTable dt = tt_bll.GetById(ma);
-                if (dt.Rows.Count < 1)
-                    return Ok(new { success = false, message = "Không có thông tin thanh toán có mã này" });
-
-                    tt_bll.Delete(ma);
-                return Ok(new { success = true, message = "Xoá thông tin thanh toán thành công" });
-            }
-            catch (Exception ex) { return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message }); }
-        }
 
     }
 }

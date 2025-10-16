@@ -22,8 +22,9 @@ namespace DAL
             try
             {
                 string sql = "SELECT COUNT(*) AS SoLuong FROM PHIEUNHAPKHO WHERE MAPHIEUNHAP = @MAPHIEUNHAP";
-                SqlParameter[] p = { new SqlParameter("@MAPHIEUNHAP", maPN) };
+                SqlParameter[] p = { new SqlParameter("@MAPHIEUNHAP", (maPN ?? string.Empty).Trim()) };
                 var dt = _dbHelper.ExecuteQuery(sql, p);
+
                 if (dt.Rows.Count > 0)
                 {
                     int count = Convert.ToInt32(dt.Rows[0]["SoLuong"]);
@@ -42,10 +43,10 @@ namespace DAL
         {
             try
             {
-                var list = new List<PhieuNhapKho>();
                 string sql = @"SELECT MAPHIEUNHAP, MASP, MANCC, MANV, NGAYLAP, THUEVAT
                                FROM PHIEUNHAPKHO";
                 var dt = _dbHelper.ExecuteQuery(sql);
+                var list = new List<PhieuNhapKho>();
 
                 foreach (DataRow r in dt.Rows)
                 {
@@ -56,9 +57,11 @@ namespace DAL
                         MANCC = r["MANCC"]?.ToString()?.Trim(),
                         MANV = r["MANV"]?.ToString()?.Trim(),
                         NGAYLAP = r["NGAYLAP"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(r["NGAYLAP"]),
-                        THUEVAT = r["THUEVAT"] == DBNull.Value ? 0 : Convert.ToDouble(r["THUEVAT"])
+                        THUEVAT = r["THUEVAT"] == DBNull.Value ? 0 : Convert.ToDecimal(r["THUEVAT"]),
+                        listjson_chitietnhap = GetChiTietByMa(r["MAPHIEUNHAP"]?.ToString()?.Trim())
                     });
                 }
+
                 return list;
             }
             catch (Exception ex)
@@ -71,12 +74,12 @@ namespace DAL
         {
             try
             {
-                var list = new List<PhieuNhapKho>();
                 string sql = @"SELECT MAPHIEUNHAP, MASP, MANCC, MANV, NGAYLAP, THUEVAT
                                FROM PHIEUNHAPKHO
                                WHERE MAPHIEUNHAP = @MAPHIEUNHAP";
-                SqlParameter[] p = { new SqlParameter("@MAPHIEUNHAP", maPN) };
+                SqlParameter[] p = { new SqlParameter("@MAPHIEUNHAP", (maPN ?? string.Empty).Trim()) };
                 var dt = _dbHelper.ExecuteQuery(sql, p);
+                var list = new List<PhieuNhapKho>();
 
                 foreach (DataRow r in dt.Rows)
                 {
@@ -87,9 +90,11 @@ namespace DAL
                         MANCC = r["MANCC"]?.ToString()?.Trim(),
                         MANV = r["MANV"]?.ToString()?.Trim(),
                         NGAYLAP = r["NGAYLAP"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(r["NGAYLAP"]),
-                        THUEVAT = r["THUEVAT"] == DBNull.Value ? 0 : Convert.ToDouble(r["THUEVAT"])
+                        THUEVAT = r["THUEVAT"] == DBNull.Value ? 0 : Convert.ToDecimal(r["THUEVAT"]),
+                        listjson_chitietnhap = GetChiTietByMa(r["MAPHIEUNHAP"]?.ToString()?.Trim())
                     });
                 }
+
                 return list;
             }
             catch (Exception ex)
@@ -98,26 +103,91 @@ namespace DAL
             }
         }
 
+        private List<ChiTietNhap> GetChiTietByMa(string maPN)
+        {
+            try
+            {
+                string sql = @"SELECT MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN, NGAYNHAPKHO
+                               FROM CHITIETNHAP WHERE MAPHIEUNHAP = @MAPHIEUNHAP";
+                SqlParameter[] p = { new SqlParameter("@MAPHIEUNHAP", (maPN ?? string.Empty).Trim()) };
+                var dt = _dbHelper.ExecuteQuery(sql, p);
+                var list = new List<ChiTietNhap>();
+
+                foreach (DataRow r in dt.Rows)
+                {
+                    list.Add(new ChiTietNhap
+                    {
+                        MAPHIEUNHAP = r["MAPHIEUNHAP"]?.ToString()?.Trim(),
+                        MASP = r["MASP"]?.ToString()?.Trim(),
+                        SOLUONG = r["SOLUONG"] == DBNull.Value ? 0 : Convert.ToInt32(r["SOLUONG"]),
+                        DONGIANHAP = r["DONGIANHAP"] == DBNull.Value ? 0 : Convert.ToDecimal(r["DONGIANHAP"]),
+                        THANHTIEN = r["THANHTIEN"] == DBNull.Value ? 0 : Convert.ToDecimal(r["THANHTIEN"]),
+                        NGAYNHAPKHO = r["NGAYNHAPKHO"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(r["NGAYNHAPKHO"])
+                    });
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi lấy chi tiết phiếu nhập: " + ex.Message);
+            }
+        }
+
         // ===== INSERT =====
         public bool Insert(PhieuNhapKho pnk)
         {
             try
             {
-                string sql = @"
-                    INSERT INTO PHIEUNHAPKHO (MAPHIEUNHAP, MASP, MANCC, MANV, NGAYLAP, THUEVAT)
-                    VALUES (@MAPHIEUNHAP, @MASP, @MANCC, @MANV, @NGAYLAP, @THUEVAT)";
+                if (KiemTraTonTai(pnk.MAPHIEUNHAP))
+                    return false;
+
+                decimal tongTienHang = 0;
+                if (pnk.listjson_chitietnhap != null && pnk.listjson_chitietnhap.Count > 0)
+                {
+                    foreach (var ct in pnk.listjson_chitietnhap)
+                    {
+                        ct.THANHTIEN = ct.SOLUONG * ct.DONGIANHAP;
+                        tongTienHang += ct.THANHTIEN;
+                    }
+                }
+
+                decimal tongSauTinh = tongTienHang + pnk.THUEVAT;
+                if (tongSauTinh < 0) tongSauTinh = 0;
+
+                string sql = @"INSERT INTO PHIEUNHAPKHO (MAPHIEUNHAP, MASP, MANCC, MANV, NGAYLAP, THUEVAT)
+                               VALUES (@MAPHIEUNHAP, @MASP, @MANCC, @MANV, @NGAYLAP, @THUEVAT)";
 
                 SqlParameter[] p =
                 {
-                    new SqlParameter("@MAPHIEUNHAP", pnk.MAPHIEUNHAP),
-                    new SqlParameter("@MASP",        pnk.MASP),
-                    new SqlParameter("@MANCC",       pnk.MANCC),
-                    new SqlParameter("@MANV",        pnk.MANV),
-                    new SqlParameter("@NGAYLAP",     pnk.NGAYLAP),
-                    new SqlParameter("@THUEVAT",     pnk.THUEVAT)
+                    new SqlParameter("@MAPHIEUNHAP", (pnk.MAPHIEUNHAP ?? string.Empty).Trim()),
+                    new SqlParameter("@MASP", (object?)pnk.MASP ?? DBNull.Value),
+                    new SqlParameter("@MANCC", (object?)pnk.MANCC ?? DBNull.Value),
+                    new SqlParameter("@MANV", (object?)pnk.MANV ?? DBNull.Value),
+                    new SqlParameter("@NGAYLAP", pnk.NGAYLAP),
+                    new SqlParameter("@THUEVAT", pnk.THUEVAT)
                 };
 
                 int rows = _dbHelper.ExecuteNonQuery(sql, p);
+
+                if (rows > 0 && pnk.listjson_chitietnhap != null)
+                {
+                    foreach (var ct in pnk.listjson_chitietnhap)
+                    {
+                        string sqlCT = @"INSERT INTO CHITIETNHAP (MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN, NGAYNHAPKHO)
+                                         VALUES (@MAPHIEUNHAP, @MASP, @SOLUONG, @DONGIANHAP, @THANHTIEN, @NGAYNHAPKHO)";
+                        SqlParameter[] pCT =
+                        {
+                            new SqlParameter("@MAPHIEUNHAP", pnk.MAPHIEUNHAP),
+                            new SqlParameter("@MASP", ct.MASP),
+                            new SqlParameter("@SOLUONG", ct.SOLUONG),
+                            new SqlParameter("@DONGIANHAP", ct.DONGIANHAP),
+                            new SqlParameter("@THANHTIEN", ct.THANHTIEN),
+                            new SqlParameter("@NGAYNHAPKHO", ct.NGAYNHAPKHO)
+                        };
+                        _dbHelper.ExecuteNonQuery(sqlCT, pCT);
+                    }
+                }
+
                 return rows > 0;
             }
             catch (Exception ex)
@@ -131,32 +201,60 @@ namespace DAL
         {
             try
             {
-                if (pnk == null || string.IsNullOrWhiteSpace(pnk.MAPHIEUNHAP))
-                    return false;
-
                 if (!KiemTraTonTai(pnk.MAPHIEUNHAP))
                     return false;
 
-                string sql = @"
-                    UPDATE PHIEUNHAPKHO
-                    SET MASP = @MASP,
-                        MANCC = @MANCC,
-                        MANV = @MANV,
-                        NGAYLAP = @NGAYLAP,
-                        THUEVAT = @THUEVAT
-                    WHERE MAPHIEUNHAP = @MAPHIEUNHAP";
+                string sqlDelCT = "DELETE FROM CHITIETNHAP WHERE MAPHIEUNHAP = @MAPHIEUNHAP";
+                _dbHelper.ExecuteNonQuery(sqlDelCT, new SqlParameter[] { new SqlParameter("@MAPHIEUNHAP", pnk.MAPHIEUNHAP) });
+
+                decimal tongTienHang = 0;
+                if (pnk.listjson_chitietnhap != null && pnk.listjson_chitietnhap.Count > 0)
+                {
+                    foreach (var ct in pnk.listjson_chitietnhap)
+                    {
+                        ct.THANHTIEN = ct.SOLUONG * ct.DONGIANHAP;
+                        tongTienHang += ct.THANHTIEN;
+                    }
+                }
+
+                decimal tongSauTinh = tongTienHang + pnk.THUEVAT;
+                if (tongSauTinh < 0) tongSauTinh = 0;
+
+                string sql = @"UPDATE PHIEUNHAPKHO
+                               SET MASP=@MASP, MANCC=@MANCC, MANV=@MANV, NGAYLAP=@NGAYLAP, THUEVAT=@THUEVAT
+                               WHERE MAPHIEUNHAP=@MAPHIEUNHAP";
 
                 SqlParameter[] p =
                 {
-                    new SqlParameter("@MAPHIEUNHAP", pnk.MAPHIEUNHAP),
-                    new SqlParameter("@MASP",        pnk.MASP),
-                    new SqlParameter("@MANCC",       pnk.MANCC),
-                    new SqlParameter("@MANV",        pnk.MANV),
-                    new SqlParameter("@NGAYLAP",     pnk.NGAYLAP),
-                    new SqlParameter("@THUEVAT",     pnk.THUEVAT)
+                    new SqlParameter("@MASP", (object?)pnk.MASP ?? DBNull.Value),
+                    new SqlParameter("@MANCC", (object?)pnk.MANCC ?? DBNull.Value),
+                    new SqlParameter("@MANV", (object?)pnk.MANV ?? DBNull.Value),
+                    new SqlParameter("@NGAYLAP", pnk.NGAYLAP),
+                    new SqlParameter("@THUEVAT", pnk.THUEVAT),
+                    new SqlParameter("@MAPHIEUNHAP", (pnk.MAPHIEUNHAP ?? string.Empty).Trim())
                 };
 
                 int rows = _dbHelper.ExecuteNonQuery(sql, p);
+
+                if (rows > 0 && pnk.listjson_chitietnhap != null)
+                {
+                    foreach (var ct in pnk.listjson_chitietnhap)
+                    {
+                        string sqlCT = @"INSERT INTO CHITIETNHAP (MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN, NGAYNHAPKHO)
+                                         VALUES (@MAPHIEUNHAP, @MASP, @SOLUONG, @DONGIANHAP, @THANHTIEN, @NGAYNHAPKHO)";
+                        SqlParameter[] pCT =
+                        {
+                            new SqlParameter("@MAPHIEUNHAP", pnk.MAPHIEUNHAP),
+                            new SqlParameter("@MASP", ct.MASP),
+                            new SqlParameter("@SOLUONG", ct.SOLUONG),
+                            new SqlParameter("@DONGIANHAP", ct.DONGIANHAP),
+                            new SqlParameter("@THANHTIEN", ct.THANHTIEN),
+                            new SqlParameter("@NGAYNHAPKHO", ct.NGAYNHAPKHO)
+                        };
+                        _dbHelper.ExecuteNonQuery(sqlCT, pCT);
+                    }
+                }
+
                 return rows > 0;
             }
             catch (Exception ex)
@@ -170,11 +268,11 @@ namespace DAL
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(maPN))
-                    return false;
-
                 if (!KiemTraTonTai(maPN))
                     return false;
+
+                string sqlCT = "DELETE FROM CHITIETNHAP WHERE MAPHIEUNHAP = @MAPHIEUNHAP";
+                _dbHelper.ExecuteNonQuery(sqlCT, new SqlParameter[] { new SqlParameter("@MAPHIEUNHAP", maPN) });
 
                 string sql = "DELETE FROM PHIEUNHAPKHO WHERE MAPHIEUNHAP = @MAPHIEUNHAP";
                 SqlParameter[] p = { new SqlParameter("@MAPHIEUNHAP", maPN) };

@@ -11,8 +11,8 @@ namespace Models
         public string MAPHIEUNHAP { get; set; }
         public string MASP { get; set; }
         public int SOLUONG { get; set; }
-        public double DONGIANHAP { get; set; }
-        public double THANHTIEN { get; set; }  
+        public decimal DONGIANHAP { get; set; }
+        public decimal THANHTIEN { get; set; }  
         public DateTime NGAYNHAPKHO { get; set; }
     }
 }

@@ -63,8 +63,8 @@ namespace DAL
                         MAPHIEUNHAP = row["MAPHIEUNHAP"]?.ToString()?.Trim(),
                         MASP = row["MASP"]?.ToString()?.Trim(),
                         SOLUONG = row["SOLUONG"] == DBNull.Value ? 0 : Convert.ToInt32(row["SOLUONG"]),
-                        DONGIANHAP = row["DONGIANHAP"] == DBNull.Value ? 0 : Convert.ToDouble(row["DONGIANHAP"]),
-                        THANHTIEN = row["THANHTIEN"] == DBNull.Value ? 0 : Convert.ToDouble(row["THANHTIEN"]),
+                        DONGIANHAP = row["DONGIANHAP"] == DBNull.Value ? 0 : Convert.ToDecimal(row["DONGIANHAP"]),
+                        THANHTIEN = row["THANHTIEN"] == DBNull.Value ? 0 : Convert.ToDecimal(row["THANHTIEN"]),
                         NGAYNHAPKHO = row["NGAYNHAPKHO"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["NGAYNHAPKHO"])
                     });
                 }
@@ -94,8 +94,8 @@ namespace DAL
                         MAPHIEUNHAP = row["MAPHIEUNHAP"]?.ToString()?.Trim(),
                         MASP = row["MASP"]?.ToString()?.Trim(),
                         SOLUONG = row["SOLUONG"] == DBNull.Value ? 0 : Convert.ToInt32(row["SOLUONG"]),
-                        DONGIANHAP = row["DONGIANHAP"] == DBNull.Value ? 0 : Convert.ToDouble(row["DONGIANHAP"]),
-                        THANHTIEN = row["THANHTIEN"] == DBNull.Value ? 0 : Convert.ToDouble(row["THANHTIEN"]),
+                        DONGIANHAP = row["DONGIANHAP"] == DBNull.Value ? 0 : Convert.ToDecimal(row["DONGIANHAP"]),
+                        THANHTIEN = row["THANHTIEN"] == DBNull.Value ? 0 : Convert.ToDecimal(row["THANHTIEN"]),
                         NGAYNHAPKHO = row["NGAYNHAPKHO"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["NGAYNHAPKHO"])
                     });
                 }
@@ -129,8 +129,8 @@ namespace DAL
                         MAPHIEUNHAP = row["MAPHIEUNHAP"]?.ToString()?.Trim(),
                         MASP = row["MASP"]?.ToString()?.Trim(),
                         SOLUONG = row["SOLUONG"] == DBNull.Value ? 0 : Convert.ToInt32(row["SOLUONG"]),
-                        DONGIANHAP = row["DONGIANHAP"] == DBNull.Value ? 0 : Convert.ToDouble(row["DONGIANHAP"]),
-                        THANHTIEN = row["THANHTIEN"] == DBNull.Value ? 0 : Convert.ToDouble(row["THANHTIEN"]),
+                        DONGIANHAP = row["DONGIANHAP"] == DBNull.Value ? 0 : Convert.ToDecimal(row["DONGIANHAP"]),
+                        THANHTIEN = row["THANHTIEN"] == DBNull.Value ? 0 : Convert.ToDecimal(row["THANHTIEN"]),
                         NGAYNHAPKHO = row["NGAYNHAPKHO"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["NGAYNHAPKHO"])
                     });
                 }
