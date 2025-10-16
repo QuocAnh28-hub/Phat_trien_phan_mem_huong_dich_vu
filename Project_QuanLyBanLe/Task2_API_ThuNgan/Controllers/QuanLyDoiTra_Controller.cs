@@ -147,6 +147,26 @@ namespace Task2_API_ThuNgan.Controllers
             }
         }
 
+        private List<object> ChuyenThanhList(DataTable dt)
+        {
+            //tạo danh sách chứa đối tượng
+            var list = new List<object>();
+            //duyệt từng dòng trong datatable
+            foreach (DataRow row in dt.Rows)
+            {
+                list.Add(new
+                {
+                    MATHANHTOAN = row["MATHANHTOAN"],
+                    MAHDBan = row["MAHDBan"],
+                    PhuongThuc = row["PhuongThuc"],
+                    SoTienThanhToan = row["SoTienThanhToan"],
+                    NGAYTHANHTOAN = row["NGAYTHANHTOAN"],
+                    TrangThai = row["TrangThai"]
+                });
+            }
+            return list;
+        }
+
         [Route("get-all-thanhtoan")]
         [HttpGet]
         public IActionResult GetAll_ThanhToan()
@@ -154,21 +174,27 @@ namespace Task2_API_ThuNgan.Controllers
             try
             {
                 DataTable dt = tt_bll.getAll();
-                return Ok(new { success = true, message = "Lấy danh sách thanh toán thành công", data = dt });
+                return Ok(new { success = true, message = "Lấy danh sách thanh toán thành công", data = ChuyenThanhList(dt) });
             }
-            catch (Exception ex) { return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message }); }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("get-byId-thanhtoan")]
         [HttpGet]
-        public IActionResult GetById_ThanhToan(string ma)
+        public IActionResult Get_ThanhToan_ById(string ma)
         {
             try
             {
                 DataTable dt = tt_bll.GetById(ma);
-                return Ok(new { success = true, message = "Lấy thông tin thanh toán thành công", data = dt });
+                return Ok(new { success = true, message = "Lấy thông tin thanh toán thành công", data = ChuyenThanhList(dt) });
             }
-            catch (Exception ex) { return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message }); }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         [Route("insert-thanhtoan")]
