@@ -8,7 +8,7 @@ using Models;
 
 namespace Task2_API_ThuNgan.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/QuanLyBanHang")]
     [ApiController]
     public class QuanLyBanHang_Controller : ControllerBase
     {

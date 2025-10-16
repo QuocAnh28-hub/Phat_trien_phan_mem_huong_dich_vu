@@ -15,7 +15,7 @@ using Models;
 using System.Data.SqlClient;
 namespace Task2_API_Admin.Controllers
 {      
-    [Route("api/[controller]")]
+    [Route("api/QuanLyNhanVien")]
     [ApiController]
     public class QuanLyNhanVien_Controller:ControllerBase
     {

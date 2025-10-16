@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Task2_API_ThuKho.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/QuanLyTonKho")]
     [ApiController]
     public class QuanLyTonKho_Controller : ControllerBase
     {

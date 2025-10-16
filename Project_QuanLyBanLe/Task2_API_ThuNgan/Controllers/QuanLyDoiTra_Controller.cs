@@ -10,7 +10,7 @@ using Models;
 
 namespace Task2_API_ThuNgan.Controllers
 {   
-    [Route("api/[controller]")]
+    [Route("api/QuanLyDoiTra")]
     [ApiController]
     public class QuanLyDoiTra_Controller:ControllerBase
     {

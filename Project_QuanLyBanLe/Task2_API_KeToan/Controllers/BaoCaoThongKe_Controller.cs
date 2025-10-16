@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Task2_API_KeToan.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/BaoCaoThongKe")]
     [ApiController]
     public class BaoCaoThongKe_Controller : ControllerBase
     {

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Task2_API_KeToan.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Login")]
     [ApiController]
     public class Login_Controller : ControllerBase
     {

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Task2_API_Admin.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/QuanLyTaiKhoan")]
     [ApiController]
     public class QuanLyTaiKhoan_Controller:ControllerBase
     {

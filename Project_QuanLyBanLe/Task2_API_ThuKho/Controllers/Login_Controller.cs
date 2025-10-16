@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Task2_API_ThuKho.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Login")]
     [ApiController]
     public class Login_Controller : ControllerBase
     {

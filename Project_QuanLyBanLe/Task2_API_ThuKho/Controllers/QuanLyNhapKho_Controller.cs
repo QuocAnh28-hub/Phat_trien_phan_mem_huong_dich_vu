@@ -6,7 +6,7 @@ using System.Data;
 
 namespace Task2_API_ThuKho.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/QuanLyNhapKho")]
     [ApiController]
     public class QuanLyNhapKho_Controller : ControllerBase
     {
