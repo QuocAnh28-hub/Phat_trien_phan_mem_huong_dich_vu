@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Quản lý bán lẻ và kho - POS & Inventory</title>
+    <link rel="stylesheet" href="../style/QuanLyDanhMuc.css"/>
+    <script src="../script/QuanLyDanhMuc.js"></script>
+    <script src="../script/jquery-3.3.1.min.js"></script>
+  </head>
+  <body>
+    <div class="wrap">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="logo">DAH</div>
+          <div>
+            <div>Thủ kho-Dashboard</div>
+          </div>  
+        </div>
+
+        
+
+        <div class="nav">
+          <a href="QuanLyDanhMuc.html">📦 Quản lý Danh mục</a>
+          <a href="QuanLySanPham.html">📦 Quản lý Sản phẩm</a>
+          <a href="QuanLyNhapKho.html">📦Quản lý Nhập kho</a>
+          <a href="QuanLyTonKho.html">📦Quản lý Tồn kho</a>
+
+          <div class="section-title">Tài khoản</div>
+          <div class="quick-stats">
+            <div class="row" style="justify-content:space-between"><span>Người dùng:</span><strong>DAH</strong></div>
+          </div>
+        </div>
+
+        <div class="small muted">© DAH</div>
+      </aside>
+
+      <main class="main">
+        <div class="header">
+          <div>
+            <div class="breadcrumbs">Quản lý / Quản lý danh mục</div>
+            <h1 style="margin:6px 0 0 0">Quản lý Danh mục</h1>
+          </div>
+          <div class="actions">
+            <div class="pill">Ngôn ngữ: Tiếng Việt</div>
+          </div>
+        </div>
+            <div class="card-header">
+              <h2>Danh sách danh mục</h2>
+              <button class="btn-primary" onclick="openAddModal()">+ Thêm danh mục mới</button>
+            </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Tên danh mục</th>
+                    <th>Mô tả</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="category-list">
+                  <tr>
+                    <td>DM001</td>
+                    <td>Điện thoại</td>
+                    <td>Các loại điện thoại di động</td>
+                    <td>
+                      <button class="btn-edit" onclick="openEditModal(1)">Sửa</button>
+                      <button class="btn-delete" onclick="deleteCategory(1)">Xóa</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>DM002</td>
+                    <td>Laptop</td>
+                    <td>Laptop, PC, linh kiện</td>
+                    <td>
+                      <button class="btn-edit" onclick="openEditModal(2)">Sửa</button>
+                      <button class="btn-delete" onclick="deleteCategory(2)">Xóa</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+        <div id="addModal" class="modal">
+          <div class="modal-content">
+            <h2>Thêm danh mục mới</h2>
+            <form id="addCategoryForm">
+              <div class="form-group">
+                <label for="categoryName">Tên danh mục:</label>
+                <input type="text" id="categoryName" required>
+              </div>
+              <div class="form-group">
+                <label for="categoryDesc">Mô tả:</label>
+                <textarea id="categoryDesc" rows="3"></textarea>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn-primary">Lưu</button>
+                <button type="button" class="btn-secondary" onclick="closeAddModal()">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div id="editModal" class="modal">
+          <div class="modal-content">
+            <h2>Sửa danh mục</h2>
+            <form id="editCategoryForm">
+              <input type="hidden" id="editCategoryId">
+              <div class="form-group">
+                <label for="editCategoryName">Tên danh mục:</label>
+                <input type="text" id="editCategoryName" required>
+              </div>
+              <div class="form-group">
+                <label for="editCategoryDesc">Mô tả:</label>
+                <textarea id="editCategoryDesc" rows="3"></textarea>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn-primary">Cập nhật</button>
+                <button type="button" class="btn-secondary" onclick="closeEditModal()">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </body>
+</html>

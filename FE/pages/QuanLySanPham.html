@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Quản lý bán lẻ và kho - POS & Inventory</title>
+    <link rel="stylesheet" href="../style/QuanLySanPham.css"/>
+    <link rel="stylesheet" href="../style/QuanLyDanhMuc.css"/>
+    <script src="../script/QuanLySanPham.js"></script>
+    <script src="../script/jquery-3.3.1.min.js"></script>
+  </head>
+  <body>
+    <div class="wrap">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="logo">DAH</div>
+          <div>
+            <div>Quản lý bán lẻ và kho DAH</div>
+          </div>
+        </div>
+
+        
+
+        <div class="nav">
+          <a href="QuanLyDanhMuc.html">📦 Quản lý Danh mục</a>
+          <a href="QuanLySanPham.html">📦 Quản lý Sản phẩm</a>
+          <a href="QuanLyNhapKho.html">📦Quản lý Nhập kho</a>
+          <a href="QuanLyTonKho.html">📦Quản lý Tồn kho</a>
+
+          <div class="section-title">Tài khoản</div>
+          <div class="quick-stats">
+            <div class="row" style="justify-content:space-between"><span>Người dùng:</span><strong>DAH</strong></div>
+          </div>
+        </div>
+
+        <div class="small muted">© DAH</div>
+      </aside>
+
+      <main class="main">
+        <div class="header">
+          <div>
+            <div class="breadcrumbs">Quản lý / Quản lý sản phẩm</div>
+            <h1 style="margin:6px 0 0 0">Quản lý Sản phẩm</h1>
+          </div>
+          <div class="actions">
+            <div class="pill">Ngôn ngữ: Tiếng Việt</div>
+          </div>
+        </div>
+
+            <div class="card-header">
+              <h2>Danh sách sản phẩm</h2>
+              <button class="btn-primary" onclick="openAddProduct()">+ Thêm sản phẩm mới</button>
+            </div>
+            
+            <div class="card-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Mã vạch</th>
+                    <th>Mô tả</th>
+                    <th>Mã danh mục</th>
+                    <th>Đơn giá</th>
+                    <th>Thuộc tính</th>
+                    <th>Thuế VAT</th>
+                    <th>Số lượng tồn</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="product-list">
+                  <tr>
+                    <td>SP001</td>
+                    <td>iPhone 14</td>
+                    <td>8934571234</td>
+                    <td>Điện thoại thông minh cao cấp</td>
+                    <td>DM001</td>
+                    <td>25,000,000₫</td>
+                    <td>128GB - Màu đen</td>
+                    <td>10%</td>
+                    <td>15</td>
+                    <td>
+                      <button class="btn-edit" onclick="openEditProduct(1)">Sửa</button>
+                      <button class="btn-delete" onclick="deleteProduct(1)">Xóa</button>
+                    </td>
+                  </tr>
+                  <tr>
+                     <td>SP002</td>
+                    <td>Asus Vivobook</td>
+                    <td>7896541230</td>
+                    <td>Laptop học tập, văn phòng</td>
+                    <td>DM002</td>
+                    <td>15,500,000₫</td>
+                    <td>Core i5 - 16GB RAM</td>
+                    <td>8%</td>
+                    <td>30</td>
+                    <td>
+                      <button class="btn-edit" onclick="openEditProduct(2)">Sửa</button>
+                      <button class="btn-delete" onclick="deleteProduct(2)">Xóa</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+        <div id="addProduct" class="product">
+          <div class="product-content">
+            <h2>Thêm sản phẩm mới</h2>
+            <form id="addProductForm">
+              <div class="form-group">
+                <label for="ProductID">Mã sản phẩm:</label>
+                <input type="text" id="ProductID" required>
+              </div>
+
+              <div class="form-group">
+                <label for="ProductName">Tên sản phẩm:</label>
+                <input type="text" id="ProductName" required>
+              </div>
+
+              <div class="form-group">
+                <label for="Barcode">Mã vạch:</label>
+                <input type="text" id="Barcode">
+              </div>
+
+              <div class="form-group">
+                <label for="ProductDesc">Mô tả:</label>
+                <textarea id="ProductDesc" rows="3" maxlength="300"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="CategoryID">Mã danh mục:</label>
+                <input type="text" id="CategoryID" required>
+              </div>
+
+              <div class="form-group">
+                <label for="Price">Đơn giá:</label>
+                <input type="number" id="Price" min="0" required>
+              </div>
+
+              <div class="form-group">
+                <label for="Attributes">Thuộc tính:</label>
+                <input type="text" id="Attributes" placeholder="VD: Màu đen - 128GB">
+              </div>
+
+              <div class="form-group">
+                <label for="VAT">Thuế VAT (%):</label>
+                <input type="number" id="VAT" min="0" max="100" step="1">
+              </div>
+
+              <div class="form-group">
+                <label for="Stock">Số lượng tồn:</label>
+                <input type="number" id="Stock" min="0" required>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-primary">Lưu</button>
+                <button type="button" class="btn-secondary" onclick="closeAddProduct()">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- POPUP SỬA SẢN PHẨM -->
+        <div id="editProduct" class="product">
+          <div class="product-content">
+            <h2>Sửa thông tin sản phẩm</h2>
+            <form id="editProductForm">
+              <input type="hidden" id="editProductId">
+
+              <div class="form-group">
+                <label for="editProductName">Tên sản phẩm:</label>
+                <input type="text" id="editProductName" required>
+              </div>
+
+              <div class="form-group">
+                <label for="editBarcode">Mã vạch:</label>
+                <input type="text" id="editBarcode">
+              </div>
+
+              <div class="form-group">
+                <label for="editProductDesc">Mô tả:</label>
+                <textarea id="editProductDesc" rows="3" maxlength="300"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="editCategoryID">Mã danh mục:</label>
+                <input type="text" id="editCategoryID" required>
+              </div>
+
+              <div class="form-group">
+                <label for="editPrice">Đơn giá:</label>
+                <input type="number" id="editPrice" min="0" required>
+              </div>
+
+              <div class="form-group">
+                <label for="editAttributes">Thuộc tính:</label>
+                <input type="text" id="editAttributes">
+              </div>
+
+              <div class="form-group">
+                <label for="editVAT">Thuế VAT (%):</label>
+                <input type="number" id="editVAT" min="0" max="100" step="1">
+              </div>
+
+              <div class="form-group">
+                <label for="editStock">Số lượng tồn:</label>
+                <input type="number" id="editStock" min="0" required>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-primary">Cập nhật</button>
+                <button type="button" class="btn-secondary" onclick="closeEditProduct()">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+
+      </main>
+    </div>
+  </body>
+</html>

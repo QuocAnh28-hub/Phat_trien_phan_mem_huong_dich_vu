@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Quản lý bán lẻ và kho - POS & Inventory</title>
+    <link rel="stylesheet" href="../style/QuanLyNhapKho.css"/>
+    <link rel="stylesheet" href="../style/QuanLyDanhMuc.css"/>
+    <script src="../script/QuanLyNhapKho.js"></script>
+    <script src="../script/jquery-3.3.1.min.js"></script>
+  </head>
+  <body>
+    <div class="wrap">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="logo">DAH</div>
+          <div>
+            <div>Quản lý bán lẻ và kho DAH</div>
+          </div>
+        </div>
+
+        
+
+        <div class="nav">
+          <a href="QuanLyDanhMuc.html">📦 Quản lý Danh mục</a>
+          <a href="QuanLySanPham.html">📦 Quản lý Sản phẩm</a>
+          <a href="QuanLyNhapKho.html">📦Quản lý Nhập kho</a>
+          <a href="QuanLyTonKho.html">📦Quản lý Tồn kho</a>
+
+          <div class="section-title">Tài khoản</div>
+          <div class="quick-stats">
+            <div class="row" style="justify-content:space-between"><span>Người dùng:</span><strong>DAH</strong></div>
+          </div>
+        </div>
+
+        <div class="small muted">© DAH</div>
+      </aside>
+
+      <main class="main">
+        <div class="header">
+          <div>
+            <div class="breadcrumbs">Quản lý / Quản lý nhập kho</div>
+            <h1 style="margin:6px 0 0 0">Quản lý Nhập kho</h1>
+          </div>
+          <div class="actions">
+            <div class="pill">Ngôn ngữ: Tiếng Việt</div>
+          </div>
+        </div>
+            <div class="card-header">
+              <h2>Danh sách phiếu nhập kho</h2>
+              <button class="btn-primary" onclick="openAddPhieuNhap()">+ Thêm phiếu nhập kho mới</button>
+            </div>
+            
+            <!-- Thay đổi phần table trong card-body -->
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Mã phiếu</th>
+                  <th>Mã NCC</th>
+                  <th>Người nhập</th>
+                  <th>Thuế VAT</th>
+                  <th>Ngày nhập</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="receipt-list">
+                <tr>
+                  <td>PN001</td>
+                  <td>NCC001</td>
+                  <td>NV001</td>
+                  <td>10%</td>
+                  <td>2025-01-05</td>
+                  <td>
+                    <button class="btn-view" onclick="toggleDetails('PN001')">Xem chi tiết</button>
+                    <button class="btn-edit" onclick="openEditPhieuNhap('PN001')">Sửa</button>
+                    <button class="btn-delete" onclick="deleteReceipt('PN001')">Xóa</button>
+                  </td>
+                </tr>
+              </tbody>
+              <tbody id="receipt-list">
+                <tr>
+                  <td>PN002</td>
+                  <td>NCC002</td>
+                  <td>NV002</td>
+                  <td>10%</td>
+                  <td>2025-01-05</td>
+                  <td>
+                    <button class="btn-view" onclick="toggleDetails('PN002')">Xem chi tiết</button>
+                    <button class="btn-edit" onclick="openEditPhieuNhap('PN002')">Sửa</button>
+                    <button class="btn-delete" onclick="deleteReceipt('PN002')">Xóa</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          <!-- Phần chi tiết phiếu nhập -->
+          <div id="receipt-details-PN001" class="receipt-details" style="display:none;">
+            <h3>Chi tiết phiếu nhập PN001</h3>
+            <table class="detail-table">
+              <thead>
+                <tr>
+                  <th>Mã SP</th>
+                  <th>Tên sản phẩm</th>
+                  <th>Số lượng</th>
+                  <th>Đơn giá</th>
+                  <th>Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>SP001</td>
+                  <td>iPhone 14</td>
+                  <td>10</td>
+                  <td>15,000,000₫</td>
+                  <td>150,000,000₫</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="receipt-details-PN002" class="receipt-details" style="display:none;">
+            <h3>Chi tiết phiếu nhập PN002</h3>
+            <table class="detail-table">
+              <thead>
+                <tr>
+                  <th>Mã SP</th>
+                  <th>Tên sản phẩm</th>
+                  <th>Số lượng</th>
+                  <th>Đơn giá</th>
+                  <th>Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>SP002</td>
+                  <td>iPhone 15</td>
+                  <td>10</td>
+                  <td>18,000,000₫</td>
+                  <td>180,000,000₫</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        <div id="addPhieuNhap" class="phieunhap">
+        <div class="phieunhap-content">
+          <h2>Thêm phiếu nhập mới</h2>
+          <form id="addPhieuNhapForm">
+            <div class="form-group">
+              <label for="PhieuNhapID">Mã phiếu:</label>
+              <input type="text" id="PhieuNhapID" required>
+            </div>
+
+            <div class="form-group">
+              <label for="NhaCungCapID">Mã NCC:</label>
+              <input type="text" id="NhaCungCapID" required>
+            </div>
+
+            <div class="form-group">
+              <label for="NguoiNhap">Người nhập:</label>
+              <input type="text" id="NguoiNhap" required>
+            </div>
+
+            <div class="form-group">
+              <label for="ThueVAT">Thuế VAT (%):</label>
+              <input type="number" id="ThueVAT" min="0" max="100" required>
+            </div>
+
+            <div class="form-group">
+              <label for="NgayNhap">Ngày nhập:</label>
+              <input type="date" id="NgayNhap" required>
+            </div>
+
+            <div class="form-group">
+              <h3>Chi tiết phiếu nhập</h3>
+              <table id="chiTietTable" class="detail-table">
+                <thead>
+                  <tr>
+                    <th>Mã SP</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="chiTietBody">
+                  <tr>
+                    <td><input type="text" class="maSP" required></td>
+                    <td><input type="text" class="tenSP" required></td>
+                    <td><input type="number" class="soLuong" min="1" required></td>
+                    <td><input type="number" class="donGia" min="0" required></td>
+                    <td class="thanhTien">0₫</td>
+                    <td><button type="button" class="btn-delete" onclick="removeChiTietRow(this)">Xóa</button></td>
+                  </tr>
+                </tbody>
+              </table>
+              <button type="button" class="btn-secondary" onclick="addChiTietRow()">+ Thêm sản phẩm</button>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Lưu phiếu nhập</button>
+              <button type="button" class="btn-secondary" onclick="closeAddPhieuNhap()">Hủy</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div id="editPhieuNhap" class="phieunhap" style="display:none;">
+        <div class="phieunhap-content">
+          <h2>Sửa phiếu nhập</h2>
+          <form id="editPhieuNhapForm">
+            <input type="hidden" id="originalPhieuId" value="">
+            <div class="form-group">
+              <label for="editPhieuNhapID">Mã phiếu:</label>
+              <input type="text" id="editPhieuNhapID" required>
+            </div>
+
+            <div class="form-group">
+              <label for="editNhaCungCapID">Mã NCC:</label>
+              <input type="text" id="editNhaCungCapID" required>
+            </div>
+
+            <div class="form-group">
+              <label for="editNguoiNhap">Người nhập:</label>
+              <input type="text" id="editNguoiNhap" required>
+            </div>
+
+            <div class="form-group">
+              <label for="editThueVAT">Thuế VAT (%):</label>
+              <input type="number" id="editThueVAT" min="0" max="100" required value="0">
+            </div>
+
+            <div class="form-group">
+              <label for="editNgayNhap">Ngày nhập:</label>
+              <input type="date" id="editNgayNhap" required>
+            </div>
+
+            <div class="form-group">
+              <h3>Chi tiết phiếu nhập</h3>
+              <div class="chi-tiet-container">
+                <table id="editChiTietTable" class="detail-table">
+                  <thead>
+                    <tr>
+                      <th>Mã SP</th>
+                      <th>Tên sản phẩm</th>
+                      <th>Số lượng</th>
+                      <th>Đơn giá</th>
+                      <th>Thành tiền</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="editChiTietBody">
+                    <!-- sẽ được fill bằng JS -->
+                  </tbody>
+                </table>
+              </div>
+              <button type="button" class="btn-secondary" onclick="addEditChiTietRow()">+ Thêm sản phẩm</button>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Lưu thay đổi</button>
+              <button type="button" class="btn-secondary" onclick="closeEditPhieuNhap()">Hủy</button>
+            </div>
+          </form>
+        </div>
+      </div>
+        
+      </main>
+    </div>
+  </body>
+</html>
