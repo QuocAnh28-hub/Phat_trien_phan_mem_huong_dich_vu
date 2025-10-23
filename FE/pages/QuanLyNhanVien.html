@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quản lý nhân viên - DAH</title>
+  <link rel="stylesheet" href="../style/QuanLyNhanVien.css">
+</head>
+<body>
+  <div class="warp">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">DAH</div>
+        <div><div>Quản lý bán lẻ và kho DAH</div></div>
+      </div>
+
+      <nav class="nav">
+        <div class="section-title">ADMIN</div>
+        <a href="QuanLyTaiKhoan.html" aria-current="page">🛠️ Quản lý tài khoản</a>
+        <a href="QuanLyNhanVien.html">🧑‍💼 Quản lý nhân viên</a>
+        <a href="QuanLyKhuyenMai.html">🎁 Quản lý khuyến mãi</a>
+      </nav>
+
+      <div class="section-title">Tài khoản</div>
+      <div class="quick-stats">
+        <div class="row" style="justify-content:space-between">
+          <span>Người dùng:</span><strong>DAH</strong>
+        </div>
+      </div>
+      <div class="small muted">© DAH</div>
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        <div>
+          <div class="breadcrumbs">ADMIN / Quản lý nhân viên</div>
+          <h1 class="h1">QUẢN LÝ NHÂN VIÊN</h1>
+        </div>
+        <div class="actions"><div class="pill">Ngôn ngữ: VN</div></div>
+      </div>
+
+      <!-- Danh sách nhân viên (schema: MANV, TENNV, SDT, DIACHI) -->
+      <section class="card">
+        <div class="row" style="justify-content:space-between">
+          <h2 class="h2">Danh sách nhân viên</h2>
+          <div class="row" style="gap:10px;flex:1;justify-content:flex-end">
+            <input class="input" placeholder="Tìm theo MANV, TENNV, SDT..." style="max-width:320px">
+            <a class="btn" href="#">+ Thêm nhân viên</a>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="margin-top:10px">
+          <table>
+            <thead>
+              <tr>
+                <th>MANV</th>
+                <th>TENNV</th>
+                <th>SDT</th>
+                <th>DIACHI</th>
+                <th style="width:160px">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>NV001</td>
+                <td>Nguyễn Văn Nam</td>
+                <td>0912345678</td>
+                <td>Q.1, TP.HCM</td>
+                <td class="table-actions">
+                  <a class="btn small neutral" href="#">Sửa</a>
+                  <a class="btn small warn" href="#">Xóa</a>
+                </td>
+              </tr>
+              <tr>
+                <td>NV002</td>
+                <td>Trần Thu Hương</td>
+                <td>0987654321</td>
+                <td>Cầu Giấy, Hà Nội</td>
+                <td class="table-actions">
+                  <a class="btn small neutral" href="#">Sửa</a>
+                  <a class="btn small warn" href="#">Xóa</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Form thêm/sửa -->
+      <section class="card" style="margin-top:16px">
+        <h3 class="h3">Thêm / Sửa nhân viên</h3>
+        <form>
+          <div class="row form-grid">
+            <div>
+              <label class="small muted">MANV *</label>
+              <input class="input" placeholder="vd: NV003">
+            </div>
+            <div>
+              <label class="small muted">TENNV *</label>
+              <input class="input" placeholder="vd: Nguyễn Văn A">
+            </div>
+            <div>
+              <label class="small muted">SDT</label>
+              <input class="input" placeholder="vd: 09xxxxxxxx">
+            </div>
+            <div>
+              <label class="small muted">DIACHI</label>
+              <input class="input" placeholder="vd: Quận/Huyện, Tỉnh/TP">
+            </div>
+          </div>
+          <div class="row" style="gap:10px;justify-content:flex-end;margin-top:12px">
+            <a class="btn secondary" href="#">Hủy</a>
+            <a class="btn" href="#">Lưu</a>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
