@@ -15,9 +15,9 @@ using Models;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Task2_API_ThuKho.Controllers
+namespace API_Common.Controllers
 {
-    [Route("api/Login")]
+    [Route("api/[controller]")]
     [ApiController]
     public class Login_Controller : ControllerBase
     {
