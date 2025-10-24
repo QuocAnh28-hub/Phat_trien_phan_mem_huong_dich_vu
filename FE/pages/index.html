@@ -5,13 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Đăng nhập — DAH</title>
   <link rel="stylesheet" href="../style/index.css" />
+  <script src="../js/axios-1.12.2.min.js"></script>
+  <script src="../js/login.js"></script>
+  <script src="../js/jquery-3.3.1.min.js"></script>
 </head>
 <body>
   <main class="login-page" aria-labelledby="loginTitle">
     <section class="login-card" role="region" aria-label="Form đăng nhập">
       <h1 id="loginTitle" class="title">Đăng nhập</h1>
 
-      <form id="loginForm" class="form" method="post" action="#" autocomplete="on">
+      <form onsubmit="return dangNhap(event)" id="loginForm" class="form" method="post" action="#" autocomplete="on">
         <label for="username" class="label">Tài khoản</label>
         <input
           id="username"
@@ -32,7 +35,7 @@
             class="input"
             placeholder="Nhập mật khẩu"
             required
-            minlength="6"
+            minlength="1"
           />
           <button type="button" id="togglePwd" class="btn-toggle" aria-label="Hiện mật khẩu">
             👁️
@@ -43,8 +46,9 @@
           <a href="#" class="forgot" onclick="alert('Vui lòng liên hệ Admin để được cấp lại mật khẩu.'); return false;">Quên mật khẩu?</a>
         </div>
 
-        <button type="submit" class="btn-submit">Đăng nhập</button>
+        <button type="submit" class="btn-submit" onclick="dangNhap(event)">Đăng nhập</button>
       </form>
+
     </section>
   </main>
 
