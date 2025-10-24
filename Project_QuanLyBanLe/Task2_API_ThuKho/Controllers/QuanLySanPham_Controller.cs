@@ -1,9 +1,11 @@
 ﻿using BLL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Task2_API_ThuKho.Controllers
 {
+    [Authorize]
     [Route("api/QuanLySanPham")]
     [ApiController]
     public class QuanLySanPham_Controller : ControllerBase

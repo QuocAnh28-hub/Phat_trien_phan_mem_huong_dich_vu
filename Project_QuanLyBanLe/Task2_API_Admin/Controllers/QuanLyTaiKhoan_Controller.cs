@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace Task2_API_Admin.Controllers
 {
+    [Authorize]
     [Route("api/QuanLyTaiKhoan")]
     [ApiController]
     public class QuanLyTaiKhoan_Controller:ControllerBase

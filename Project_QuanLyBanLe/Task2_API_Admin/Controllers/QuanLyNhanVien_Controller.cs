@@ -14,7 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Models;
 using System.Data.SqlClient;
 namespace Task2_API_Admin.Controllers
-{      
+{
+    [Authorize]
     [Route("api/QuanLyNhanVien")]
     [ApiController]
     public class QuanLyNhanVien_Controller:ControllerBase

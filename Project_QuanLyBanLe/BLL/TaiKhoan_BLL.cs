@@ -58,12 +58,22 @@ namespace BLL
             return tk_dal.Delete(mataikhoan);
         }
 
-        // Tuỳ chọn: đăng nhập
+        // Đăng nhập
         public List<TaiKhoan> DangNhap(string username, string password)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
                 return new List<TaiKhoan>();
+
             return tk_dal.Login(username, password);
+        }
+
+        // Lấy quyền theo username
+        public int LayQuyen(string username)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                return 0;
+
+            return tk_dal.GetRoleByUsername(username);
         }
     }
 }

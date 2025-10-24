@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using BLL;
+﻿using BLL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace Task2_API_ThuNgan.Controllers
 {
+    [Authorize]
     [Route("api/QuanLyBanHang")]
     [ApiController]
     public class QuanLyBanHang_Controller : ControllerBase

@@ -101,31 +101,56 @@ namespace DAL
             try
             {
                 var list = new List<TaiKhoan>();
-                string sql = @"SELECT TOP 1 MATAIKHOAN, USERNAME, PASS, QUYEN
-                               FROM TAIKHOAN
-                               WHERE USERNAME = @USERNAME AND PASS = @PASS";
+                string sql = @"
+                    SELECT TOP 1 MATAIKHOAN, USERNAME, PASS, QUYEN
+                    FROM TAIKHOAN
+                    WHERE USERNAME = @USERNAME AND PASS = @PASS";
+
                 SqlParameter[] p =
                 {
                     new SqlParameter("@USERNAME", username),
-                    new SqlParameter("@PASS",     password)
+                    new SqlParameter("@PASS", password)
                 };
-                var dt = _dbHelper.ExecuteQuery(sql, p);
 
+                DataTable dt = _dbHelper.ExecuteQuery(sql, p);
                 foreach (DataRow r in dt.Rows)
                 {
                     list.Add(new TaiKhoan
                     {
-                        MATAIKHOAN = r["MATAIKHOAN"]?.ToString()?.Trim(),
-                        USERNAME = r["USERNAME"]?.ToString()?.Trim(),
-                        PASS = r["PASS"]?.ToString()?.Trim(),
+                        MATAIKHOAN = r["MATAIKHOAN"].ToString().Trim(),
+                        USERNAME = r["USERNAME"].ToString().Trim(),
+                        PASS = r["PASS"].ToString().Trim(),
                         QUYEN = r["QUYEN"] == DBNull.Value ? 0 : Convert.ToInt32(r["QUYEN"])
                     });
                 }
+
                 return list;
             }
             catch (Exception ex)
             {
                 throw new Exception("Lỗi khi đăng nhập: " + ex.Message);
+            }
+        }
+
+        public int GetRoleByUsername(string username)
+        {
+            try
+            {
+                string sql = "SELECT TOP 1 QUYEN FROM TAIKHOAN WHERE USERNAME = @USERNAME";
+                SqlParameter[] p =
+                {
+                    new SqlParameter("@USERNAME", username)
+                };
+
+                DataTable dt = _dbHelper.ExecuteQuery(sql, p);
+                if (dt.Rows.Count > 0)
+                    return Convert.ToInt32(dt.Rows[0]["QUYEN"]);
+
+                return 0;
+            }
+            catch (Exception)
+            {
+                return 0;
             }
         }
 

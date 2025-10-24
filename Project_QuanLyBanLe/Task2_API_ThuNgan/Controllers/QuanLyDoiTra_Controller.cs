@@ -1,15 +1,16 @@
-﻿using System;
+﻿using BLL;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-using BLL;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Models;
-
 namespace Task2_API_ThuNgan.Controllers
-{   
+{
+    [Authorize]
     [Route("api/QuanLyDoiTra")]
     [ApiController]
     public class QuanLyDoiTra_Controller:ControllerBase

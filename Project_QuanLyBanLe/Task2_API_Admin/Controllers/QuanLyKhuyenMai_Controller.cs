@@ -15,6 +15,7 @@ using Models;
 
 namespace Task2_API_Admin.Controllers
 {
+    [Authorize]
     [Route("api/QuanLyKhuyenMai")]
     [ApiController]
     public class QuanLyKhuyenMai_Controller : ControllerBase

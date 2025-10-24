@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace Task2_API_KeToan.Controllers
 {
+    [Authorize]
     [Route("api/QuanLyCongNo")]
     [ApiController]
     public class QuanLyCongNo_Controller : ControllerBase
