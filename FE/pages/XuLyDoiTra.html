@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAH — Xử lý Đổi/Trả (Thu ngân)</title>
+  <link rel="stylesheet" href="../style/XuLyDoiTra.css">
+</head>
+
+<body>
+  <div class="warp">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">DAH</div>
+        <div>
+          <div>Quản lý bán hàng - Thu ngân</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <div class="section-title">THU NGÂN</div>
+        <a href="QuanLyBanHang.html" aria-current="page">🧾 QUẢN LÝ BÁN HÀNG</a>
+        <a href="XuLyDoiTra.html" aria-current="page">🔁 XỬ LÝ ĐỔI TRẢ</a>
+      </nav>
+
+      <div class="section-title">Phiên</div>
+      <div class="quick-stats">
+        <div class="row" style="justify-content:space-between">
+          <span>Người dùng:</span>
+          <strong>DAH</strong>
+        </div>
+      </div>
+      <div class="small muted">© DAH</div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="header">
+        <div>
+          <div class="breadcrumbs">THU NGÂN / Xử lý đổi trả</div>
+          <h1 class="h1">XỬ LÝ ĐỔI / TRẢ</h1>
+        </div>
+        <div class="actions">
+          <div class="pill">Ngôn ngữ: VN</div>
+        </div>
+      </div>
+
+      <!-- 1) Tìm hóa đơn gốc -->
+      <section class="card">
+        <h3 class="h3">Tìm hóa đơn gốc</h3>
+        <div class="row" style="gap:12px;flex-wrap:wrap;align-items:flex-end">
+          <div>
+            <div class="small muted">Mã hóa đơn</div>
+            <input class="input" placeholder="vd: HD0001">
+          </div>
+          <div>
+            <div class="small muted">SĐT khách</div>
+            <input class="input" placeholder="vd: 09xxxxxxxx">
+          </div>
+          <div>
+            <div class="small muted">Ngày bán từ</div>
+            <input class="input" type="date">
+          </div>
+          <div>
+            <div class="small muted">đến</div>
+            <input class="input" type="date">
+          </div>
+          <div class="row" style="gap:8px">
+            <a class="btn" href="#">Tải hóa đơn</a>
+            <a class="btn secondary" href="#">Làm mới</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2) Thông tin hóa đơn gốc -->
+      <section class="card">
+        <div class="row" style="gap:16px;flex-wrap:wrap">
+          <div style="min-width:220px">
+            <div class="small muted">Mã HĐ</div>
+            <strong>HD0001</strong>
+          </div>
+          <div style="min-width:220px">
+            <div class="small muted">Khách hàng</div>
+            <strong>Nguyễn Văn An — 0912345678</strong>
+          </div>
+          <div style="min-width:220px">
+            <div class="small muted">Ngày bán</div>
+            <strong>10/09/2025 14:32</strong>
+          </div>
+          <div style="min-width:220px">
+            <div class="small muted">Trạng thái</div>
+            <span class="pill">Đã thanh toán</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3) Chọn hàng để đổi/trả -->
+      <section class="card">
+        <h3 class="h3">Chọn hàng để đổi / trả</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Chọn</th>
+                <th>MÃ SP</th>
+                <th>TÊN SẢN PHẨM</th>
+                <th>SL đã mua</th>
+                <th>SL đổi/trả</th>
+                <th>Giá bán</th>
+                <th>Lý do</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox"></td>
+                <td>SP001</td>
+                <td>Bánh quy</td>
+                <td>2</td>
+                <td><input class="input" style="width:70px" value="1"></td>
+                <td>25.000</td>
+                <td>
+                  <select class="input">
+                    <option>Không ưng</option>
+                    <option>Lỗi/ hỏng</option>
+                    <option>Giao nhầm</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"></td>
+                <td>SP002</td>
+                <td>Nước cam</td>
+                <td>1</td>
+                <td><input class="input" style="width:70px" value="0"></td>
+                <td>18.000</td>
+                <td>
+                  <select class="input">
+                    <option>Không ưng</option>
+                    <option>Lỗi/ hỏng</option>
+                    <option>Giao nhầm</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Hàng đổi (nhận lại) -->
+        <div class="row" style="margin-top:12px;gap:8px">
+          <span class="small muted">Thêm sản phẩm đổi (nếu khách đổi sang món khác):</span>
+          <input class="input" placeholder="Mã/Tên SP">
+          <input class="input" placeholder="SL" style="width:80px">
+          <a class="btn secondary" href="#">Thêm vào danh sách đổi</a>
+        </div>
+      </section>
+
+      <!-- 4) Tổng kết & thanh toán hoàn/thu thêm -->
+      <section class="card">
+        <h3 class="h3">Tổng kết</h3>
+        <div class="row" style="gap:24px;flex-wrap:wrap">
+          <div style="min-width:240px">
+            <div class="small muted">Giá trị hàng trả</div>
+            <strong>25.000 ₫</strong>
+          </div>
+          <div style="min-width:240px">
+            <div class="small muted">Giá trị hàng đổi</div>
+            <strong>0 ₫</strong>
+          </div>
+          <div style="min-width:240px">
+            <div class="small muted">Chênh lệch (âm: hoàn, dương: thu thêm)</div>
+            <strong class="tag-return">-25.000 ₫</strong>
+          </div>
+        </div>
+
+        <div class="row" style="gap:12px;flex-wrap:wrap;margin-top:12px">
+          <div>
+            <div class="small muted">Hình thức hoàn/thu</div>
+            <select class="input" style="min-width:200px">
+              <option>Tiền mặt</option>
+              <option>Chuyển khoản</option>
+              <option>Thẻ</option>
+            </select>
+          </div>
+          <div style="flex:1;min-width:260px">
+            <div class="small muted">Ghi chú</div>
+            <input class="input" placeholder="Lý do chi tiết...">
+          </div>
+          <div class="row" style="gap:8px; margin-left:auto">
+            <a class="btn secondary" href="#">Hủy</a>
+            <a class="btn" href="#">Tạo phiếu đổi/trả</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5) Lịch sử phiếu đổi/trả -->
+      <section class="card">
+        <h3 class="h3">Phiếu đổi/trả gần đây</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>MÃ PHIẾU</th>
+                <th>HĐ GỐC</th>
+                <th>KHÁCH HÀNG</th>
+                <th>NGÀY</th>
+                <th>LOẠI</th>
+                <th>GIÁ TRỊ</th>
+                <th>TRẠNG THÁI</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>DT0001</td>
+                <td>HD0001</td>
+                <td>Nguyễn Văn An</td>
+                <td>12/09/2025</td>
+                <td><span class="tag-exchange">Trả hàng</span></td>
+                <td>-25.000 ₫</td>
+                <td><span class="pill">Đã hoàn</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

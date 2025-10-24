@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quản lý tài khoản - DAH</title>
+  <link rel="stylesheet" href="../style/QuanLyTaiKhoan.css">
+</head>
+<body>
+  <div class="warp">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">DAH</div>
+        <div><div>Quản lý bán lẻ và kho DAH</div></div>
+      </div>
+
+      <nav class="nav">
+        <div class="section-title">ADMIN</div>
+        <a href="QuanLyTaiKhoan.html" aria-current="page">🛠️ Quản lý tài khoản</a>
+        <a href="QuanLyNhanVien.html">🧑‍💼 Quản lý nhân viên</a>
+        <a href="QuanLyKhuyenMai.html">🎁 Quản lý khuyến mãi</a>
+      </nav>
+
+      <div class="section-title">Tài khoản</div>
+      <div class="quick-stats">
+        <div class="row" style="justify-content:space-between">
+          <span>Người dùng:</span><strong>DAH</strong>
+        </div>
+      </div>
+      <div class="small muted">© DAH</div>
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        <div>
+          <div class="breadcrumbs">ADMIN / Quản lý tài khoản</div>
+          <h1 class="h1">QUẢN LÝ TÀI KHOẢN</h1>
+        </div>
+        <div class="actions">
+          <div class="pill">Ngôn ngữ: VN</div>
+        </div>
+      </div>
+
+      <section class="card">
+        <div class="row" style="justify-content:space-between">
+          <h2 class="h2">Danh sách tài khoản</h2>
+          <div class="row" style="gap:10px;flex:1;justify-content:flex-end">
+            <input class="input" placeholder="Tìm theo MATAIKHOAN, USERNAME..." style="max-width:320px">
+            <a class="btn" href="#">+ Thêm tài khoản</a>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="margin-top:10px">
+          <table>
+            <thead>
+              <tr>
+                <th>MATAIKHOAN</th>
+                <th>USERNAME</th>
+                <th>PASS</th>
+                <th>QUYEN</th>
+                <th style="width:160px">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TK001</td>
+                <td>admin</td>
+                <td>••••••••</td>
+                <td>Admin</td>
+                <td class="table-actions">
+                  <a class="btn small neutral" href="#">Sửa</a>
+                  <a class="btn small warn" href="#">Xóa</a>
+                </td>
+              </tr>
+              <tr>
+                <td>TK002</td>
+                <td>huong.tr</td>
+                <td>••••••••</td>
+                <td>Nhân viên</td>
+                <td class="table-actions">
+                  <a class="btn small neutral" href="#">Sửa</a>
+                  <a class="btn small warn" href="#">Xóa</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:16px">
+        <h3 class="h3">Thêm / Sửa tài khoản</h3>
+        <form>
+          <div class="row form-grid">
+            <div>
+              <label class="small muted">MATAIKHOAN *</label>
+              <input class="input" placeholder="vd: TK003">
+            </div>
+            <div>
+              <label class="small muted">USERNAME *</label>
+              <input class="input" placeholder="vd: minh.ng">
+            </div>
+            <div>
+              <label class="small muted">PASS *</label>
+              <input class="input" type="password" placeholder="Ít nhất 6 ký tự">
+            </div>
+            <div>
+              <label class="small muted">QUYEN *</label>
+              <select class="input">
+                <option>Admin</option>
+                <option>Nhân viên</option>
+                <option>Quản lý</option>
+              </select>
+            </div>
+          </div>
+          <div class="row" style="gap:10px;justify-content:flex-end;margin-top:12px">
+            <a class="btn secondary" href="#">Hủy</a>
+            <a class="btn" href="#">Lưu</a>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

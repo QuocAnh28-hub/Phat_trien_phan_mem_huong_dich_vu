@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quản lý khuyến mãi - DAH</title>
+  <link rel="stylesheet" href="../style/QuanLyKhuyenMai.css">
+</head>
+<body>
+  <div class="warp">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">DAH</div>
+        <div><div>Quản lý bán lẻ và kho DAH</div></div>
+      </div>
+
+      <nav class="nav">
+        <div class="section-title">ADMIN</div>
+        <a href="QuanLyTaiKhoan.html">🛠️ Quản lý tài khoản</a>
+        <a href="QuanLyNhanVien.html">🧑‍💼 Quản lý nhân viên</a>
+        <a href="QuanLyKhuyenMai.html" aria-current="page">🎁 Quản lý khuyến mãi</a>
+      </nav>
+
+      <div class="section-title">Tài khoản</div>
+      <div class="quick-stats">
+        <div class="row" style="justify-content:space-between">
+          <span>Người dùng:</span><strong>DAH</strong>
+        </div>
+      </div>
+      <div class="small muted">© DAH</div>
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        <div>
+          <div class="breadcrumbs">ADMIN / Quản lý khuyến mãi</div>
+          <h1 class="h1">QUẢN LÝ KHUYẾN MÃI</h1>
+        </div>
+        <div class="actions"><div class="pill">Ngôn ngữ: VN</div></div>
+      </div>
+
+      <!-- Danh sách KM (schema: MAKM, TENKM, MASP, NGAYBATDAU, NGAYKETTHUC) -->
+      <section class="card">
+        <div class="row" style="justify-content:space-between">
+          <h2 class="h2">Danh sách khuyến mãi</h2>
+          <div class="row" style="gap:10px;flex:1;justify-content:flex-end">
+            <input class="input" placeholder="Tìm theo MAKM, TENKM, MASP..." style="max-width:320px">
+            <a class="btn" href="#">+ Thêm khuyến mãi</a>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="margin-top:10px">
+          <table>
+            <thead>
+              <tr>
+                <th>MAKM</th>
+                <th>TENKM</th>
+                <th>MASP</th>
+                <th>NGAYBATDAU</th>
+                <th>NGAYKETTHUC</th>
+                <th style="width:160px">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>KM001</td>
+                <td>Giảm 20% dịp 2/9</td>
+                <td>SP001</td>
+                <td>01/09/2025</td>
+                <td>05/09/2025</td>
+                <td class="table-actions">
+                  <a class="btn small neutral" href="#">Sửa</a>
+                  <a class="btn small warn" href="#">Xóa</a>
+                </td>
+              </tr>
+              <tr>
+                <td>KM002</td>
+                <td>Tặng quà Trung Thu</td>
+                <td>SP015</td>
+                <td>10/09/2025</td>
+                <td>30/09/2025</td>
+                <td class="table-actions">
+                  <a class="btn small neutral" href="#">Sửa</a>
+                  <a class="btn small warn" href="#">Xóa</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Form thêm/sửa -->
+      <section class="card" style="margin-top:16px">
+        <h3 class="h3">Thêm / Sửa khuyến mãi</h3>
+        <form>
+          <div class="row form-grid">
+            <div>
+              <label class="small muted">MAKM *</label>
+              <input class="input" placeholder="vd: KM003">
+            </div>
+            <div>
+              <label class="small muted">TENKM *</label>
+              <input class="input" placeholder="vd: Giảm 10% cuối năm">
+            </div>
+            <div>
+              <label class="small muted">MASP *</label>
+              <input class="input" placeholder="vd: SP099">
+            </div>
+            <div>
+              <label class="small muted">NGAYBATDAU *</label>
+              <input type="date" class="input">
+            </div>
+            <div>
+              <label class="small muted">NGAYKETTHUC *</label>
+              <input type="date" class="input">
+            </div>
+          </div>
+          <div class="row" style="gap:10px;justify-content:flex-end;margin-top:12px">
+            <a class="btn secondary" href="#">Hủy</a>
+            <a class="btn" href="#">Lưu</a>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
