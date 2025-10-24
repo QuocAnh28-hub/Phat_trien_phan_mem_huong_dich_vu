@@ -53,6 +53,11 @@ body {
   font-size: 18px;
 }
 
+.temple {
+  width: 24px;
+  height: 12px;
+}
+
 .logo {
   width: 44px;
   height: 44px;
@@ -61,7 +66,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
+  font-weight: bolder;
 }
 
 .nav {
@@ -149,7 +154,6 @@ body {
 .small {
   font-size: 13px;
   color: var(--muted);
-  margin-top: 460px;
 }
 
 .table-wrap {
