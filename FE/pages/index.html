@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đăng nhập — DAH</title>
+  <link rel="stylesheet" href="../style/index.css" />
+</head>
+<body>
+  <main class="login-page" aria-labelledby="loginTitle">
+    <section class="login-card" role="region" aria-label="Form đăng nhập">
+      <h1 id="loginTitle" class="title">Đăng nhập</h1>
+
+      <form id="loginForm" class="form" method="post" action="#" autocomplete="on">
+        <label for="username" class="label">Tài khoản</label>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          class="input"
+          placeholder="Nhập tài khoản"
+          required
+          autofocus
+        />
+
+        <label for="password" class="label">Mật khẩu</label>
+        <div class="password-wrapper">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            class="input"
+            placeholder="Nhập mật khẩu"
+            required
+            minlength="6"
+          />
+          <button type="button" id="togglePwd" class="btn-toggle" aria-label="Hiện mật khẩu">
+            👁️
+          </button>
+        </div>
+
+        <div class="row-between">
+          <a href="#" class="forgot" onclick="alert('Vui lòng liên hệ Admin để được cấp lại mật khẩu.'); return false;">Quên mật khẩu?</a>
+        </div>
+
+        <button type="submit" class="btn-submit">Đăng nhập</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const pwd = document.getElementById('password');
+      const btn = document.getElementById('togglePwd');
+      btn.addEventListener('click', function () {
+        const showing = pwd.type === 'text';
+        pwd.type = showing ? 'password' : 'text';
+        btn.setAttribute('aria-label', showing ? 'Hiện mật khẩu' : 'Ẩn mật khẩu');
+        btn.textContent = showing ? '👁️' : '🙈';
+      });
+    })();
+  </script>
+</body>
+</html>
