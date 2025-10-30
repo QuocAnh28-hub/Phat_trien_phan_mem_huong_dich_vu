@@ -17,11 +17,13 @@ function dangNhap(event) {
       if (res.data.success) {
         alert(res.data.message); // "Đăng nhập thành công!"
 
-        // ✅ Lưu token và user
+        // Lưu token và user
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
 
-        // ✅ Gọi thêm API lấy quyền
+        localStorage.setItem("isLoggedIn", "true");  // trạng thái đăng nhập
+
+        // Gọi thêm API lấy quyền
         return axios.get(`https://localhost:7107/api-common/Login/get-role?username=${user}`);
       } else {
         throw new Error(res.data.message || "Sai thông tin đăng nhập!");
@@ -30,13 +32,13 @@ function dangNhap(event) {
     .then(roleRes => {
       console.log("Dữ liệu quyền:", roleRes.data);
 
-      // ✅ Lấy quyền đúng cấu trúc
+      // Lấy quyền đúng cấu trúc
       const role = parseInt(roleRes.data.data.quyen);
 
-      // ✅ Lưu quyền vào localStorage
+      // Lưu quyền vào localStorage
       localStorage.setItem("role", role);
 
-      // ✅ Chuyển hướng theo quyền
+      // Chuyển hướng theo quyền
       if (role === 4) {
         window.location.href = "../pages/QuanLyTaiKhoan.html";
       } else if (role === 3) {
@@ -50,7 +52,24 @@ function dangNhap(event) {
       }
     })
     .catch(err => {
-      console.error("❌ Lỗi khi đăng nhập hoặc lấy quyền:", err);
+      console.error("Lỗi khi đăng nhập hoặc lấy quyền:", err);
       alert("Không thể kết nối đến API hoặc tài khoản không hợp lệ!");
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const logoutBtn = document.getElementsByClassName("logout");
+
+  if (logoutBtn.length > 0) {
+    logoutBtn[0].addEventListener("click", () => {
+      if (confirm("Bạn có chắc muốn đăng xuất không?")) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("role");
+        localStorage.removeItem("isLoggedIn"); // xóa trạng thái đăng nhập
+
+        window.location.href = "../pages/index.html";
+      }
+    });
+  }
+});
