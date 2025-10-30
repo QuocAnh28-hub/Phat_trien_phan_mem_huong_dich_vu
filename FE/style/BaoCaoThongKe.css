@@ -570,3 +570,23 @@ th {
   text-decoration: none;
   color: white;
 }
+
+.sidebar .small.muted {
+  margin-top: auto;                              
+  padding-top: 16px; 
+}
+
+.logout a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar > div:first-child {
+  display: flex;
+  flex-direction: column;
+  flex: 1;  
+}

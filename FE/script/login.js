@@ -17,11 +17,13 @@ function dangNhap(event) {
       if (res.data.success) {
         alert(res.data.message); // "Đăng nhập thành công!"
 
-        // Lưu token và user
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+        // Lưu token và trạng thái
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("isLoggedIn", "true");
 
-        localStorage.setItem("isLoggedIn", "true");  // trạng thái đăng nhập
+      // Lưu user: nếu API không trả user -> vẫn lưu tối thiểu username để hiện lên UI
+      const userObj = res.data.user || { username: user };
+      localStorage.setItem("user", JSON.stringify(userObj));
 
         // Gọi thêm API lấy quyền
         return axios.get(`https://localhost:7107/api-common/Login/get-role?username=${user}`);
@@ -41,20 +43,12 @@ function dangNhap(event) {
       // Chuyển hướng theo quyền
       if (role === 4) {
         window.location.href = "../pages/QuanLyTaiKhoan.html";
-        // Đổi nội dung trong thẻ strong
-        //document.querySelector(".quick-stats .row strong").textContent = "Administrator";
       } else if (role === 3) {
         window.location.href = "../pages/QuanLyDanhMuc.html";
-        // Đổi nội dung trong thẻ strong
-        //document.querySelector(".quick-stats .row strong").textContent = "Thủ kho";
       } else if (role === 2) {
         window.location.href = "../pages/QuanLyBanHang.html";
-        // Đổi nội dung trong thẻ strong
-        //document.querySelector(".quick-stats .row strong").textContent = "Thu ngân";
       } else if (role === 1) {
         window.location.href = "../pages/QuanLyCongNo.html";
-        // Đổi nội dung trong thẻ strong
-        //document.querySelector(".quick-stats .row strong").textContent = "Kế toán";
       } else {
         window.location.href = "../pages/index.html";
       }
@@ -66,18 +60,36 @@ function dangNhap(event) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const logoutBtn = document.getElementsByClassName("logout");
+  const logoutBtn = document.querySelector(".logout a");
 
-  if (logoutBtn.length > 0) {
-    logoutBtn[0].addEventListener("click", () => {
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+
       if (confirm("Bạn có chắc muốn đăng xuất không?")) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         localStorage.removeItem("role");
-        localStorage.removeItem("isLoggedIn"); // xóa trạng thái đăng nhập
-
+        localStorage.removeItem("isLoggedIn");
         window.location.href = "../pages/index.html";
+      } else {
       }
     });
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Lấy thông tin người dùng từ localStorage
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // Kiểm tra có user không
+  if (user && (user.userName || user.username)) {
+    const userName = user.userName || user.username;
+
+    // Tìm đến thẻ <strong> trong quick-stats và thay nội dung
+    const strongTag = document.querySelector(".quick-stats .row strong");
+    if (strongTag) {
+      strongTag.textContent = userName;
+    }
   }
 });
