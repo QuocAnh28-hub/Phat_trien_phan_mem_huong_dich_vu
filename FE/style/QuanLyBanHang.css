@@ -253,3 +253,8 @@ th {
 .muted {
   color: var(--muted);
 }
+
+.logout a{
+  text-decoration: none;
+  color: white;
+}

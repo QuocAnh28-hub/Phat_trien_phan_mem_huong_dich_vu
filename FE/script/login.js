@@ -8,12 +8,9 @@ function dangNhap(event) {
     alert("Vui lòng nhập đầy đủ tài khoản và mật khẩu!");
     return;
   }
-
+  //https://localhost:7107/api-common/Login/login?username=user1&pass=pass1
   // ✅ Gọi API qua Gateway
-  axios.post(`https://localhost:7107/api-common/Login/login`, {
-    USERNAME: user,
-    PASS: pass
-  })
+  axios.post(`https://localhost:7107/api-common/Login/login?username=${user}&pass=${pass}`)
   .then(res => {
     console.log("Kết quả API:", res.data);
 

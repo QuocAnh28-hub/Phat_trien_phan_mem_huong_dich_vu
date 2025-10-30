@@ -563,3 +563,8 @@ textarea:focus {
   background-color: #757575;
   transform: translateY(-1px);
 }
+
+.logout a{
+  text-decoration: none;
+  color: white;
+}

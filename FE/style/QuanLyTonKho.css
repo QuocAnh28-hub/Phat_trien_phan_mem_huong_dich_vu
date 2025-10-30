@@ -116,3 +116,8 @@
     width: 100%;
   }
 }
+
+.logout a{
+  text-decoration: none;
+  color: white;
+}

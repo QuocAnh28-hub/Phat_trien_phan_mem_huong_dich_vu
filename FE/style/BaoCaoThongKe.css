@@ -565,3 +565,8 @@ th {
     font-size: 15px;
   }
 }
+
+.logout a{
+  text-decoration: none;
+  color: white;
+}
