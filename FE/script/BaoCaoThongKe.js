@@ -1,80 +1,111 @@
-const db = {
-  HoaDonBan: [
-    { id:'HD001', ngay:'2025-10-01', tong:1500000, paid:1500000 },
-    { id:'HD002', ngay:'2025-10-03', tong:800000, paid:800000 },
-    { id:'HD003', ngay:'2025-10-10', tong:1200000, paid:900000 },
-    { id:'HD004', ngay:'2025-10-12', tong:2000000, paid:2000000 },
-    { id:'HD005', ngay:'2025-10-15', tong:500000, paid:500000 }
-  ],
-  SanPham: [
-    { ma:'SP01', ten:'Nước ngọt Coca', soLuongBan:120, tonKho:40 },
-    { ma:'SP02', ten:'Bánh Oreo', soLuongBan:95, tonKho:25 },
-    { ma:'SP03', ten:'Snack Oishi', soLuongBan:150, tonKho:15 },
-    { ma:'SP04', ten:'Sữa Vinamilk', soLuongBan:80, tonKho:60 },
-    { ma:'SP05', ten:'Trà Xanh 0 độ', soLuongBan:100, tonKho:50 },
-    { ma:'SP06', ten:'Mì Hảo Hảo', soLuongBan:70, tonKho:200 },
-    { ma:'SP07', ten:'Kẹo Alpenliebe', soLuongBan:60, tonKho:180 }
-  ]
-};
-
+// =================== HÀM CHUNG ===================
 const money = n => new Intl.NumberFormat('vi-VN').format(n || 0);
+const API_BASE = "https://localhost:7107/api-ketoan/BaoCaoThongKe";
 
-// =================== LẮNG NGHE SỰ KIỆN FORM ===================
+// Hàm gọi API có kèm token
+async function fetchApi(url) {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.get(url, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.data;
+  } catch (err) {
+    console.error("❌ Lỗi khi gọi API:", err);
+    alert("Không thể tải dữ liệu từ máy chủ!");
+    return [];
+  }
+}
+
+// =================== FORM BÁO CÁO ===================
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById('report-form');
-  const result = document.getElementById('report-results');
+  const form = document.getElementById("report-form");
+  const result = document.getElementById("report-results");
 
-  if (!form || !result) return;
-
-  form.addEventListener('submit', e => {
+  form.addEventListener("submit", async e => {
     e.preventDefault();
 
     const type = form.type.value;
     const from = form.from.value;
     const to = form.to.value;
 
-    let html = `<p><strong>Thời gian thống kê:</strong> ${from || '---'} → ${to || '---'}</p>`;
+    let html = `<p><strong>Thời gian thống kê:</strong> ${from || "---"} → ${to || "---"}</p>`;
 
-    if (type === 'Doanh thu') {
-      html += renderRevenue();
-    } else if (type === 'Sản phẩm bán chạy') {
-      html += renderTopProducts();
-    } else if (type === 'Sản phẩm tồn nhiều') {
-      html += renderStockedProducts();
+    if (type === "Doanh thu") {
+      html += await renderRevenue();
+    } else if (type === "Sản phẩm bán chạy") {
+      html += await renderTopProducts();
+    } else if (type === "Sản phẩm tồn nhiều") {
+      html += await renderStockedProducts();
     }
 
     result.innerHTML = html;
   });
 });
 
-// =================== HÀM XỬ LÝ BÁO CÁO ===================
-function renderRevenue() {
-  let html = `<table><thead><tr><th>Mã hóa đơn</th><th>Ngày</th><th>Số tiền thanh toán (₫)</th></tr></thead><tbody>`;
+// =================== BÁO CÁO DOANH THU ===================
+async function renderRevenue() {
+  const data = await fetchApi(`${API_BASE}/get-all-hoadonban`);
+  let html = `<table><thead><tr><th>Mã hóa đơn</th><th>Ngày</th><th>Tổng tiền hàng (₫)</th><th>Thuế VAT</th><th>Giảm giá</th></tr></thead><tbody>`;
   let total = 0;
-  db.HoaDonBan.forEach(h => {
-    html += `<tr><td>${h.id}</td><td>${h.ngay}</td><td>${money(h.paid)}</td></tr>`;
-    total += h.paid;
+
+  data.forEach(h => {
+    html += `<tr>
+      <td>${h.mahdban}</td>
+      <td>${new Date(h.ngaylap).toLocaleDateString("vi-VN")}</td>
+      <td>${money(h.tongtienhang)}</td>
+      <td>${money(h.thuevat)}</td>
+      <td>${money(h.giamgia)}</td>
+    </tr>`;
+    total += h.tongtienhang;
   });
-  html += `</tbody><tfoot><tr><td colspan="2">Tổng cộng</td><td>${money(total)}</td></tr></tfoot></table>`;
+
+  html += `</tbody><tfoot><tr><td colspan="2">Tổng cộng</td><td>${money(total)}</td><td></td><td></td></tr></tfoot></table>`;
   return html;
 }
 
-function renderTopProducts() {
-  const sorted = [...db.SanPham].sort((a,b)=>b.soLuongBan - a.soLuongBan).slice(0,5);
-  let html = `<table><thead><tr><th>Mã SP</th><th>Tên sản phẩm</th><th>Số lượng bán</th></tr></thead><tbody>`;
+// =================== TOP 5 SẢN PHẨM BÁN CHẠY ===================
+async function renderTopProducts() {
+  const data = await fetchApi(`${API_BASE}/get-all-sanpham`);
+
+  // Sắp xếp theo số lượng bán (nếu chưa có trường riêng, có thể thay bằng "soluongton" tạm)
+  const sorted = [...data].sort((a, b) => (b.soluongban || 0) - (a.soluongban || 0)).slice(0, 5);
+
+  let html = `<table>
+    <thead><tr><th>Mã SP</th><th>Tên sản phẩm</th><th>Giá bán (₫)</th><th>Số lượng bán</th></tr></thead><tbody>`;
+
   sorted.forEach(sp => {
-    html += `<tr><td>${sp.ma}</td><td>${sp.ten}</td><td>${sp.soLuongBan}</td></tr>`;
+    html += `<tr>
+      <td>${sp.masp}</td>
+      <td>${sp.tensp}</td>
+      <td>${money(sp.dongia)}</td>
+      <td>${sp.soluongban ?? 0}</td>
+    </tr>`;
   });
+
   html += `</tbody></table>`;
   return html;
 }
 
-function renderStockedProducts() {
-  const sorted = [...db.SanPham].sort((a,b)=>b.tonKho - a.tonKho).slice(0,5);
-  let html = `<table><thead><tr><th>Mã SP</th><th>Tên sản phẩm</th><th>Tồn kho</th><th>Lượt bán</th></tr></thead><tbody>`;
+// =================== TOP 5 SẢN PHẨM TỒN NHIỀU ===================
+async function renderStockedProducts() {
+  const data = await fetchApi(`${API_BASE}/get-all-sanpham`);
+
+  // Sắp xếp theo số lượng tồn giảm dần
+  const sorted = [...data].sort((a, b) => (b.soluongton || 0) - (a.soluongton || 0)).slice(0, 5);
+
+  let html = `<table>
+    <thead><tr><th>Mã SP</th><th>Tên sản phẩm</th><th>Tồn kho</th><th>Đơn giá (₫)</th></tr></thead><tbody>`;
+
   sorted.forEach(sp => {
-    html += `<tr><td>${sp.ma}</td><td>${sp.ten}</td><td>${sp.tonKho}</td><td>${sp.soLuongBan}</td></tr>`;
+    html += `<tr>
+      <td>${sp.masp}</td>
+      <td>${sp.tensp}</td>
+      <td>${sp.soluongton ?? 0}</td>
+      <td>${money(sp.dongia)}</td>
+    </tr>`;
   });
+
   html += `</tbody></table>`;
   return html;
 }

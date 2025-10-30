@@ -103,7 +103,6 @@ html, body {
   margin-top: -10px;
 }
 
-/* Main */
 .main {
   flex: 1;
   padding: 24px 32px;
@@ -147,7 +146,6 @@ html, body {
   font-size: 16px;
 }
 
-/* Views with hash routing */
 .view {
   display: none;
 }
@@ -157,7 +155,6 @@ html, body {
   display: block;
 }
 
-/* Buttons */
 .btn {
   background: var(--accent);
   color: #fff;
