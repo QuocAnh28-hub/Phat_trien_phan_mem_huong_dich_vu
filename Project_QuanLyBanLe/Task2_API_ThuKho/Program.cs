@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+ï»¿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// C?u hình xác th?c JWT
+// C?u hÃ¬nh xÃ¡c th?c JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
@@ -44,8 +44,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Thêm hai middleware quan tr?ng này
-app.UseAuthentication();  // <--- Ph?i có tr??c UseAuthorization()
+// ThÃªm hai middleware quan tr?ng nÃ y
+app.UseAuthentication();  // <--- Ph?i cÃ³ tr??c UseAuthorization()
 app.UseAuthorization();
 
 app.MapControllers();
