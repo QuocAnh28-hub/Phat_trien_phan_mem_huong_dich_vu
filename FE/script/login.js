@@ -41,12 +41,20 @@ function dangNhap(event) {
       // Chuyển hướng theo quyền
       if (role === 4) {
         window.location.href = "../pages/QuanLyTaiKhoan.html";
+        // Đổi nội dung trong thẻ strong
+        //document.querySelector(".quick-stats .row strong").textContent = "Administrator";
       } else if (role === 3) {
         window.location.href = "../pages/QuanLyDanhMuc.html";
+        // Đổi nội dung trong thẻ strong
+        //document.querySelector(".quick-stats .row strong").textContent = "Thủ kho";
       } else if (role === 2) {
         window.location.href = "../pages/QuanLyBanHang.html";
+        // Đổi nội dung trong thẻ strong
+        //document.querySelector(".quick-stats .row strong").textContent = "Thu ngân";
       } else if (role === 1) {
         window.location.href = "../pages/QuanLyCongNo.html";
+        // Đổi nội dung trong thẻ strong
+        //document.querySelector(".quick-stats .row strong").textContent = "Kế toán";
       } else {
         window.location.href = "../pages/index.html";
       }
