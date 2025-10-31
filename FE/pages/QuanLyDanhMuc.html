@@ -67,8 +67,20 @@
         </div>
             <div class="card-header">
               <h2>Danh sách danh mục</h2>
+              <div class="search-container">
+                <input 
+                  type="text" 
+                  id="searchInput" 
+                  placeholder="🔍 Nhập mã danh mục cần tìm..."
+                >
+                <button class="btn-primary" onclick="searchByMaDanhMuc()">Tìm kiếm</button>
+                <button class="btn-secondary" onclick="loadAllCategories()">Làm mới</button>
+              </div>
+              
               <button class="btn-primary" onclick="openAddModal()">+ Thêm danh mục mới</button>
             </div>
+            
+
               <table class="table">
                 <thead>
                   <tr>
@@ -79,27 +91,10 @@
                   </tr>
                 </thead>
                 <tbody id="category-list">
-                  <tr>
-                    <td>DM001</td>
-                    <td>Điện thoại</td>
-                    <td>Các loại điện thoại di động</td>
-                    <td>
-                      <button class="btn-edit" onclick="openEditModal(1)">Sửa</button>
-                      <button class="btn-delete" onclick="deleteCategory(1)">Xóa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>DM002</td>
-                    <td>Laptop</td>
-                    <td>Laptop, PC, linh kiện</td>
-                    <td>
-                      <button class="btn-edit" onclick="openEditModal(2)">Sửa</button>
-                      <button class="btn-delete" onclick="deleteCategory(2)">Xóa</button>
-                    </td>
-                  </tr>
+                  
                 </tbody>
               </table>
-
+        <div id="pagination" class="pagination"></div>
         <div id="addModal" class="modal">
           <div class="modal-content">
             <h2>Thêm danh mục mới</h2>
@@ -117,7 +112,7 @@
                 <textarea id="categoryDesc" rows="3"></textarea>
               </div>
               <div class="form-actions">
-                <button type="submit" class="btn-primary">Lưu</button>
+                <button type="submit" class="btn-primary" onclick="addCategory(event)">Lưu</button>
                 <button type="button" class="btn-secondary" onclick="closeAddModal()">Hủy</button>
               </div>
             </form>
@@ -138,7 +133,7 @@
                 <textarea id="editCategoryDesc" rows="3"></textarea>
               </div>
               <div class="form-actions">
-                <button type="submit" class="btn-primary">Cập nhật</button>
+                <button type="submit" class="btn-primary" onclick="editCategory(event)">Cập nhật</button>
                 <button type="button" class="btn-secondary" onclick="closeEditModal()">Hủy</button>
               </div>
             </form>
