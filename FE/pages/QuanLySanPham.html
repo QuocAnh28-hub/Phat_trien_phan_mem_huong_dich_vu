@@ -9,7 +9,9 @@
     <script src="../script/auth.js"></script>
     <script src="../script/login.js"></script>
     <script src="../script/QuanLySanPham.js"></script>
-    <script src="../script/jquery-3.3.1.min.js"></script>
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/axios-1.12.2.min.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
   <body>
@@ -67,7 +69,17 @@
 
             <div class="card-header">
               <h2>Danh sách sản phẩm</h2>
-              <button class="btn-primary" onclick="openAddProduct()">+ Thêm sản phẩm mới</button>
+              <div class="search-container">
+                <input 
+                  type="text" 
+                  id="searchInput" 
+                  placeholder="🔍 Nhập mã sản phẩm cần tìm..."
+                >
+                <button class="btn-primary" onclick="searchByMaSanPham()">Tìm kiếm</button>
+                <button class="btn-secondary" onclick="loadAllSanPham()">Làm mới</button>
+              </div>
+              
+              <button class="btn-primary" onclick="openAdd()">+ Thêm danh mục mới</button>
             </div>
             
             <div class="card-body">
@@ -87,7 +99,7 @@
                   </tr>
                 </thead>
                 <tbody id="product-list">
-                  <tr>
+                  <!-- <tr>
                     <td>SP001</td>
                     <td>iPhone 14</td>
                     <td>8934571234</td>
@@ -116,11 +128,11 @@
                       <button class="btn-edit" onclick="openEditProduct(2)">Sửa</button>
                       <button class="btn-delete" onclick="deleteProduct(2)">Xóa</button>
                     </td>
-                  </tr>
+                  </tr> -->
                 </tbody>
               </table>
             </div>
-
+        <div id="pagination" class="pagination"></div>
         <div id="addProduct" class="product">
           <div class="product-content">
             <h2>Thêm sản phẩm mới</h2>
@@ -172,7 +184,7 @@
 
               <div class="form-actions">
                 <button type="submit" class="btn-primary">Lưu</button>
-                <button type="button" class="btn-secondary" onclick="closeAddProduct()">Hủy</button>
+                <button type="button" class="btn-secondary" onclick="closeAdd()">Hủy</button>
               </div>
             </form>
           </div>
@@ -184,47 +196,38 @@
             <h2>Sửa thông tin sản phẩm</h2>
             <form id="editProductForm">
               <input type="hidden" id="editProductId">
-
               <div class="form-group">
                 <label for="editProductName">Tên sản phẩm:</label>
                 <input type="text" id="editProductName" required>
               </div>
-
               <div class="form-group">
                 <label for="editBarcode">Mã vạch:</label>
                 <input type="text" id="editBarcode">
               </div>
-
               <div class="form-group">
                 <label for="editProductDesc">Mô tả:</label>
                 <textarea id="editProductDesc" rows="3" maxlength="300"></textarea>
               </div>
-
               <div class="form-group">
                 <label for="editCategoryID">Mã danh mục:</label>
                 <input type="text" id="editCategoryID" required>
               </div>
-
               <div class="form-group">
                 <label for="editPrice">Đơn giá:</label>
                 <input type="number" id="editPrice" min="0" required>
               </div>
-
               <div class="form-group">
                 <label for="editAttributes">Thuộc tính:</label>
                 <input type="text" id="editAttributes">
               </div>
-
               <div class="form-group">
                 <label for="editVAT">Thuế VAT (%):</label>
                 <input type="number" id="editVAT" min="0" max="100" step="1">
               </div>
-
               <div class="form-group">
                 <label for="editStock">Số lượng tồn:</label>
                 <input type="number" id="editStock" min="0" required>
               </div>
-
               <div class="form-actions">
                 <button type="submit" class="btn-primary">Cập nhật</button>
                 <button type="button" class="btn-secondary" onclick="closeEditProduct()">Hủy</button>
@@ -232,8 +235,6 @@
             </form>
           </div>
         </div>
-
-
       </main>
     </div>
   </body>

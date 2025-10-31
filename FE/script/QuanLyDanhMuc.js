@@ -26,6 +26,45 @@ window.onclick = function(e) {
 };
 
 
+
+
+//lấy danh mục khi tải trang
+window.onload = function() {
+
+  axios.get(`${API_URL}/get-all-danhmuc`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(function (response) {
+    allCategories = response.data;
+    console.log("Danh sách danh mục:", allCategories);
+
+    const tableBody = document.getElementById("category-list");
+    if (tableBody) {
+      tableBody.innerHTML = "";
+      allCategories.forEach(danhmuc => {
+        const row = `
+          <tr>
+            <td>${danhmuc.madanhmuc.trim()}</td>
+            <td>${danhmuc.tendanhmuc.trim()}</td>
+            <td>${danhmuc.mota.trim() || ""}</td>
+            <td>
+              <button class="btn-edit" onclick="openEditModal('${danhmuc.madanhmuc.trim()}')">Sửa</button>
+              <button class="btn-delete" onclick="deleteCategory('${danhmuc.madanhmuc.trim()}')">Xóa</button>
+            </td>
+          </tr>`;
+        tableBody.innerHTML += row;
+      });
+    renderTable();
+    }
+  })
+  .catch(function (error) {
+    console.error("Lỗi khi tải danh mục:", error);
+    alert("Không thể tải danh mục. Kiểm tra token hoặc API.");
+  });
+};
+
 function renderTable() {
   const start = (currentPage - 1) * itemsPerPage;
   const end = start + itemsPerPage;
@@ -69,47 +108,6 @@ function renderPagination() {
   }
 }
 
-
-//lấy danh mục khi tải trang
-window.onload = function() {
-
-  axios.get(`${API_URL}/get-all-danhmuc`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-  .then(function (response) {
-    data = response.data;
-    console.log("Danh sách danh mục:", data);
-
-    const tableBody = document.getElementById("category-list");
-    if (tableBody) {
-      tableBody.innerHTML = "";
-      data.forEach(danhmuc => {
-        const row = `
-          <tr>
-            <td>${danhmuc.madanhmuc.trim()}</td>
-            <td>${danhmuc.tendanhmuc.trim()}</td>
-            <td>${danhmuc.mota.trim() || ""}</td>
-            <td>
-              <button class="btn-edit" onclick="openEditModal('${danhmuc.madanhmuc.trim()}')">Sửa</button>
-              <button class="btn-delete" onclick="deleteCategory('${danhmuc.madanhmuc.trim()}')">Xóa</button>
-            </td>
-          </tr>`;
-        tableBody.innerHTML += row;
-      });
-
-    allCategories = response.data;
-    renderTable();
-    }
-  })
-  .catch(function (error) {
-    console.error("Lỗi khi tải danh mục:", error);
-    alert("Không thể tải danh mục. Kiểm tra token hoặc API.");
-  });
-};
-
-
 //thêm danh mục
 function addCategory(event) {
   event.preventDefault();
@@ -144,13 +142,12 @@ function addCategory(event) {
 //sửa
 function openEditModal(maDanhmuc) {
   document.getElementById("editModal").style.display = "flex";
-  const category = data.find(dm => dm.madanhmuc.trim() === maDanhmuc.trim());
+  const category = allCategories.find(dm => dm.madanhmuc.trim() === maDanhmuc.trim());
   if (!category) {
     alert("Không tìm thấy danh mục cần sửa!");
     return;
   }
 
-  // Gán dữ liệu vào form sửa (chú ý tên trường đúng)
   document.getElementById("editCategoryId").value = category.madanhmuc.trim();
   document.getElementById("editCategoryName").value = category.tendanhmuc.trim();
   document.getElementById("editCategoryDesc").value = category.mota?.trim() || "";
