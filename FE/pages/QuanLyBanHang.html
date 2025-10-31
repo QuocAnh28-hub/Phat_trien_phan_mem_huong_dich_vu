@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DAH — Quản lý bán hàng (Thu ngân)</title>
+  <script src="../js/axios-1.12.2.min.js"></script>
   <script src="../script/auth.js"></script>
   <script src="../script/login.js"></script>
   <script src="../script/QuanLyBanHang.js"></script>
-  <script src="../js/axios-1.12.2.min.js"></script>
   <link rel="stylesheet" href="../style/QuanLyBanHang.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -112,19 +112,6 @@
                   <th style="width:160px">THAO TÁC</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>HD0001</td>
-                  <td>Nguyễn Văn An</td>
-                  <td>10/09/2025</td>
-                  <td>2.350.000 ₫</td>
-                  <td><span class="pill">Đã thanh toán</span></td>
-                  <td class="table-actions">
-                    <a class="btn small neutral" href="#chi-tiet">Xem</a>
-                    <a class="btn small warn" href="#">Hủy</a>
-                  </td>
-                </tr>
-              </tbody>
             </table>
           </div>
         </section>
@@ -134,47 +121,64 @@
       <section id="tao-hoa-don" class="view">
         <div class="card">
           <h3 class="h3">Tạo hóa đơn mới</h3>
+
+          <!-- Thông tin khách hàng -->
           <div class="row" style="gap:12px;flex-wrap:wrap">
-            <div style="flex:1;min-width:250px">
-              <div class="small muted">Khách hàng</div>
-              <input class="input" placeholder="Tên hoặc SĐT khách...">
+            <div style="flex:1;min-width:150px">
+              <div class="small muted">Mã khách hàng</div>
+              <input id="ma-kh" class="input" placeholder="VD: KH001">
             </div>
-            <div style="flex:1;min-width:250px">
-              <div class="small muted">Ghi chú</div>
-              <input class="input" placeholder="Ghi chú đơn hàng...">
+            <div style="flex:1;min-width:200px">
+              <div class="small muted">Tên khách hàng</div>
+              <input id="tenkh" class="input" placeholder="Tên khách hàng">
+            </div>
+            <div style="flex:1;min-width:200px">
+              <div class="small muted">Số điện thoại</div>
+              <input id="sdt" class="input" placeholder="0999123456">
+            </div>
+            <div style="flex:1;min-width:200px">
+              <div class="small muted">Địa chỉ</div>
+              <input id="diachi" class="input" placeholder="Địa chỉ khách hàng">
             </div>
           </div>
 
+          <hr style="margin:20px 0;border:dashed 1px #ccc">
+
+          <!-- Nhập sản phẩm -->
+          <div class="row" style="gap:12px;align-items:flex-end;flex-wrap:wrap">
+            <div>
+              <div class="small muted">Mã sản phẩm</div>
+              <input id="ma-sp" class="input" placeholder="VD: SP001">
+            </div>
+            <div>
+              <div class="small muted">Số lượng</div>
+              <input id="sl" class="input" type="number" min="1" value="1">
+            </div>
+            <div>
+              <button id="btn-them-sp" class="btn">+ Thêm sản phẩm</button>
+            </div>
+          </div>
+
+          <!-- Bảng chi tiết -->
           <div class="table-wrap" style="margin-top:12px">
-            <table>
+            <table id="bang-ct">
               <thead>
                 <tr>
                   <th>MÃ SP</th>
                   <th>TÊN SẢN PHẨM</th>
                   <th>SL</th>
                   <th>GIÁ</th>
-                  <th>CK</th>
                   <th>THÀNH TIỀN</th>
                   <th></th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>SP001</td>
-                  <td>Bánh quy</td>
-                  <td><input class="input" style="width:60px" value="2"></td>
-                  <td>25.000</td>
-                  <td><input class="input" style="width:60px" value="0"></td>
-                  <td>50.000</td>
-                  <td><a class="btn small warn" href="#">Xóa</a></td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
 
           <div class="row" style="justify-content:flex-end;margin-top:12px;gap:8px">
             <a class="btn secondary" href="#hoa-don">Hủy</a>
-            <a class="btn" href="#hoa-don">Lưu hóa đơn</a>
+            <a class="btn" id="btn-luu-hoa-don" href="#">Lưu hóa đơn</a>
           </div>
         </div>
       </section>
@@ -183,9 +187,6 @@
       <section id="chi-tiet" class="view">
         <div class="card">
           <h3 class="h3">Chi tiết hóa đơn</h3>
-          <p><strong>Mã HĐ:</strong> HD0001</p>
-          <p><strong>Khách hàng:</strong> Nguyễn Văn An</p>
-          <p><strong>Ngày lập:</strong> 10/09/2025</p>
 
           <div class="table-wrap">
             <table>

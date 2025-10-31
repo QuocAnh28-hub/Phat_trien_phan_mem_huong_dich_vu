@@ -1,115 +1,161 @@
-// =================== DỮ LIỆU MÔ PHỎNG ===================
-const db = {
-  KhachHang: [
-    { id: "KH001", ten: "Nguyễn Văn An", sdt: "0912345678" },
-    { id: "KH002", ten: "Trần Thị B", sdt: "0987654321" },
-    { id: "KH003", ten: "Phạm Văn C", sdt: "0909090909" }
-  ],
-  SanPham: [
-    { ma: "SP001", ten: "Bánh quy", gia: 25000 },
-    { ma: "SP002", ten: "Sữa Vinamilk 1L", gia: 35000 },
-    { ma: "SP003", ten: "Nước ngọt Coca 330ml", gia: 12000 },
-    { ma: "SP004", ten: "Snack Oishi", gia: 10000 },
-    { ma: "SP005", ten: "Trà xanh 0 độ", gia: 15000 }
-  ],
-  HoaDonBan: [
-    { id: "HD0001", khach: "Nguyễn Văn An", ngay: "2025-10-10", tong: 2350000, trangThai: "Đã thanh toán" },
-    { id: "HD0002", khach: "Trần Thị B", ngay: "2025-10-12", tong: 1500000, trangThai: "Nháp" },
-    { id: "HD0003", khach: "Phạm Văn C", ngay: "2025-10-14", tong: 870000, trangThai: "Đã hủy" },
-    { id: "HD0004", khach: "Nguyễn Văn An", ngay: "2025-10-16", tong: 3200000, trangThai: "Đã thanh toán" }
-  ]
-};
-
-// =================== HÀM TIỆN ÍCH ===================
-const money = n => new Intl.NumberFormat("vi-VN").format(n || 0) + " ₫";
-
-// =================== HIỂN THỊ DANH SÁCH HÓA ĐƠN ===================
-function renderHoaDon() {
-  const tbody = document.querySelector("#hoa-don table tbody");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-
-  db.HoaDonBan.forEach(h => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${h.id}</td>
-      <td>${h.khach}</td>
-      <td>${h.ngay}</td>
-      <td>${money(h.tong)}</td>
-      <td><span class="pill">${h.trangThai}</span></td>
-      <td class="table-actions">
-        <a class="btn small neutral" href="#chi-tiet" data-id="${h.id}">Xem</a>
-        <a class="btn small warn" href="#" data-huy="${h.id}">Hủy</a>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  // Gán sự kiện nút "Xem" & "Hủy"
-  document.querySelectorAll('[data-id]').forEach(btn => {
-    btn.addEventListener("click", e => {
-      const id = e.target.getAttribute("data-id");
-      renderChiTiet(id);
-    });
-  });
-
-  document.querySelectorAll('[data-huy]').forEach(btn => {
-    btn.addEventListener("click", e => {
-      const id = e.target.getAttribute("data-huy");
-      huyHoaDon(id);
-    });
-  });
-}
-
-// =================== HIỂN THỊ CHI TIẾT HÓA ĐƠN ===================
-function renderChiTiet(maHD) {
-  const hd = db.HoaDonBan.find(h => h.id === maHD);
-  const section = document.querySelector("#chi-tiet");
-  if (!hd || !section) return;
-
-  // Giả lập chi tiết sản phẩm
-  const chiTiet = [
-    { ma: "SP001", ten: "Bánh quy", sl: 2, gia: 25000, ck: 0 },
-    { ma: "SP003", ten: "Coca 330ml", sl: 5, gia: 12000, ck: 0 },
-    { ma: "SP005", ten: "Trà xanh 0 độ", sl: 3, gia: 15000, ck: 0 }
-  ];
-
-  const tbody = section.querySelector("tbody");
-  tbody.innerHTML = "";
-  chiTiet.forEach(sp => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${sp.ma}</td>
-      <td>${sp.ten}</td>
-      <td>${sp.sl}</td>
-      <td>${money(sp.gia)}</td>
-      <td>${sp.ck}</td>
-      <td>${money(sp.sl * sp.gia - sp.ck)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  // Cập nhật thông tin chi tiết
-  section.querySelector("p:nth-of-type(1)").innerHTML = `<strong>Mã HĐ:</strong> ${hd.id}`;
-  section.querySelector("p:nth-of-type(2)").innerHTML = `<strong>Khách hàng:</strong> ${hd.khach}`;
-  section.querySelector("p:nth-of-type(3)").innerHTML = `<strong>Ngày lập:</strong> ${hd.ngay}`;
-
-  // Chuyển view sang phần chi tiết
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("is-active"));
-  section.classList.add("is-active");
-}
-
-// =================== HỦY HÓA ĐƠN ===================
-function huyHoaDon(maHD) {
-  if (!confirm("Bạn có chắc muốn hủy hóa đơn " + maHD + " không?")) return;
-  const hd = db.HoaDonBan.find(h => h.id === maHD);
-  if (!hd) return;
-  hd.trangThai = "Đã hủy";
-  alert("Hóa đơn " + maHD + " đã được hủy!");
-  renderHoaDon();
-}
-
-// =================== KHỞI TẠO SAU KHI LOAD ===================
 document.addEventListener("DOMContentLoaded", () => {
-  renderHoaDon();
+  console.log("✅ JS QuanLyBanHang đã được tải!");
+
+  // ==================== CẤU HÌNH CHUNG ====================
+  const API_BASE = "https://localhost:7107/api-thungan/QuanLyBanHang";
+  const token = localStorage.getItem("token");
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const money = n => new Intl.NumberFormat('vi-VN').format(n || 0);
+
+  // ==================== LẤY ELEMENT ====================
+  const maKHInput = document.getElementById("ma-kh");
+  const tenKHInput = document.getElementById("tenkh");
+  const sdtInput = document.getElementById("sdt");
+  const diachiInput = document.getElementById("diachi");
+  const maSPInput = document.getElementById("ma-sp");
+  const slInput = document.getElementById("sl");
+  const tbody = document.querySelector("#bang-ct tbody");
+  const btnThemSP = document.getElementById("btn-them-sp");
+  const btnLuuHD = document.getElementById("btn-luu-hoa-don");
+
+  // ==================== KIỂM TRA KHÁCH HÀNG ====================
+  maKHInput?.addEventListener("blur", async () => {
+    const maKH = maKHInput.value.trim();
+    if (!maKH) return;
+
+    console.log("🔍 Đang kiểm tra khách hàng:", maKH);
+    try {
+      const res = await axios.get(`${API_BASE}/get-byid-khachhang?maKH=${maKH}`, { headers });
+      console.log("📥 Phản hồi khách hàng:", res.data);
+
+      if (res.data && res.data.success && res.data.data) {
+        const kh = res.data.data;
+        tenKHInput.value = kh.TenKH || "";
+        sdtInput.value = kh.SDT || "";
+        diachiInput.value = kh.DiaChi || "";
+        console.log("✅ Khách hàng đã tải:", kh);
+      } else {
+        alert("⚠️ Không tìm thấy khách hàng!");
+        tenKHInput.value = "";
+        sdtInput.value = "";
+        diachiInput.value = "";
+      }
+    } catch (err) {
+      console.error("❌ Lỗi lấy thông tin KH:", err);
+      alert("Không thể kết nối API khách hàng!");
+    }
+  });
+
+  // ==================== THÊM SẢN PHẨM ====================
+  btnThemSP?.addEventListener("click", async () => {
+    const maSP = maSPInput.value.trim();
+    const sl = parseInt(slInput.value) || 1;
+    if (!maSP) return alert("Vui lòng nhập mã sản phẩm!");
+
+    console.log("🔍 Đang lấy thông tin sản phẩm:", maSP);
+    try {
+      const res = await axios.get(`${API_BASE}/get-sanpham-by-id?id=${maSP}`, { headers });
+      console.log("📥 Phản hồi sản phẩm:", res.data);
+
+      if (!res.data || !res.data.length) {
+        alert("❌ Không tìm thấy sản phẩm!");
+        return;
+      }
+
+      const sp = res.data[0];
+      const gia = Number(sp.dongia);
+      const tt = gia * sl;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${sp.masp}</td>
+        <td>${sp.tensp}</td>
+        <td><input type="number" min="1" value="${sl}" class="input sl-input" style="width:60px"></td>
+        <td>${money(gia)}</td>
+        <td>${money(tt)}</td>
+        <td><button class="btn small warn btn-xoa">Xóa</button></td>
+      `;
+      tbody.appendChild(tr);
+      capNhatTongTien();
+    } catch (err) {
+      console.error("❌ Lỗi lấy sản phẩm:", err);
+      alert("Không thể kết nối API sản phẩm!");
+    }
+  });
+
+  // ==================== XÓA SẢN PHẨM ====================
+  tbody?.addEventListener("click", e => {
+    if (e.target.classList.contains("btn-xoa")) {
+      e.target.closest("tr").remove();
+      capNhatTongTien();
+    }
+  });
+
+  // ==================== TÍNH TỔNG TIỀN ====================
+  function capNhatTongTien() {
+    const rows = tbody.querySelectorAll("tr");
+    let tong = 0;
+    rows.forEach(row => {
+      const sl = Number(row.querySelector(".sl-input").value);
+      const gia = Number(row.cells[3].innerText.replace(/\D/g, ""));
+      const tt = sl * gia;
+      row.cells[4].innerText = money(tt);
+      tong += tt;
+    });
+    let div = document.getElementById("tong-tien-hd");
+    if (!div) {
+      div = document.createElement("div");
+      div.id = "tong-tien-hd";
+      div.style = "text-align:right;margin-top:10px;font-weight:600";
+      tbody.parentElement.appendChild(div);
+    }
+    div.innerHTML = `Tổng tiền hàng: ${money(tong)} ₫`;
+    return tong;
+  }
+
+  // ==================== LƯU HÓA ĐƠN ====================
+  btnLuuHD?.addEventListener("click", async () => {
+    const maKH = maKHInput.value.trim();
+    const tenKH = tenKHInput.value.trim();
+    const sdt = sdtInput.value.trim();
+    const diachi = diachiInput.value.trim();
+    const maHDBan = "HD" + Date.now().toString().slice(-6);
+
+    if (!maKH || !tenKH) return alert("Vui lòng nhập thông tin khách hàng!");
+    const rows = tbody.querySelectorAll("tr");
+    if (!rows.length) return alert("Vui lòng thêm ít nhất 1 sản phẩm!");
+
+    const list = [];
+    rows.forEach(r => {
+      const masp = r.cells[0].innerText.trim();
+      const sl = Number(r.querySelector(".sl-input").value);
+      const gia = Number(r.cells[3].innerText.replace(/\D/g, ""));
+      const tt = sl * gia;
+      list.push({ MAHDBAN: maHDBan, MASP: masp, SOLUONG: sl, DONGIA: gia, TONGTIEN: tt });
+    });
+
+    const tong = list.reduce((sum, x) => sum + x.TONGTIEN, 0);
+    const payload = {
+      MAHDBAN: maHDBan,
+      MANV: "NV001",
+      MAKH: maKH,
+      NGAYLAP: new Date().toISOString(),
+      TONGTIENHANG: tong,
+      THUEVAT: Math.round(tong * 0.1),
+      GIAMGIA: 0,
+      listjson_chitietban: list
+    };
+
+    console.log("📦 GỬI DỮ LIỆU:", payload);
+    try {
+      const res = await axios.post(`${API_BASE}/insert-hoadonban`, payload, { headers });
+      console.log("📥 Phản hồi lưu HĐ:", res.data);
+      alert(res.data.message || "Lưu hóa đơn thành công!");
+      tbody.innerHTML = "";
+      capNhatTongTien();
+    } catch (err) {
+      console.error("❌ Lỗi khi lưu hóa đơn:", err);
+      alert("Không thể lưu hóa đơn!");
+    }
+  });
 });

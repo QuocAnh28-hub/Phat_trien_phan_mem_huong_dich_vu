@@ -31,6 +31,55 @@ namespace Task2_API_ThuNgan.Controllers
             _BLL = new ThanhToan_BLL(configuration);
         }
 
+        [Route("insert-khachhang")]
+        [HttpPost]
+        public IActionResult Create([FromBody] KhachHang kh)
+        {
+            try
+            {
+                if (kh == null)
+                    return BadRequest(new { success = false, message = "Dữ liệu gửi lên rỗng." });
+
+                DataTable result = KH_BLL.CreateKH(kh);
+
+                var list = result.AsEnumerable().Select(row =>
+                    result.Columns.Cast<DataColumn>().ToDictionary(
+                        col => col.ColumnName,
+                        col => row[col]
+                    )
+                ).ToList();
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Thêm khách hàng thành công!",
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Lỗi khi thêm khách hàng: " + ex.Message
+                });
+            }
+        }
+
+        [Route("insert-hoadonban")]
+        [HttpPost]
+        public IActionResult Create([FromBody] HoaDonBan model)
+        {
+            try
+            {
+                bool result = hdb_bll.ThemMoi(model);
+                return result ? Ok("Thêm hóa đơn thành công") : BadRequest("Thêm hóa đơn thất bại");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
+
         [Route("get-all-hoadonban")]
         [HttpGet]
         public IActionResult GetAll_HoaDon()
@@ -97,15 +146,42 @@ namespace Task2_API_ThuNgan.Controllers
 
         [Route("get-byid-khachhang")]
         [HttpGet]
-        public IActionResult GetByIdKH(string makh)
+        public IActionResult GetByIdKH(string maKH)
         {
             try
             {
-                DataTable dt = KH_BLL.GetByIdKH(makh);
-                return Ok(new { success = true, message = "Lấy thông tin khách thành công", data = dt });
+                if (string.IsNullOrEmpty(maKH))
+                    return BadRequest(new { success = false, message = "Thiếu mã khách hàng." });
+
+                DataTable dt = KH_BLL.GetByIdKH(maKH);
+
+                if (dt == null || dt.Rows.Count == 0)
+                    return NotFound(new { success = false, message = "Không tìm thấy khách hàng." });
+
+                var list = dt.AsEnumerable()
+                    .Select(row => dt.Columns.Cast<DataColumn>()
+                        .ToDictionary(col => col.ColumnName, col => row[col])
+                    ).ToList();
+
+                var khach = (object)(list.Count == 1 ? list[0] : list);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Lấy thông tin khách hàng thành công!",
+                    data = khach
+                });
             }
-            catch (Exception ex) { return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message }); }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Lỗi khi lấy thông tin khách hàng: " + ex.Message
+                });
+            }
         }
+
 
         [Route("get-all-danhmuc")]
         [HttpGet]
