@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DAH — Quản lý bán hàng (Thu ngân)</title>
-  <script src="../js/axios-1.12.2.min.js"></script>
+  <script src="../angular/angular.min.js"></script>
   <script src="../script/auth.js"></script>
   <script src="../script/login.js"></script>
   <script src="../script/QuanLyBanHang.js"></script>
   <link rel="stylesheet" href="../style/QuanLyBanHang.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body>
+<body ng-app="dahApp" ng-controller="BanHangCtrl">
   <div class="warp">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -126,19 +126,30 @@
           <div class="row" style="gap:12px;flex-wrap:wrap">
             <div style="flex:1;min-width:150px">
               <div class="small muted">Mã khách hàng</div>
-              <input id="ma-kh" class="input" placeholder="VD: KH001">
+              <input id="ma-kh" class="input" placeholder="VD: KH001"
+                    ng-model="khachHang.ma"
+                    ng-blur="kiemTraKhachHang()">
             </div>
+
             <div style="flex:1;min-width:200px">
               <div class="small muted">Tên khách hàng</div>
-              <input id="tenkh" class="input" placeholder="Tên khách hàng">
+              <input id="tenkh" class="input" ng-model="khachHang.ten"
+                    placeholder="Tên khách hàng"
+                    ng-readonly="!khachHang.moi">
             </div>
+
             <div style="flex:1;min-width:200px">
               <div class="small muted">Số điện thoại</div>
-              <input id="sdt" class="input" placeholder="0999123456">
+              <input id="sdt" class="input" ng-model="khachHang.sdt"
+                    placeholder="0999123456"
+                    ng-readonly="!khachHang.moi">
             </div>
+
             <div style="flex:1;min-width:200px">
               <div class="small muted">Địa chỉ</div>
-              <input id="diachi" class="input" placeholder="Địa chỉ khách hàng">
+              <input id="diachi" class="input" ng-model="khachHang.diachi"
+                    placeholder="Địa chỉ khách hàng"
+                    ng-readonly="!khachHang.moi">
             </div>
           </div>
 
@@ -148,14 +159,14 @@
           <div class="row" style="gap:12px;align-items:flex-end;flex-wrap:wrap">
             <div>
               <div class="small muted">Mã sản phẩm</div>
-              <input id="ma-sp" class="input" placeholder="VD: SP001">
+              <input id="ma-sp" class="input" ng-model="sanPham.ma" placeholder="VD: SP001">
             </div>
             <div>
               <div class="small muted">Số lượng</div>
-              <input id="sl" class="input" type="number" min="1" value="1">
+              <input id="sl" class="input" type="number" min="1" ng-model="sanPham.sl" value="1">
             </div>
             <div>
-              <button id="btn-them-sp" class="btn">+ Thêm sản phẩm</button>
+              <button id="btn-them-sp" class="btn" ng-click="themSanPham()" style="cursor: pointer;">+ Thêm sản phẩm</button>
             </div>
           </div>
 
@@ -172,13 +183,26 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody></tbody>
+              <tbody>
+                <tr ng-repeat="sp in danhSachCT track by $index">
+                  <td>{{sp.masp}}</td>
+                  <td>{{sp.tensp}}</td>
+                  <td><input type="number" ng-model="sp.soluong" ng-change="capNhatTongTien()" min="1" style="width:60px"></td>
+                  <td>{{sp.dongia | number}} ₫</td>
+                  <td>{{sp.tongtien | number}} ₫</td>
+                  <td><button class="btn small warn" ng-click="xoaSanPham($index)" style="cursor: pointer;">Xóa</button></td>
+                </tr>
+              </tbody>
             </table>
+          </div>
+
+          <div style="text-align:right;margin-top:10px;font-weight:600">
+            Tổng tiền hàng: {{tongTien | number}} ₫
           </div>
 
           <div class="row" style="justify-content:flex-end;margin-top:12px;gap:8px">
             <a class="btn secondary" href="#hoa-don">Hủy</a>
-            <a class="btn" id="btn-luu-hoa-don" href="#">Lưu hóa đơn</a>
+            <a class="btn" id="btn-luu-hoa-don" ng-click="luuHoaDon()" style="cursor: pointer;">Lưu hóa đơn</a>
           </div>
         </div>
       </section>
@@ -214,6 +238,28 @@
           </div>
         </div>
       </section>
+
+      <!-- POPUP THANH TOÁN -->
+      <div class="modal-overlay" ng-show="showPaymentModal">
+        <div class="modal">
+          <h3 class="modal-title">Chọn phương thức thanh toán</h3>
+          <div class="modal-body">
+            <label class="radio-option">
+              <input type="radio" ng-model="thanhToan.phuongThuc" value="Tiền mặt"> Tiền mặt
+            </label>
+            <label class="radio-option">
+              <input type="radio" ng-model="thanhToan.phuongThuc" value="Chuyển khoản"> Chuyển khoản
+            </label>
+            <label class="radio-option">
+              <input type="radio" ng-model="thanhToan.phuongThuc" value="Ghi nợ"> Ghi nợ
+            </label>
+          </div>
+          <div class="modal-actions">
+            <button class="btn secondary" ng-click="dongModal()">Hủy</button>
+            <button class="btn" ng-click="xacNhanThanhToan()">Xác nhận</button>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 </body>

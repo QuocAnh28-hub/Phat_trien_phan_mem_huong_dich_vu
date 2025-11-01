@@ -19,7 +19,7 @@ namespace Task2_API_ThuNgan.Controllers
         private readonly KhachHang_BLL KH_BLL;
         private readonly DanhMuc_BLL dm_bll;
         private readonly SanPham_BLL sp_bll;
-        private readonly ThanhToan_BLL _BLL;
+        private readonly ThanhToan_BLL tt_bll;
 
         public QuanLyBanHang_Controller(IConfiguration configuration)
         {
@@ -28,7 +28,23 @@ namespace Task2_API_ThuNgan.Controllers
             KH_BLL = new KhachHang_BLL(configuration);
             dm_bll = new DanhMuc_BLL(configuration);
             sp_bll = new SanPham_BLL(configuration);
-            _BLL = new ThanhToan_BLL(configuration);
+            tt_bll = new ThanhToan_BLL(configuration);
+        }
+
+        [Route("insert-thanhtoan")]
+        [HttpPost]
+        public IActionResult Create([FromBody] Models.ThanhToan model)
+        {
+            try
+            {
+                DataTable dt = tt_bll.GetById(model.MaThanhToan);
+                if (dt.Rows.Count == 1)
+                    return Ok(new { success = false, message = "Đã tồn tại thanh toán có mã này" });
+
+                tt_bll.Create(model);
+                return Ok(new { success = true, message = "Thêm thông tin thanh toán thành công" });
+            }
+            catch (Exception ex) { return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message }); }
         }
 
         [Route("insert-khachhang")]
