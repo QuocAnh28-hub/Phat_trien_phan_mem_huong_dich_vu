@@ -31,37 +31,40 @@ window.onclick = function(e) {
 //lấy danh mục khi tải trang
 window.onload = function() {
 
-  axios.get(`${API_URL}/get-all-danhmuc`, {
+  $.ajax({
+    url: `${API_URL}/get-all-danhmuc`,
+    type: 'GET',
     headers: {
       Authorization: `Bearer ${token}`
-    }
-  })
-  .then(function (response) {
-    allCategories = response.data;
-    console.log("Danh sách danh mục:", allCategories);
+    },
+    success: function(data) {
+      allCategories = data;
+      console.log("Danh sách danh mục:", allCategories);
 
-    const tableBody = document.getElementById("category-list");
-    if (tableBody) {
-      tableBody.innerHTML = "";
-      allCategories.forEach(danhmuc => {
-        const row = `
-          <tr>
-            <td>${danhmuc.madanhmuc.trim()}</td>
-            <td>${danhmuc.tendanhmuc.trim()}</td>
-            <td>${danhmuc.mota.trim() || ""}</td>
-            <td>
-              <button class="btn-edit" onclick="openEditModal('${danhmuc.madanhmuc.trim()}')">Sửa</button>
-              <button class="btn-delete" onclick="deleteCategory('${danhmuc.madanhmuc.trim()}')">Xóa</button>
-            </td>
-          </tr>`;
-        tableBody.innerHTML += row;
-      });
-    renderTable();
+      const $tableBody = $("#category-list");
+
+      if ($tableBody.length > 0) {
+        let rowsHtml = "";
+        $.each(allCategories, function(index, danhmuc) {
+          rowsHtml += `
+            <tr>
+              <td>${danhmuc.madanhmuc.trim()}</td>
+              <td>${danhmuc.tendanhmuc.trim()}</td>
+              <td>${danhmuc.mota.trim() || ""}</td>
+              <td>
+                <button class="btn-edit" onclick="openEditModal('${danhmuc.madanhmuc.trim()}')">Sửa</button>
+                <button class="btn-delete" onclick="deleteCategory('${danhmuc.madanhmuc.trim()}')">Xóa</button>
+              </td>
+            </tr>`;
+        });
+        $tableBody.html(rowsHtml);
+
+        renderTable(); 
+      }
+    },
+    error: function() {
+      alert("Không thể tải danh mục. Kiểm tra token hoặc API.");
     }
-  })
-  .catch(function (error) {
-    console.error("Lỗi khi tải danh mục:", error);
-    alert("Không thể tải danh mục. Kiểm tra token hoặc API.");
   });
 };
 
@@ -108,13 +111,13 @@ function renderPagination() {
   }
 }
 
-//thêm danh mục
+// Thêm danh mục
 function addCategory(event) {
   event.preventDefault();
 
-  const maDanhmuc = document.getElementById("categoryID").value.trim();
-  const tenDanhmuc = document.getElementById("categoryName").value.trim();
-  const moTa = document.getElementById("categoryDesc").value.trim();
+  const maDanhmuc = $("#categoryID").val().trim();
+  const tenDanhmuc = $("#categoryName").val().trim();
+  const moTa = $("#categoryDesc").val().trim();
 
   const danhmucNew = {
     madanhmuc: maDanhmuc,
@@ -122,22 +125,26 @@ function addCategory(event) {
     mota: moTa
   };
 
-  axios.post(`${API_URL}/insert-danhmuc`, danhmucNew, {
+  $.ajax({
+    url: `${API_URL}/insert-danhmuc`,
+    type: "POST",
+    data: JSON.stringify(danhmucNew),
+    contentType: "application/json",
     headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
+      Authorization: `Bearer ${token}`
+    },
+    success: function (response) {
+      alert("Thêm danh mục thành công!");
+      closeAddModal();
+      location.reload(); // tải lại danh sách
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi thêm mới danh mục:", xhr);
+      alert(`Không thể thêm danh mục do trùng mã '${maDanhmuc}'.`);
     }
-  })
-  .then(function (response) {
-    alert("Thêm danh mục thành công!");
-    closeAddModal();
-    window.location.reload(); // tải lại danh sách
-  })
-  .catch(function (error) {
-    console.error("Lỗi khi thêm mới danh mục:", error);
-    alert(`Không thể thêm danh mục do trùng mã '${maDanhmuc.trim()}'.`);
   });
 }
+
 
 //sửa
 function openEditModal(maDanhmuc) {
@@ -161,8 +168,9 @@ function closeEditModal() {
 
 //sửa danh mục
 function editCategory(event) {
+  
   event.preventDefault();
-
+  
   const maDanhmuc = document.getElementById("editCategoryId").value.trim();
   const tenDanhmuc = document.getElementById("editCategoryName").value.trim();
   const moTa = document.getElementById("editCategoryDesc").value.trim();
@@ -172,41 +180,44 @@ function editCategory(event) {
     tendanhmuc: tenDanhmuc,
     mota: moTa
   };
-
-  axios.put(`${API_URL}/update-danhmuc`, danhmucUpdate, {
+  if (!confirm(`Bạn có chắc muốn sửa danh mục '${maDanhmuc}' không?`)) return;
+  $.ajax({
+    url: `${API_URL}/update-danhmuc`,
+    type: "PUT",
+    data: JSON.stringify(danhmucUpdate),
+    contentType: "application/json",
     headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
+      Authorization: `Bearer ${token}`
+    },
+    success: function (response) {
+      alert("Sửa danh mục thành công!");
+      closeEditModal();
+      location.reload(); // tải lại danh sách
+    },
+    error: function (xhr) {
+      alert(`Không thể thêm sửa danh mục!.`);
     }
-  })
-  .then(function (response) {
-    alert("Sửa thông tin danh mục thành công!");
-    closeEditModal();
-    window.location.reload(); // tải lại danh sách
-  })
-  .catch(function (error) {
-    console.error("Lỗi khi thay đổi thông tin danh mục:", error);
-    alert("Không thể sửa danh mục. Kiểm tra token hoặc API.");
   });
   
 }
-//xoá danh mục
+//xoá danh mục 
 function deleteCategory(maDanhmuc) {
   if (!confirm(`Bạn có chắc muốn xóa danh mục '${maDanhmuc}' không?`)) return;
 
-  axios.delete(`${API_URL}/delete-danhmuc?maDanhMuc=${maDanhmuc}`, {
+  $.ajax({
+    url: `${API_URL}/delete-danhmuc?maDanhMuc=${maDanhmuc}`,
+    type: "DELETE",
+    contentType: "application/json",
     headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
+      Authorization: `Bearer ${token}`
+    },
+    success: function (response) {
+      alert("Xoá danh mục thành công!");
+      location.reload(); // tải lại danh sách
+    },
+    error: function (xhr) {
+      alert(`Không thể thêm xoá danh mục!.`);
     }
-  })
-  .then(function (response) {
-    alert("Xóa danh mục thành công!");
-    window.location.reload(); // tải lại danh sách
-  })
-  .catch(function (error) {
-    console.error("Lỗi khi xóa danh mục:", error);
-    alert("Không thể xóa danh mục. Kiểm tra token hoặc API.");
   });
 }
 
@@ -214,54 +225,58 @@ function deleteCategory(maDanhmuc) {
 
 
 function searchByMaDanhMuc() {
-  const maDanhMuc = document.getElementById("searchInput").value.trim();
+  const maDanhMuc = $("#searchInput").val().trim();
   if (!maDanhMuc) {
     alert("Vui lòng nhập mã danh mục cần tìm!");
     return;
   }
 
-  axios.get(`${API_URL}/get-byID-danhmuc?madanhmuc=${maDanhMuc}`, {
+  $.ajax({
+    url: `${API_URL}/get-byID-danhmuc?madanhmuc=${maDanhMuc}`,
+    type: "GET",
     headers: {
       Authorization: `Bearer ${token}`
+    },
+    success: function (response) {
+      const danhmuc = response[0]; // API trả về mảng
+      if (danhmuc) {
+        const row = `
+          <tr>
+            <td>${danhmuc.madanhmuc.trim()}</td>
+            <td>${danhmuc.tendanhmuc.trim()}</td>
+            <td>${danhmuc.mota?.trim() || ""}</td>
+            <td>
+              <button class="btn-edit" onclick="openEditModal('${danhmuc.madanhmuc.trim()}')">Sửa</button>
+              <button class="btn-delete" onclick="deleteCategory('${danhmuc.madanhmuc.trim()}')">Xóa</button>
+            </td>
+          </tr>`;
+        $("#category-list").html(row);
+      } else {
+        alert("Không tìm thấy danh mục!");
+      }
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi tìm danh mục:", xhr);
+      alert("Không tìm thấy danh mục hoặc API bị lỗi.");
     }
-  })
-  .then(function (response) {
-    
-
-    // Vì API trả về MẢNG, nên lấy phần tử đầu tiên
-    const danhmuc = response.data[0];
-    //console.log("Kết quả API:", response.data);
-    if (danhmuc) {
-      const tableBody = document.getElementById("category-list");
-      tableBody.innerHTML = `
-        <tr>
-          <td>${danhmuc.madanhmuc.trim()}</td>
-          <td>${danhmuc.tendanhmuc.trim()}</td>
-          <td>${danhmuc.mota.trim() || ""}</td>
-          <td>
-            <button class="btn-edit" onclick="openEditModal('${danhmuc.madanhmuc.trim()}')">Sửa</button>
-            <button class="btn-delete" onclick="deleteCategory('${danhmuc.madanhmuc.trim()}')">Xóa</button>
-          </td>
-        </tr>`;
-    }
-  })
-  .catch(function (error) {
-    console.error("Lỗi khi tìm danh mục:", error);
-    alert("Không tìm thấy danh mục hoặc API bị lỗi.");
   });
 }
 
 // Hàm làm mới lại danh sách
 function loadAllCategories() {
-  axios.get(`${API_URL}/get-all-danhmuc`, {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  .then(function (response) {
-    allCategories = response.data;
-    renderTable();
-    document.getElementById("searchInput").value = "";
-  })
-  .catch(function (error) {
-    console.error("Lỗi khi tải lại danh mục:", error);
+  $.ajax({
+    url: `${API_URL}/get-all-danhmuc`,
+    type: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    success: function (response) {
+      allCategories = response;
+      renderTable();
+      $("#searchInput").val("");
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi tải lại danh mục:", xhr);
+    }
   });
 }
