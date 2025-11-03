@@ -238,29 +238,28 @@
           </div>
         </div>
       </section>
-
-      <!-- POPUP THANH TOÁN -->
-      <div class="modal-overlay" ng-show="showPaymentModal">
-        <div class="modal">
-          <h3 class="modal-title">Chọn phương thức thanh toán</h3>
-          <div class="modal-body">
-            <label class="radio-option">
-              <input type="radio" ng-model="thanhToan.phuongThuc" value="Tiền mặt"> Tiền mặt
-            </label>
-            <label class="radio-option">
-              <input type="radio" ng-model="thanhToan.phuongThuc" value="Chuyển khoản"> Chuyển khoản
-            </label>
-            <label class="radio-option">
-              <input type="radio" ng-model="thanhToan.phuongThuc" value="Ghi nợ"> Ghi nợ
-            </label>
-          </div>
-          <div class="modal-actions">
-            <button class="btn secondary" ng-click="dongModal()">Hủy</button>
-            <button class="btn" ng-click="xacNhanThanhToan()">Xác nhận</button>
-          </div>
-        </div>
-      </div>
     </main>
+  </div>
+  <!-- POPUP THANH TOÁN -->
+  <div class="modal-overlay" ng-show="showPaymentModal">
+    <div class="modal">
+      <h3 class="modal-title">Chọn phương thức thanh toán</h3>
+      <div class="modal-body">
+        <label class="radio-option">
+          <input type="radio" ng-model="thanhToan.phuongThuc" value="Tiền mặt"> Tiền mặt
+        </label>
+        <label class="radio-option">
+          <input type="radio" ng-model="thanhToan.phuongThuc" value="Chuyển khoản"> Chuyển khoản
+        </label>
+        <label class="radio-option">
+          <input type="radio" ng-model="thanhToan.phuongThuc" value="Ghi nợ"> Ghi nợ
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn secondary" ng-click="dongModal()">Hủy</button>
+        <button class="btn" ng-click="xacNhanThanhToan()">Xác nhận</button>
+      </div>
+    </div>
   </div>
 </body>
 </html>

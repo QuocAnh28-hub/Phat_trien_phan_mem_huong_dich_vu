@@ -87,12 +87,31 @@ namespace Task2_API_ThuNgan.Controllers
         {
             try
             {
-                bool result = hdb_bll.ThemMoi(model);
-                return result ? Ok("Thêm hóa đơn thành công") : BadRequest("Thêm hóa đơn thất bại");
+                bool kq = hdb_bll.ThemMoi(model);
+                if (kq)
+                {
+                    return Ok(new
+                    {
+                        success = true,
+                        message = "Thêm hóa đơn thành công!"
+                    });
+                }
+                else
+                {
+                    return Ok(new
+                    {
+                        success = false,
+                        message = "Không thể thêm hóa đơn (đã tồn tại hoặc lỗi khác)."
+                    });
+                }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Lỗi khi thêm hóa đơn: " + ex.Message
+                });
             }
         }
 
