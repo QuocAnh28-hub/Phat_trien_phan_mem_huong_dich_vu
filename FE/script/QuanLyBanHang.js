@@ -18,10 +18,6 @@ app.controller("BanHangCtrl", function ($scope, $http) {
   $scope.showPaymentModal = false;
   $scope.thanhToan = { maHDBan: null, soTienThanhToan: 0, phuongThuc: "Tiền mặt" };
 
-  $scope.dongModal = function () {
-    $scope.showPaymentModal = false;
-  };
-
   $scope.xacNhanThanhToan = async function () {
     try {
       const maThanhToan = `TT${Date.now()}${Math.floor(Math.random() * 9000 + 1000)}`;

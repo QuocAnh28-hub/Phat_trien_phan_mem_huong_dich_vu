@@ -63,62 +63,8 @@
         <div class="actions"><div class="pill">Ngôn ngữ: VN</div></div>
       </div>
 
-      <!-- ===== VIEW: Hóa đơn bán ===== -->
-      <section id="hoa-don" class="view is-active">
-        <section class="card">
-          <div class="row" style="gap:12px;flex-wrap:wrap;align-items:flex-end">
-            <div>
-              <div class="small muted">Từ ngày</div>
-              <input class="input" type="date">
-            </div>
-            <div>
-              <div class="small muted">Đến ngày</div>
-              <input class="input" type="date">
-            </div>
-            <div>
-              <div class="small muted">Khách hàng</div>
-              <input class="input" placeholder="Tên / SĐT khách...">
-            </div>
-            <div>
-              <div class="small muted">Trạng thái</div>
-              <select class="input">
-                <option value="">-- Tất cả --</option>
-                <option>Nháp</option>
-                <option>Đã thanh toán</option>
-                <option>Đã hủy</option>
-              </select>
-            </div>
-            <div style="flex:1;min-width:200px">
-              <div class="small muted">Tìm nhanh</div>
-              <input class="input" placeholder="Mã HĐ / ghi chú...">
-            </div>
-            <div class="row" style="gap:8px">
-              <a class="btn secondary" href="#hoa-don">Làm mới</a>
-              <a class="btn" href="#tao-hoa-don">+ Tạo hóa đơn</a>
-            </div>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>MÃ HĐ</th>
-                  <th>KHÁCH HÀNG</th>
-                  <th>NGÀY</th>
-                  <th>TỔNG TIỀN</th>
-                  <th>TRẠNG THÁI</th>
-                  <th style="width:160px">THAO TÁC</th>
-                </tr>
-              </thead>
-            </table>
-          </div>
-        </section>
-      </section>
-
       <!-- ===== VIEW: Tạo hóa đơn ===== -->
-      <section id="tao-hoa-don" class="view">
+      <section id="tao-hoa-don" class="view is-active">
         <div class="card">
           <h3 class="h3">Tạo hóa đơn mới</h3>
 
@@ -256,7 +202,6 @@
         </label>
       </div>
       <div class="modal-actions">
-        <button class="btn secondary" ng-click="dongModal()">Hủy</button>
         <button class="btn" ng-click="xacNhanThanhToan()">Xác nhận</button>
       </div>
     </div>
