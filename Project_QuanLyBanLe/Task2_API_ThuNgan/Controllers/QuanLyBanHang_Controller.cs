@@ -31,6 +31,21 @@ namespace Task2_API_ThuNgan.Controllers
             tt_bll = new ThanhToan_BLL(configuration);
         }
 
+        [Route("update-soluong-sanpham")]
+        [HttpPatch]
+        public IActionResult UpdateSoLuong(string maSP, int soLuongMoi)
+        {
+            try
+            {
+                bool result = sp_bll.SuaSoLuong(maSP, soLuongMoi);
+                return result ? Ok("Cập nhật số lượng thành công") : BadRequest("Cập nhật thất bại");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
+
         [Route("insert-thanhtoan")]
         [HttpPost]
         public IActionResult Create([FromBody] Models.ThanhToan model)
