@@ -50,7 +50,6 @@ app.controller("BanHangCtrl", function ($scope, $http) {
       alert(`Không thể tạo bản ghi thanh toán! Chi tiết: ${serverMsg}`);
     } finally {
       $scope.showPaymentModal = false;
-      // ensure digest
       if (!$scope.$$phase) $scope.$applyAsync();
     }
   };
@@ -103,7 +102,6 @@ app.controller("BanHangCtrl", function ($scope, $http) {
     console.log("🔍 Đang lấy thông tin sản phẩm:", maSP);
     $http.get(`${API_BASE}/get-sanpham-by-id?id=${encodeURIComponent(maSP)}`, { headers })
       .then(res => {
-        // backend may return array or object
         const data = res.data;
         const sp = Array.isArray(data) ? data[0] : (data && data.data) ? data.data : data;
         if (sp) {
@@ -139,8 +137,48 @@ app.controller("BanHangCtrl", function ($scope, $http) {
 
   // ================== 4️⃣ TÍNH TỔNG TIỀN ==================
   $scope.capNhatTongTien = function () {
+    // cập nhật tongtien cho từng dòng trước khi tính tổng (nếu user thay đổi soluong)
+    $scope.danhSachCT.forEach(sp => {
+      sp.tongtien = Number(sp.dongia || 0) * Number(sp.soluong || 0);
+    });
     $scope.tongTien = $scope.danhSachCT.reduce((s, x) => s + (Number(x.tongtien) || 0), 0);
   };
+
+  // ================== Helper: gộp các dòng trùng MASP ==================
+  function mergeItems(list) {
+    const map = {};
+    list.forEach(it => {
+      const id = it.masp;
+      const qty = Number(it.soluong || 0);
+      const price = Number(it.dongia || 0);
+      if (!map[id]) {
+        map[id] = { masp: id, tensp: it.tensp || "", dongia: price, soluong: qty, tongtien: price * qty };
+      } else {
+        map[id].soluong += qty;
+        map[id].tongtien = map[id].dongia * map[id].soluong;
+      }
+    });
+    return Object.values(map);
+  }
+
+  // ================== Helper: cập nhật tồn kho cho 1 sản phẩm ==================
+  async function updateStockForProduct(masp, soldQty) {
+    try {
+      const res = await $http.get(`${API_BASE}/get-sanpham-by-id?id=${encodeURIComponent(masp)}`, { headers });
+      const data = res.data;
+      const sp = Array.isArray(data) ? data[0] : (data && data.data) ? data.data : data;
+      const curQty = Number(sp?.soluongton ?? sp?.SOLUONGTON ?? sp?.soLuong ?? sp?.SoLuong ?? 0);
+      const newQty = Math.max(0, curQty - Number(soldQty || 0));
+
+      const patchUrl = `${API_BASE}/update-soluong-sanpham?maSP=${encodeURIComponent(masp)}&soLuongMoi=${encodeURIComponent(newQty)}`;
+      const patchRes = await $http.patch(patchUrl, null, { headers });
+      console.log(`Cập nhật tồn kho cho ${masp}: ${curQty} -> ${newQty}`, patchRes.data);
+      return { ok: true, newQty };
+    } catch (err) {
+      console.error(`Lỗi cập nhật tồn kho cho ${masp}:`, err);
+      return { ok: false, error: err };
+    }
+  }
 
   // ================== 5️⃣ LƯU HÓA ĐƠN ==================
   $scope.luuHoaDon = async function () {
@@ -166,10 +204,13 @@ app.controller("BanHangCtrl", function ($scope, $http) {
       }
     }
 
-    // Sinh mã dạng HD + 8 chữ số ngẫu nhiên (ví dụ: HD12345678)
+    // Sinh mã hóa đơn (ngắn) để phù hợp DB
     const maHDBan = 'HD' + Math.floor(Math.random() * 90000000 + 10000000);
-
     const tong = $scope.tongTien || 0;
+
+    // Gộp các dòng trùng MASP trước khi gửi
+    const mergedList = mergeItems($scope.danhSachCT);
+
     const payload = {
       MAHDBAN: maHDBan,
       MANV: "NV001",
@@ -178,7 +219,7 @@ app.controller("BanHangCtrl", function ($scope, $http) {
       TONGTIENHANG: tong,
       THUEVAT: Math.round(tong * 0.1),
       GIAMGIA: 0,
-      listjson_chitietban: $scope.danhSachCT.map(x => ({
+      listjson_chitietban: mergedList.map(x => ({
         MAHDBAN: maHDBan,
         MASP: x.masp,
         SOLUONG: x.soluong,
@@ -188,12 +229,24 @@ app.controller("BanHangCtrl", function ($scope, $http) {
     };
 
     try {
-      console.log("Gửi payload lưu hóa đơn:", payload);
+      console.log("Gửi payload lưu hóa đơn (đã gộp):", payload);
       const res = await $http.post(`${API_BASE}/insert-hoadonban`, payload, { headers });
       console.log("Phản hồi lưu hóa đơn:", res.data);
 
       if (res.data && res.data.success) {
         alert("✅ Lưu hóa đơn thành công!");
+
+        // Cập nhật tồn kho cho từng sản phẩm (sử dụng mergedList)
+        const updateResults = await Promise.all(mergedList.map(it => updateStockForProduct(it.masp, it.soluong)));
+        const failed = updateResults.filter(r => !r.ok);
+        if (failed.length) {
+          console.warn(`${failed.length} sản phẩm cập nhật tồn kho thất bại. Kiểm tra console.`);
+          alert(`Lưu hóa đơn thành công nhưng có ${failed.length} sản phẩm cập nhật tồn kho thất bại.`);
+        } else {
+          console.log("✅ Tất cả sản phẩm đã cập nhật tồn kho thành công.");
+        }
+
+        // Xóa danh sách sau khi cập nhật tồn kho
         $scope.danhSachCT = [];
         $scope.capNhatTongTien();
 
@@ -204,8 +257,10 @@ app.controller("BanHangCtrl", function ($scope, $http) {
           phuongThuc: "Tiền mặt"
         };
 
+        // set maHDBan cho thanhToan và mở modal trong $applyAsync
         $scope.$applyAsync(() => {
           $scope.thanhToan = paymentPayload;
+          $scope.thanhToan.maHDBan = maHDBan;
           $scope.showPaymentModal = true;
         });
       } else {
@@ -215,8 +270,13 @@ app.controller("BanHangCtrl", function ($scope, $http) {
       }
     } catch (err) {
       console.error("❌ Lỗi lưu hóa đơn:", err);
-      const serverMsg = err?.data?.message || err?.statusText || err?.message || JSON.stringify(err);
-      alert(`Không thể lưu hóa đơn! Chi tiết: ${serverMsg}`);
+      // Nếu server báo lỗi duplicate PK, gợi ý nguyên nhân (dòng trùng)
+      const text = err?.data?.message || err?.statusText || err?.message || JSON.stringify(err);
+      if (String(text).toLowerCase().includes("primary") || String(text).toLowerCase().includes("duplicate")) {
+        alert("Lỗi khi thêm hóa đơn: có thể do nhiều dòng cùng mã sản phẩm (MASP) gây trùng khoá. Hệ thống đã cố gắng gộp các dòng trước khi gửi; nếu vẫn lỗi, kiểm tra server.");
+      } else {
+        alert(`Không thể lưu hóa đơn! Chi tiết: ${text}`);
+      }
     }
   };
 });

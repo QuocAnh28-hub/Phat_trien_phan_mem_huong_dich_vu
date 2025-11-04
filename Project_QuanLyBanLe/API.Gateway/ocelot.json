@@ -46,7 +46,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api-thungan/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ]
     },
     {
       "DownstreamPathTemplate": "/api/{everything}",
