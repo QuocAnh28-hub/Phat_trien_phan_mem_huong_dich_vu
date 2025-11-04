@@ -104,20 +104,31 @@ app.controller("BanHangCtrl", function ($scope, $http) {
       .then(res => {
         const data = res.data;
         const sp = Array.isArray(data) ? data[0] : (data && data.data) ? data.data : data;
-        if (sp) {
-          const gia = Number(sp.dongia || sp.DONGIA || sp.DonGia || 0);
-          const tt = gia * sl;
+        if (!sp) return alert("❌ Không tìm thấy sản phẩm!");
+
+        const masp = sp.masp || sp.MASP || maSP;
+        const gia  = Number(sp.dongia || sp.DONGIA || sp.DonGia || 0);
+
+        // Nếu đã có sản phẩm cùng mã thì chỉ cập nhật số lượng / thành tiền
+        const existing = $scope.danhSachCT.find(item => item.masp === masp);
+        if (existing) {
+          existing.soluong = Number(existing.soluong || 0) + sl;
+          existing.dongia = gia; // giữ giá hiện tại hoặc cập nhật theo backend
+          existing.tongtien = Number(existing.dongia) * Number(existing.soluong);
+        } else {
           $scope.danhSachCT.push({
-            masp: sp.masp || sp.MASP || maSP,
+            masp: masp,
             tensp: sp.tensp || sp.TENSP || sp.TenSP || "",
             soluong: sl,
             dongia: gia,
-            tongtien: tt
+            tongtien: gia * sl
           });
-          $scope.capNhatTongTien();
-        } else {
-          alert("❌ Không tìm thấy sản phẩm!");
         }
+
+        // Cập nhật tổng và reset input nếu muốn
+        $scope.capNhatTongTien();
+        $scope.sanPham.ma = "";
+        $scope.sanPham.sl = 1;
       })
       .catch(err => {
         if (err && err.status === 404) {
