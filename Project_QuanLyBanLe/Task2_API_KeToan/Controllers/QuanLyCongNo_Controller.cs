@@ -25,12 +25,47 @@ namespace Task2_API_KeToan.Controllers
         private readonly NhaCungCap_BLL NCC_BLL;
         private readonly KhachHang_BLL KH_BLL;
         private readonly ThanhToan_BLL TT_BLL;
+        private readonly HoaDonBan_BLL hdb_bll;
 
         public QuanLyCongNo_Controller(IConfiguration configuration)
         {
             NCC_BLL = new NhaCungCap_BLL(configuration);
             KH_BLL = new KhachHang_BLL(configuration);
             TT_BLL = new ThanhToan_BLL(configuration);
+            hdb_bll = new HoaDonBan_BLL(configuration);
+        }
+
+        [Route("get-all-hoadonban")]
+        [HttpGet]
+        public IActionResult GetAll_HDB()
+        {
+            try
+            {
+                var result = hdb_bll.LayTatCa();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
+
+        [Route("get-hoadonban-by-id")]
+        [HttpGet]
+        public IActionResult Get_HDB_ByID(string maHoaDon)
+        {
+            try
+            {
+                var result = hdb_bll.LayTheoID(maHoaDon);
+                if (result == null || result.Count == 0)
+                    return NotFound("Không tìm thấy hóa đơn.");
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         private List<object> ChuyenThanhList(DataTable dt)
