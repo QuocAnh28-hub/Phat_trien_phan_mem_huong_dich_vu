@@ -50,7 +50,7 @@ namespace Task2_API_ThuKho.Controllers
 
 
         [Route("update-soluong-sanpham")]
-        [HttpPatch]
+        [HttpPost]
         public IActionResult UpdateSoLuong(string maSP, int soLuongMoi)
         {
             try

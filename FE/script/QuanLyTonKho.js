@@ -1,136 +1,169 @@
-// Nỗ lực lấy sản phẩm từ API, nếu không có dùng demo
-      const API_PRODUCTS = '/api/products'; // thay đổi khi có API thực
-      let products = [
-        { id: 'SP001', name: 'iPhone 14', barcode: '8934571234', desc: 'Điện thoại thông minh cao cấp', category: 'DM001', price: 25000000, attrs: '128GB - Đen', vat: 10, stock: 15 },
-        { id: 'SP002', name: 'Asus Vivobook', barcode: '7896541230', desc: 'Laptop hiệu năng tốt', category: 'DM002', price: 15000000, attrs: '8GB/512GB', vat: 10, stock: 8 },
-        { id: 'SP003', name: 'Tai nghe Bluetooth', barcode: '111222333', desc: 'Tai nghe không dây', category: 'DM003', price: 800000, attrs: 'Màu trắng', vat: 10, stock: 50 }
-      ];
+const API_URL = "https://localhost:7107/api-thukho/QuanLyTonKho";
+const token = localStorage.getItem("token");
+const tableBody = document.getElementById("product-list");
 
-      function formatCurrency(v){ return new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND'}).format(v||0); }
 
-      async function loadProducts() {
-        try {
-          const res = await fetch(API_PRODUCTS);
-          if (res.ok) {
-            const data = await res.json();
-            if (Array.isArray(data) && data.length) { products = data; }
-          }
-        } catch(e){
-          // dùng dữ liệu demo
-          console.warn('Không thể lấy từ API, dùng dữ liệu demo.');
-        }
-        renderProducts();
-      }
+let currentPage = 1;
+const itemsPerPage = 8;
+let allSanPham = [];
 
-      function refreshProducts(){ loadProducts(); }
+// Hàm làm mới lại danh sách
+function loadAllSanPham() {
+  $.ajax({
+    url: `${API_URL}/get-all-sanpham`,
+    type: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+    success: function (response) {
+      allSanPham = response;
+      renderTable();
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi tải lại sản phẩm:", xhr);
+    }
+  });
+}
 
-      function renderProducts(){
-        const tbody = document.getElementById('product-list');
-        tbody.innerHTML = '';
-        products.forEach(p => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${p.id}</td>
-            <td>${p.name}</td>
-            <td>${p.barcode || ''}</td>
-            <td>${p.desc || ''}</td>
-            <td>${p.category || ''}</td>
-            <td>${formatCurrency(p.price)}</td>
-            <td>${p.attrs || ''}</td>
-            <td>${p.vat ? p.vat + '%' : ''}</td>
-            <td>${p.stock}</td>
+
+// Lấy sản phẩm khi tải trang
+window.onload = function () {
+  $.ajax({
+    url: `${API_URL}/get-all-sanpham`,
+    type: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+    success: function (response) {
+      allSanPham = response;
+      console.log("Sản phẩm:", allSanPham);
+
+      const tableBody = $("#product-list");
+      tableBody.empty();
+
+      allSanPham.forEach(sp => {
+        const row = `
+              <tr>
+                <td>${sp.masp.trim()}</td>
+                <td>${sp.tensp.trim()}</td>
+                <td>${sp.mavach?.trim() || ""}</td>
+                <td>${sp.dongia}</td>
+                <td>${sp.thuoctinh?.trim() || ""}</td>
+                <td>${sp.thue}</td>
+                <td>${sp.soluongton}</td>
+                <td>
+                  <button class="btn-edit" onclick="dieuchitonkho('${sp.masp.trim()}')">Sửa</button>
+                </td>
+              </tr>`;
+        tableBody.append(row);
+      });
+
+      renderTable();
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi tải sản phẩm:", xhr);
+      alert("Không thể tải sản phẩm. Kiểm tra token hoặc API.");
+    }
+  });
+}
+
+
+
+function renderTable() {
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const dataToShow = allSanPham.slice(start, end);
+
+  const tableBody = document.getElementById("product-list");
+  tableBody.innerHTML = "";
+
+  dataToShow.forEach(sp => {
+    const row = `
+        <tr>
+            <td>${sp.masp.trim()}</td>
+            <td>${sp.tensp.trim()}</td>
+            <td>${sp.mavach.trim()}</td>
+            
+            <td>${sp.dongia}</td>
+            <td>${sp.thuoctinh.trim() || ""}</td>
+            <td>${sp.thue}</td>
+            <td>${sp.soluongton}</td>
             <td>
-              <button class="btn-view" onclick="toggleProductDetails('${p.id}')">Xem</button>
-              <button class="btn-primary" onclick="openAdjustModal('${p.id}')">Điều chỉnh</button>
+              <button class="btn-edit" onclick="dieuchitonkho('${sp.masp.trim()}')">Điều chỉnh</button>
             </td>
-          `;
-          tbody.appendChild(tr);
-        });
-        renderAllDetails(); // chuẩn bị div chi tiết
-      }
+          </tr>`;
+    tableBody.innerHTML += row;
+  });
+  renderPagination();
+}
 
-      function renderAllDetails(){
-        const container = document.getElementById('product-details-container');
-        container.innerHTML = '';
-        products.forEach(p => {
-          const div = document.createElement('div');
-          div.id = 'product-details-' + p.id;
-          div.className = 'receipt-details';
-          div.style.display = 'none';
-          div.innerHTML = `
-            <h3>Chi tiết ${p.id} - ${p.name}</h3>
-            <table class="detail-table">
-              <thead><tr><th>Mã SP</th><th>Tên</th><th>Số lượng</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead>
-              <tbody>
-                <tr>
-                  <td>${p.id}</td>
-                  <td>${p.name}</td>
-                  <td>${p.stock}</td>
-                  <td>${formatCurrency(p.price)}</td>
-                  <td>${formatCurrency(p.stock * (p.price||0))}</td>
-                </tr>
-              </tbody>
-            </table>
-          `;
-          container.appendChild(div);
-        });
-      }
+function renderPagination() {
+  //tính số trang
+  const totalPages = Math.ceil(allSanPham.length / itemsPerPage);
+  const pagination = document.getElementById("pagination");
+  pagination.innerHTML = "";
 
-      function toggleProductDetails(id){
-        document.querySelectorAll('.receipt-details').forEach(d => d.style.display = 'none');
-        const el = document.getElementById('product-details-' + id);
-        if (!el) return;
-        el.style.display = el.style.display === 'block' ? 'none' : 'block';
-        if (el.style.display === 'block') el.scrollIntoView({behavior:'smooth', block:'nearest'});
-      }
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.innerText = i;
+    //gán class active cho trang hiện tại
+    btn.className = i === currentPage ? "active" : "";
+    btn.onclick = function () {
+      currentPage = i;
+      renderTable();
+    };
+    pagination.appendChild(btn);
+  }
+}
 
-      // Adjust modal
-      function openAdjustModal(productId){
-        const modal = document.getElementById('adjustModal');
-        const idEl = document.getElementById('adjustProductId');
-        const nameEl = document.getElementById('adjustProductName');
-        if (productId){
-          const p = products.find(x => x.id === productId);
-          if (p){
-            idEl.value = p.id;
-            nameEl.value = p.name;
-          } else {
-            idEl.value = productId;
-            nameEl.value = '';
-          }
-        } else {
-          idEl.value = '';
-          nameEl.value = '';
-        }
-        modal.style.display = 'block';
-      }
+function dieuchitonkho(masanpham) {
+  document.getElementById("adjustModal").style.display = "flex";
 
-      function closeAdjustModal(){
-        document.getElementById('adjustModal').style.display = 'none';
-        document.getElementById('adjustForm').reset();
-      }
+  const sanpham = allSanPham.find(sp => sp.masp.trim() === masanpham.trim());
+  if (!sanpham) {
+    alert("Không tìm thấy sản phẩm cần điều chỉnh số lượng!");
+    return;
+  }
 
-      document.getElementById('adjustForm').addEventListener('submit', function(e){
-        e.preventDefault();
-        const id = document.getElementById('adjustProductId').value.trim();
-        const type = document.getElementById('adjustType').value;
-        const qty = parseInt(document.getElementById('adjustQuantity').value,10) || 0;
-        if (!id || qty <= 0) return alert('Chọn sản phẩm và số lượng hợp lệ.');
-        const idx = products.findIndex(p => p.id === id);
-        if (idx === -1) return alert('Không tìm thấy sản phẩm.');
-        if (type === 'increase') products[idx].stock += qty;
-        else products[idx].stock = Math.max(0, products[idx].stock - qty);
-        renderProducts();
-        closeAdjustModal();
-        alert('Cập nhật tồn kho thành công.');
-      });
+  document.getElementById("adjustProductId").value = sanpham.masp.trim();
+  document.getElementById("adjustProductName").value = sanpham.tensp.trim();
+}
+function closeEditTonKho() {
+  document.getElementById("adjustModal").style.display = "none";
+  document.getElementById("adjustForm").reset();
+}
 
-      // khởi tạo
-      document.addEventListener('DOMContentLoaded', () => {
-        loadProducts();
-        // đóng modal khi click ngoài nội dung
-        window.addEventListener('click', function(e){
-          const modal = document.getElementById('adjustModal');
-          if (e.target === modal) closeAdjustModal();
-        });
-      });
+function apdungdieuchinh(event){
+  event.preventDefault();
+  const masp = document.getElementById("adjustProductId").value.trim();
+  const sanpham = allSanPham.find(sp => sp.masp.trim() === masp.trim());
+  
+  const soluongcu = Number(sanpham.soluongton);
+  let soluongcapnhat = 0;
+  
+  const soluongmoi = Number(document.getElementById("adjustQuantity").value);
+  const loaidieuchinh = document.getElementById("adjustType").value.trim();
+
+  if(loaidieuchinh === "increase"){
+    soluongcapnhat = soluongcu + soluongmoi;
+  }
+  else if (loaidieuchinh === "decrease"){
+    if(soluongcu < soluongmoi){
+      alert("Không thể giảm nhiều hơn số lượng hiện tại!");
+      return;
+    }
+    soluongcapnhat = soluongcu - soluongmoi;
+  }
+  console.log("Dữ liệu gửi lên API:", soluongcapnhat);
+  $.ajax({
+    url: `${API_URL}/update-soluong-sanpham?maSP=${masp}&soLuongMoi=${soluongcapnhat}`,
+    type: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    success: function (response) {
+      alert("Cập nhật tồn kho thành công!");
+      allSanPham = response;
+      closeEditTonKho();
+      renderTable();
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi cập nhật số lượng sản phẩm:", xhr);
+      alert("Cập nhật thất bại!");
+    }
+  });
+}

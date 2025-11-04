@@ -6,7 +6,7 @@
     <title>Quản lý Tồn kho - POS & Inventory</title>
     <link rel="stylesheet" href="../style/QuanLyDanhMuc.css"/>
     <link rel="stylesheet" href="../style/QuanLyTonKho.css"/>
-    <script src="../script/jquery-3.3.1.min.js"></script>
+    <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../script/auth.js"></script>
     <script src="../script/login.js"></script>
     <script src="../script/QuanLyTonKho.js"></script>
@@ -68,8 +68,7 @@
         <div class="card-header">
           <h2>Danh sách sản phẩm và tồn kho</h2>
           <div>
-            <button class="btn-primary" onclick="refreshProducts()">Tải lại</button>
-            <button class="btn-primary" onclick="openAdjustModal()">Điều chỉnh tồn kho</button>
+            <button class="btn-primary" onclick="loadAllSanPham()">Tải lại</button>
           </div>
         </div>
 
@@ -78,30 +77,27 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Tên sản phẩm</th>
-                  <th>Mã vạch</th>
-                  <th>Mô tả</th>
-                  <th>Mã danh mục</th>
-                  <th>Đơn giá</th>
-                  <th>Thuộc tính</th>
-                  <th>Thuế VAT</th>
-                  <th>Số lượng tồn</th>
-                  <th>Thao tác</th>
-                </tr>
+              <th>ID</th>
+              <th>Tên sản phẩm</th>
+              <th>Mã vạch</th>
+              <th>Đơn giá (VNĐ)</th>
+              <th>Thuộc tính</th>
+              <th>Thuế VAT(%)</th>
+              <th>Số lượng tồn</th>
+              <th>Thao tác</th>
+            </tr>
               </thead>
               <tbody id="product-list">
-                <!-- render bởi JS -->
+                
               </tbody>
             </table>
+            
           </div>
-
-          <!-- chi tiết hiển thị bên dưới khi bấm Xem -->
-          <div id="product-details-container"></div>
-        </div>
+        <div id="pagination" class="pagination"></div>
+          
 
         <!-- Popup điều chỉnh tồn kho (dùng cho tăng/giảm) -->
-        <div id="adjustModal" class="phieunhap" style="display:none;">
+        <div id="adjustModal" class ="tonkho"style="display:none;">
           <div class="phieunhap-content">
             <h2>Điều chỉnh tồn kho</h2>
             <form id="adjustForm">
@@ -125,8 +121,8 @@
                 <input type="number" id="adjustQuantity" min="1" value="1" required>
               </div>
               <div class="form-actions">
-                <button type="submit" class="btn-primary">Áp dụng</button>
-                <button type="button" class="btn-secondary" onclick="closeAdjustModal()">Hủy</button>
+                <button type="submit" class="btn-primary" onclick="apdungdieuchinh(event)">Áp dụng</button>
+                <button type="button" class="btn-secondary" onclick="closeEditTonKho()">Hủy</button>
               </div>
             </form>
           </div>
