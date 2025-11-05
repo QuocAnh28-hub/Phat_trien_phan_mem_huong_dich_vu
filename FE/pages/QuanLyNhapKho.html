@@ -9,7 +9,7 @@
     <script src="../script/QuanLyNhapKho.js"></script>
     <script src="../script/auth.js"></script>
     <script src="../script/login.js"></script>
-    <script src="../script/jquery-3.3.1.min.js"></script>
+    <script src="../js/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
   <body>
@@ -66,24 +66,28 @@
         </div>
             <div class="card-header">
               <h2>Danh sách phiếu nhập kho</h2>
+              
               <button class="btn-primary" onclick="openAddPhieuNhap()">+ Thêm phiếu nhập kho mới</button>
             </div>
+            
             
             <!-- Thay đổi phần table trong card-body -->
           <div class="card-body">
             <table class="table">
+              <input type="text" id="searchInput" placeholder="🔍 Nhập mã phiếu nhập cần tìm...">
+              <button class="btn-primary" onclick="searchByMaPhieuNhap()">Tìm kiếm</button>
+              <button class="btn-secondary" onclick="loadAllPhieuNhap()">Làm mới</button>
               <thead>
                 <tr>
                   <th>Mã phiếu</th>
-                  <th>Mã NCC</th>
-                  <th>Người nhập</th>
-                  <th>Thuế VAT</th>
+                  <th>Nhà cung cấp</th>
+                  <th>Người lập phiếu</th>
                   <th>Ngày nhập</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody id="receipt-list">
-                <tr>
+                <!-- <tr>
                   <td>PN001</td>
                   <td>NCC001</td>
                   <td>NV001</td>
@@ -108,57 +112,33 @@
                     <button class="btn-edit" onclick="openEditPhieuNhap('PN002')">Sửa</button>
                     <button class="btn-delete" onclick="deleteReceipt('PN002')">Xóa</button>
                   </td>
-                </tr>
+                </tr> -->
               </tbody>
             </table>
-
+          <div id="pagination" class="pagination"></div>
           <!-- Phần chi tiết phiếu nhập -->
-          <div id="receipt-details-PN001" class="receipt-details" style="display:none;">
-            <h3>Chi tiết phiếu nhập PN001</h3>
+          <div id="receipt-details" class="receipt-details" style="display:none;">
+            <h3>Chi tiết phiếu nhập</h3>
             <table class="detail-table">
               <thead>
                 <tr>
-                  <th>Mã SP</th>
-                  <th>Tên sản phẩm</th>
+                  <th>Mã sản phẩm</th>
                   <th>Số lượng</th>
-                  <th>Đơn giá</th>
+                  <th>Đơn giá nhập</th>
                   <th>Thành tiền</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
+              <tbody id="detail-table-body">
+                <!-- <tr>
                   <td>SP001</td>
-                  <td>iPhone 14</td>
                   <td>10</td>
                   <td>15,000,000₫</td>
                   <td>150,000,000₫</td>
-                </tr>
+                </tr> -->
               </tbody>
             </table>
           </div>
-          <div id="receipt-details-PN002" class="receipt-details" style="display:none;">
-            <h3>Chi tiết phiếu nhập PN002</h3>
-            <table class="detail-table">
-              <thead>
-                <tr>
-                  <th>Mã SP</th>
-                  <th>Tên sản phẩm</th>
-                  <th>Số lượng</th>
-                  <th>Đơn giá</th>
-                  <th>Thành tiền</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>SP002</td>
-                  <td>iPhone 15</td>
-                  <td>10</td>
-                  <td>18,000,000₫</td>
-                  <td>180,000,000₫</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          
 
         <div id="addPhieuNhap" class="phieunhap">
         <div class="phieunhap-content">
@@ -180,11 +160,6 @@
             </div>
 
             <div class="form-group">
-              <label for="ThueVAT">Thuế VAT (%):</label>
-              <input type="number" id="ThueVAT" min="0" max="100" required>
-            </div>
-
-            <div class="form-group">
               <label for="NgayNhap">Ngày nhập:</label>
               <input type="date" id="NgayNhap" required>
             </div>
@@ -198,17 +173,14 @@
                     <th>Tên sản phẩm</th>
                     <th>Số lượng</th>
                     <th>Đơn giá</th>
-                    <th>Thành tiền</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody id="chiTietBody">
                   <tr>
-                    <td><input type="text" class="maSP" required></td>
-                    <td><input type="text" class="tenSP" required></td>
-                    <td><input type="number" class="soLuong" min="1" required></td>
-                    <td><input type="number" class="donGia" min="0" required></td>
-                    <td class="thanhTien">0₫</td>
+                    <td><input type="text" id="maSP" required></td>
+                    <td><input type="number" id="soLuong" min="1" required></td>
+                    <td><input type="number" id="donGia" min="0" required></td>
                     <td><button type="button" class="btn-delete" onclick="removeChiTietRow(this)">Xóa</button></td>
                   </tr>
                 </tbody>
@@ -217,12 +189,13 @@
             </div>
 
             <div class="form-actions">
-              <button type="submit" class="btn-primary">Lưu phiếu nhập</button>
+              <button type="submit" class="btn-primary" onclick="addPhieuNhap(event)">Lưu phiếu nhập</button>
               <button type="button" class="btn-secondary" onclick="closeAddPhieuNhap()">Hủy</button>
             </div>
           </form>
         </div>
       </div>
+
       <div id="editPhieuNhap" class="phieunhap" style="display:none;">
         <div class="phieunhap-content">
           <h2>Sửa phiếu nhập</h2>
@@ -263,7 +236,6 @@
                       <th>Tên sản phẩm</th>
                       <th>Số lượng</th>
                       <th>Đơn giá</th>
-                      <th>Thành tiền</th>
                       <th></th>
                     </tr>
                   </thead>

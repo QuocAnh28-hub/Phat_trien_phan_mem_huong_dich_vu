@@ -125,7 +125,6 @@ namespace Task2_API_ThuKho.Controllers
                                    SOLUONG = x.SOLUONG,
                                    DONGIANHAP = x.DONGIANHAP,
                                    THANHTIEN = x.THANHTIEN,
-                                   NGAYNHAPKHO = x.NGAYNHAPKHO
                                })
                                .ToList();
 
@@ -153,7 +152,6 @@ namespace Task2_API_ThuKho.Controllers
                     SOLUONG = x.SOLUONG,
                     DONGIANHAP = x.DONGIANHAP,
                     THANHTIEN = x.THANHTIEN,
-                    NGAYNHAPKHO = x.NGAYNHAPKHO
                 })
                                .ToList();
 
@@ -185,8 +183,7 @@ namespace Task2_API_ThuKho.Controllers
                     MASP = x.MASP?.Trim(),
                     SOLUONG = x.SOLUONG,
                     DONGIANHAP = x.DONGIANHAP,
-                    THANHTIEN = x.THANHTIEN,
-                    NGAYNHAPKHO = x.NGAYNHAPKHO
+                    THANHTIEN = x.THANHTIEN
                 };
 
                 return Ok(new { success = true, message = "Lấy chi tiết nhập thành công", data });

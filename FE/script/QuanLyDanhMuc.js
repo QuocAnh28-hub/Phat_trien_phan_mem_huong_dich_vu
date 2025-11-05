@@ -17,17 +17,6 @@ function closeAddModal() {
 
 
 
-// Đóng popup khi click ra ngoài
-window.onclick = function(e) {
-  const addModal = document.getElementById("addModal");
-  const editModal = document.getElementById("editModal");
-  if (e.target === addModal) closeAddModal();
-  if (e.target === editModal) closeEditModal();
-};
-
-
-
-
 //lấy danh mục khi tải trang
 window.onload = function() {
 

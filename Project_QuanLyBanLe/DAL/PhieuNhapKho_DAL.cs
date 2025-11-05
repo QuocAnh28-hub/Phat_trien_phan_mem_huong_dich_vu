@@ -43,7 +43,7 @@ namespace DAL
         {
             try
             {
-                string sql = @"SELECT MAPHIEUNHAP, MASP, MANCC, MANV, NGAYLAP, THUEVAT
+                string sql = @"SELECT MAPHIEUNHAP, MANCC, MANV, NGAYLAP
                                FROM PHIEUNHAPKHO";
                 var dt = _dbHelper.ExecuteQuery(sql);
                 var list = new List<PhieuNhapKho>();
@@ -53,11 +53,9 @@ namespace DAL
                     list.Add(new PhieuNhapKho
                     {
                         MAPHIEUNHAP = r["MAPHIEUNHAP"]?.ToString()?.Trim(),
-                        MASP = r["MASP"]?.ToString()?.Trim(),
                         MANCC = r["MANCC"]?.ToString()?.Trim(),
                         MANV = r["MANV"]?.ToString()?.Trim(),
                         NGAYLAP = r["NGAYLAP"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(r["NGAYLAP"]),
-                        THUEVAT = r["THUEVAT"] == DBNull.Value ? 0 : Convert.ToDecimal(r["THUEVAT"]),
                         listjson_chitietnhap = GetChiTietByMa(r["MAPHIEUNHAP"]?.ToString()?.Trim())
                     });
                 }
@@ -74,7 +72,7 @@ namespace DAL
         {
             try
             {
-                string sql = @"SELECT MAPHIEUNHAP, MASP, MANCC, MANV, NGAYLAP, THUEVAT
+                string sql = @"SELECT MAPHIEUNHAP, MANCC, MANV, NGAYLAP
                                FROM PHIEUNHAPKHO
                                WHERE MAPHIEUNHAP = @MAPHIEUNHAP";
                 SqlParameter[] p = { new SqlParameter("@MAPHIEUNHAP", (maPN ?? string.Empty).Trim()) };
@@ -86,11 +84,9 @@ namespace DAL
                     list.Add(new PhieuNhapKho
                     {
                         MAPHIEUNHAP = r["MAPHIEUNHAP"]?.ToString()?.Trim(),
-                        MASP = r["MASP"]?.ToString()?.Trim(),
                         MANCC = r["MANCC"]?.ToString()?.Trim(),
                         MANV = r["MANV"]?.ToString()?.Trim(),
                         NGAYLAP = r["NGAYLAP"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(r["NGAYLAP"]),
-                        THUEVAT = r["THUEVAT"] == DBNull.Value ? 0 : Convert.ToDecimal(r["THUEVAT"]),
                         listjson_chitietnhap = GetChiTietByMa(r["MAPHIEUNHAP"]?.ToString()?.Trim())
                     });
                 }
@@ -107,7 +103,7 @@ namespace DAL
         {
             try
             {
-                string sql = @"SELECT MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN, NGAYNHAPKHO
+                string sql = @"SELECT MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN
                                FROM CHITIETNHAP WHERE MAPHIEUNHAP = @MAPHIEUNHAP";
                 SqlParameter[] p = { new SqlParameter("@MAPHIEUNHAP", (maPN ?? string.Empty).Trim()) };
                 var dt = _dbHelper.ExecuteQuery(sql, p);
@@ -122,7 +118,6 @@ namespace DAL
                         SOLUONG = r["SOLUONG"] == DBNull.Value ? 0 : Convert.ToInt32(r["SOLUONG"]),
                         DONGIANHAP = r["DONGIANHAP"] == DBNull.Value ? 0 : Convert.ToDecimal(r["DONGIANHAP"]),
                         THANHTIEN = r["THANHTIEN"] == DBNull.Value ? 0 : Convert.ToDecimal(r["THANHTIEN"]),
-                        NGAYNHAPKHO = r["NGAYNHAPKHO"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(r["NGAYNHAPKHO"])
                     });
                 }
                 return list;
@@ -151,20 +146,18 @@ namespace DAL
                     }
                 }
 
-                decimal tongSauTinh = tongTienHang + pnk.THUEVAT;
+                decimal tongSauTinh = tongTienHang;
                 if (tongSauTinh < 0) tongSauTinh = 0;
 
-                string sql = @"INSERT INTO PHIEUNHAPKHO (MAPHIEUNHAP, MASP, MANCC, MANV, NGAYLAP, THUEVAT)
-                               VALUES (@MAPHIEUNHAP, @MASP, @MANCC, @MANV, @NGAYLAP, @THUEVAT)";
+                string sql = @"INSERT INTO PHIEUNHAPKHO (MAPHIEUNHAP, MANCC, MANV, NGAYLAP)
+                               VALUES (@MAPHIEUNHAP, @MANCC, @MANV, @NGAYLAP)";
 
                 SqlParameter[] p =
                 {
                     new SqlParameter("@MAPHIEUNHAP", (pnk.MAPHIEUNHAP ?? string.Empty).Trim()),
-                    new SqlParameter("@MASP", (object?)pnk.MASP ?? DBNull.Value),
                     new SqlParameter("@MANCC", (object?)pnk.MANCC ?? DBNull.Value),
                     new SqlParameter("@MANV", (object?)pnk.MANV ?? DBNull.Value),
                     new SqlParameter("@NGAYLAP", pnk.NGAYLAP),
-                    new SqlParameter("@THUEVAT", pnk.THUEVAT)
                 };
 
                 int rows = _dbHelper.ExecuteNonQuery(sql, p);
@@ -173,8 +166,8 @@ namespace DAL
                 {
                     foreach (var ct in pnk.listjson_chitietnhap)
                     {
-                        string sqlCT = @"INSERT INTO CHITIETNHAP (MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN, NGAYNHAPKHO)
-                                         VALUES (@MAPHIEUNHAP, @MASP, @SOLUONG, @DONGIANHAP, @THANHTIEN, @NGAYNHAPKHO)";
+                        string sqlCT = @"INSERT INTO CHITIETNHAP (MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN)
+                                         VALUES (@MAPHIEUNHAP, @MASP, @SOLUONG, @DONGIANHAP, @THANHTIEN)";
                         SqlParameter[] pCT =
                         {
                             new SqlParameter("@MAPHIEUNHAP", pnk.MAPHIEUNHAP),
@@ -182,7 +175,6 @@ namespace DAL
                             new SqlParameter("@SOLUONG", ct.SOLUONG),
                             new SqlParameter("@DONGIANHAP", ct.DONGIANHAP),
                             new SqlParameter("@THANHTIEN", ct.THANHTIEN),
-                            new SqlParameter("@NGAYNHAPKHO", ct.NGAYNHAPKHO)
                         };
                         _dbHelper.ExecuteNonQuery(sqlCT, pCT);
                     }
@@ -217,20 +209,18 @@ namespace DAL
                     }
                 }
 
-                decimal tongSauTinh = tongTienHang + pnk.THUEVAT;
+                decimal tongSauTinh = tongTienHang;
                 if (tongSauTinh < 0) tongSauTinh = 0;
 
                 string sql = @"UPDATE PHIEUNHAPKHO
-                               SET MASP=@MASP, MANCC=@MANCC, MANV=@MANV, NGAYLAP=@NGAYLAP, THUEVAT=@THUEVAT
+                               SET MANCC=@MANCC, MANV=@MANV, NGAYLAP=@NGAYLAP
                                WHERE MAPHIEUNHAP=@MAPHIEUNHAP";
 
                 SqlParameter[] p =
                 {
-                    new SqlParameter("@MASP", (object?)pnk.MASP ?? DBNull.Value),
                     new SqlParameter("@MANCC", (object?)pnk.MANCC ?? DBNull.Value),
                     new SqlParameter("@MANV", (object?)pnk.MANV ?? DBNull.Value),
                     new SqlParameter("@NGAYLAP", pnk.NGAYLAP),
-                    new SqlParameter("@THUEVAT", pnk.THUEVAT),
                     new SqlParameter("@MAPHIEUNHAP", (pnk.MAPHIEUNHAP ?? string.Empty).Trim())
                 };
 
@@ -240,8 +230,8 @@ namespace DAL
                 {
                     foreach (var ct in pnk.listjson_chitietnhap)
                     {
-                        string sqlCT = @"INSERT INTO CHITIETNHAP (MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN, NGAYNHAPKHO)
-                                         VALUES (@MAPHIEUNHAP, @MASP, @SOLUONG, @DONGIANHAP, @THANHTIEN, @NGAYNHAPKHO)";
+                        string sqlCT = @"INSERT INTO CHITIETNHAP (MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN)
+                                         VALUES (@MAPHIEUNHAP, @MASP, @SOLUONG, @DONGIANHAP, @THANHTIEN)";
                         SqlParameter[] pCT =
                         {
                             new SqlParameter("@MAPHIEUNHAP", pnk.MAPHIEUNHAP),
@@ -249,7 +239,6 @@ namespace DAL
                             new SqlParameter("@SOLUONG", ct.SOLUONG),
                             new SqlParameter("@DONGIANHAP", ct.DONGIANHAP),
                             new SqlParameter("@THANHTIEN", ct.THANHTIEN),
-                            new SqlParameter("@NGAYNHAPKHO", ct.NGAYNHAPKHO)
                         };
                         _dbHelper.ExecuteNonQuery(sqlCT, pCT);
                     }

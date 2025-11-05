@@ -18,6 +18,7 @@
   max-height: 90vh;
   overflow-y: auto;
   border-radius: 8px;
+  animation: zoomIn 0.3s ease;
 }
 
 .form-group {
@@ -90,4 +91,32 @@
 .logout a{
   text-decoration: none;
   color: white;
+}
+input[type="text"], input[type="number"], select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.2s;
+  font-size: 15px;
+  resize: none;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, select:focus,
+textarea:focus {
+  border-color: #1976d2;
+  outline: none;
+}
+
+/* hiệu ứng bật popup */
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

@@ -16,15 +16,6 @@ function closeAdd() {
 }
 
 
-
-// Đóng popup khi click ra ngoài
-window.onclick = function (e) {
-  const addProduct = document.getElementById("addProduct");
-  const editProduct = document.getElementById("editProduct");
-  if (e.target === addProduct) closeAddProduct();
-  if (e.target === editProduct) closeEditProduct();
-};
-
 // Hàm làm mới lại danh sách
 function loadAllSanPham() {
   $.ajax({

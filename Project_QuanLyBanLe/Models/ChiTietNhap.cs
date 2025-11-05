@@ -13,6 +13,5 @@ namespace Models
         public int SOLUONG { get; set; }
         public decimal DONGIANHAP { get; set; }
         public decimal THANHTIEN { get; set; }  
-        public DateTime NGAYNHAPKHO { get; set; }
     }
 }
