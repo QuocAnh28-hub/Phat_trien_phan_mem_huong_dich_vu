@@ -92,5 +92,18 @@ namespace DAL
                 throw new Exception("Lỗi khi xoá: " + ex.Message);
             }
         }
+
+        public DataTable GetHoaDonChuaThanhToan()
+        {
+            try
+            {
+                DataTable dt = db.GetDataTableFromSP("SP_LAY_HOADON_CHUA_THANHTOAN");
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy danh sách hóa đơn chưa thanh toán: " + ex.Message);
+            }
+        }
     }
 }

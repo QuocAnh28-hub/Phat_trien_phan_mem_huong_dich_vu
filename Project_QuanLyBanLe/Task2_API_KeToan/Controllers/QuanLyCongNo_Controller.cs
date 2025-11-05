@@ -35,6 +35,42 @@ namespace Task2_API_KeToan.Controllers
             hdb_bll = new HoaDonBan_BLL(configuration);
         }
 
+        [Route("get-hoadon-chuathanhtoan")]
+        [HttpGet]
+        public IActionResult GetHoaDonChuaThanhToan()
+        {
+            try
+            {
+                DataTable dt = TT_BLL.GetHoaDonChuaThanhToan();
+
+                var list = new List<Dictionary<string, object>>();
+                foreach (DataRow row in dt.Rows)
+                {
+                    var dict = new Dictionary<string, object>();
+                    foreach (DataColumn col in dt.Columns)
+                    {
+                        dict[col.ColumnName] = row[col];
+                    }
+                    list.Add(dict);
+                }
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Lấy danh sách hóa đơn chưa thanh toán thành công!",
+                    data = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Lỗi: " + ex.Message
+                });
+            }
+        }
+
         [Route("get-all-hoadonban")]
         [HttpGet]
         public IActionResult GetAll_HDB()
