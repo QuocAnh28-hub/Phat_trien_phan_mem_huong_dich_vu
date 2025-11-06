@@ -140,23 +140,7 @@ window.onload = function () {
       const tableBody = $("#receipt-list");
       tableBody.empty();
 
-      allPhieuNhap.forEach(pn => {
-        const row = `
-          <tr>
-            <td>${pn.maphieunhap.trim()}</td>
-            <td>${pn.mancc.trim()}</td>
-            <td>${pn.manv.trim()}</td>
-            <td>${new Date(pn.ngaylap).toLocaleDateString("vi-VN")}</td>
-            <td>
-              <button class="btn-view" onclick="viewCTPhieuNhap('${pn.maphieunhap.trim()}')">Xem</button>
-              <button class="btn-edit" onclick="openEditPhieuNhap('${pn.maphieunhap.trim()}')">Sửa</button>
-              <button class="btn-delete" onclick="deleteReceipt('${pn.maphieunhap.trim()}')">Xóa</button>
-            </td>
-          </tr>`;
-
-        tableBody.append(row);
-        renderTable();
-      });
+      renderTable();
     },
     error: function (xhr) {
       console.error("Lỗi khi tải Phiếu nhập:", xhr);
@@ -249,13 +233,16 @@ function loadNhaCungCap() {
     headers: { Authorization: `Bearer ${token}` },
     success: function (response) {
       const select = document.getElementById("NhaCungCapID");
+      const selectEdit = document.getElementById("editNhaCungCapID");
       select.innerHTML = '<option value="">-- Chọn nhà cung cấp --</option>';
+      selectEdit.innerHTML = '<option value="">-- Chọn nhà cung cấp --</option>';
       //console.log(response.data);
       response.data.forEach(ncc => {
         const option = document.createElement("option");
         option.value = ncc.mancc;
         option.textContent = ncc.tenncc;
         select.appendChild(option);
+        selectEdit.appendChild(option.cloneNode(true));
       });
     },
     error: function (xhr) {
@@ -272,12 +259,14 @@ function loadNhanVien() {
     success: function (response) {
       const select = document.getElementById("NguoiNhap");
       select.innerHTML = '<option value="">-- Chọn người nhập --</option>';
-
+      const selectedit = document.getElementById("editNguoiNhap");
+      selectedit.innerHTML = '<option value="">-- Chọn người nhập --</option>';
       response.data.forEach(nv => {
         const option = document.createElement("option");
         option.value = nv.manv;
         option.textContent = nv.tennv;
         select.appendChild(option);
+        selectedit.appendChild(option.cloneNode(true));
       });
     },
     error: function (xhr) {
@@ -285,7 +274,8 @@ function loadNhanVien() {
     }
   });
 }
-
+// Khai báo một biến toàn cục mới để lưu chuỗi HTML options
+let sanPhamOptionsHTML = '<option value="">-- Chọn sản phẩm --</option>';
 function loadAllSanPham() {
   $.ajax({
     url: `${API_URL_SANPHAM}/get-all-sanpham`,
@@ -293,38 +283,45 @@ function loadAllSanPham() {
     headers: { Authorization: `Bearer ${token}` },
     success: function (response) {
       // Dữ liệu trả về có thể nằm trong response hoặc response.data
-      allPhieuNhap = response.data || response;
-
+      allSanPham = response.data || response;
+      console.log("Sản phẩm: ", allSanPham);
       // Tạo danh sách <option> một lần
       let options = '<option value="">-- Chọn sản phẩm --</option>';
-      allPhieuNhap.forEach(sp => {
+      allSanPham.forEach(sp => {
         const masp = (sp.masp || "").trim();
         const tensp = (sp.tensp || "").trim();
         if (masp !== "") {
-          options += `<option value="${masp}">${tensp}</option>`;
+          options += `<option value="${masp}">${masp} - ${tensp}</option>`;
         }
       });
-
-      // Gán options cho TẤT CẢ select có class "maSP"
-      const selects = document.querySelectorAll(".maSP");
-      selects.forEach(select => {
-        const currentValue = select.value; // lưu giá trị hiện tại
-        select.innerHTML = options;
-        select.value = currentValue; // khôi phục lại sau khi gán
-      });
+      sanPhamOptionsHTML = options;
     },
     error: function (xhr) {
       console.error("Lỗi khi tải sản phẩm:", xhr.responseText);
     }
   });
 }
-
+function loadChiTietPhieu() {
+  $.ajax({
+    url: `${API_URL}/get-all-chitietnhap`,
+    type: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+    success: function (response) {
+      allCTPhieuNhap = response.data;
+      console.log("Phiếu nhập chi tiết:", allCTPhieuNhap);
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi tải chi tiết phiếu:", xhr.responseText);
+    }
+  });
+}
 
 // Gọi khi trang load
 $(document).ready(function () {
   loadNhaCungCap();
   loadNhanVien();
   loadAllSanPham();
+  loadChiTietPhieu();
 });
 
 
@@ -336,12 +333,6 @@ function addPhieuNhap(event) {
   const manhacungcap = document.getElementById("NhaCungCapID").value.trim();
   const manhanvien = document.getElementById("NguoiNhap").value.trim();
   const ngaynhap = document.getElementById("NgayNhap").value.trim();
-
-
-  // const masanpham = document.getElementById("maSP").value.trim();
-  // const soluong = Number(document.getElementById("soLuong").value.trim());
-  // const dongia = Number(document.getElementById("donGia").value.trim());
-  // const thanhtien = soluong * dongia;
 
   const listChiTiet = collectChiTietNhap();
   //chuyển ngày sang ISO dạng bên backend nhận
@@ -390,7 +381,7 @@ function addChiTietRow() {
   newRow.innerHTML = `
     <td>
       <select class="maSP" required>
-        <option value="">-- Chọn sản phẩm --</option>
+        ${sanPhamOptionsHTML}
       </select>
     </td>
     <td><input type="number" class="soLuong" min="1" required></td>
@@ -401,27 +392,93 @@ function addChiTietRow() {
   `;
 
   tbody.appendChild(newRow);
-
-  const select = newRow.querySelector('.maSP');
-  loadAllSanPham(select);
 }
 
 function removeChiTietRow(button) {
-
   button.closest('tr').remove();
 }
 
-function openEditPhieuNhap(id) {
+function addEditChiTietRow() {
+  const tbody = document.getElementById('editChiTietBody');
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+    <td>
+      <select class="maSP" required>
+        ${sanPhamOptionsHTML}
+      </select>
+    </td>
+    <td><input type="number" class="soLuong" min="1" required></td>
+    <td><input type="number" class="donGia" min="0" required></td>
+    <td>
+      <button type="button" class="btn-delete" onclick="removeChiTietRow(this)">Xóa</button>
+    </td>
+  `;
+
+  tbody.appendChild(newRow);
+}
+
+
+function openEditPhieuNhap(maphieuNhap) {
   document.getElementById("editPhieuNhap").style.display = "flex";
+
+  const phieunhap = allPhieuNhap.find(pn => pn.maphieunhap.trim() === maphieuNhap.trim());
+  if (!phieunhap) {
+    alert("Không tìm thấy phiếu nhập cần sửa!");
+    return;
+  }
+
+  document.getElementById("originalPhieuId").value = phieunhap.maphieunhap.trim();
+  document.getElementById("editNhaCungCapID").value = phieunhap.mancc.trim();
+  document.getElementById("editNguoiNhap").value = phieunhap.manv.trim();
+
+  //chuyển ngày ISO: cắt, chỉ lấy phần ngày
+  const ngaylapBT = phieunhap.ngaylap.split('T')[0];
+  document.getElementById("editNgayNhap").value = ngaylapBT;
+
+  //lấy các chi tiết phiếu
+  const dschitietnhap = allCTPhieuNhap.filter(ctpn => ctpn.maphieunhap.trim() === maphieuNhap.trim());
+  //thêm các row chi tiết cho phiếu (nếu có)
+  const tableEdit = document.getElementById("editChiTietBody");
+  tableEdit.innerHTML = "";
+  if (dschitietnhap.length > 0) {
+    dschitietnhap.forEach(ctpn => {
+
+      let optionsHTML = '<option value="">-- Chọn sản phẩm --</option>';
+      allSanPham.forEach(sp => {
+        const masp = (sp.masp || "").trim();
+        const tensp = (sp.tensp || "").trim();
+
+        const selected = (masp === ctpn.masp.trim()) ? 'selected' : '';
+
+        optionsHTML += `<option value="${masp}" ${selected}>${masp} - ${tensp}</option>`;
+      });
+      const newRowHTML = `
+            <tr>
+                <td>
+                    <select class="maSP" required>
+                        ${optionsHTML} 
+                      </select>
+                </td>
+                <td><input type="number" value="${ctpn.soluong}" class="soLuong" min="1" required></td>
+                <td><input type="number" value="${ctpn.dongianhap}" class="donGia" min="0" required></td>
+                <td>
+                    <button type="button" class="btn-delete" onclick="removeChiTietRow(this)">Xóa</button>
+                </td>
+            </tr>
+            `;
+      tableEdit.innerHTML += newRowHTML;
+    });
+  }
 }
 function closeEditPhieuNhap() {
   document.getElementById("editPhieuNhap").style.display = "none";
   document.getElementById("editPhieuNhapForm").reset();
+  return;
 }
 
 //xoá
 function deleteReceipt(maphieunhap) {
-  if (!confirm(`Bạn có chắc muốn xoá phiếu nhập '${maphieunhap}' không?`)) return;
+  if (!confirm(`Bạn có chắc muốn xoá phiếu nhập '${maphieunhap}' này không?`)) return;
 
   $.ajax({
     url: `${API_URL}/delete-phieunhapkho?maphieunhap=${maphieunhap}`,

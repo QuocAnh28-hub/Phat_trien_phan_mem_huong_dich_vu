@@ -29,27 +29,7 @@ window.onload = function() {
     success: function(data) {
       allCategories = data;
       console.log("Danh sách danh mục:", allCategories);
-
-      const $tableBody = $("#category-list");
-
-      if ($tableBody.length > 0) {
-        let rowsHtml = "";
-        $.each(allCategories, function(index, danhmuc) {
-          rowsHtml += `
-            <tr>
-              <td>${danhmuc.madanhmuc.trim()}</td>
-              <td>${danhmuc.tendanhmuc.trim()}</td>
-              <td>${danhmuc.mota.trim() || ""}</td>
-              <td>
-                <button class="btn-edit" onclick="openEditModal('${danhmuc.madanhmuc.trim()}')">Sửa</button>
-                <button class="btn-delete" onclick="deleteCategory('${danhmuc.madanhmuc.trim()}')">Xóa</button>
-              </td>
-            </tr>`;
-        });
-        $tableBody.html(rowsHtml);
-
-        renderTable(); 
-      }
+      renderTable(); 
     },
     error: function() {
       alert("Không thể tải danh mục. Kiểm tra token hoặc API.");

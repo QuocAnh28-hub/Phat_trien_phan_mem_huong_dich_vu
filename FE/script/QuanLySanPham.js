@@ -78,7 +78,28 @@ function searchByMaSanPham() {
 
 // Lấy sản phẩm khi tải trang
 window.onload = function () {
-  // Tải danh mục trước
+  $.ajax({
+    url: `${API_URL}/get-all-sanpham`,
+    type: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+    success: function (response) {
+      allSanPham = response;
+      console.log("Danh mục:", allDanhMuc);
+      console.log("Sản phẩm:", allSanPham);
+
+      const tableBody = $("#product-list");
+      tableBody.empty();
+      renderTable();
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi tải sản phẩm:", xhr);
+      alert("Không thể tải sản phẩm. Kiểm tra token hoặc API.");
+    }
+  });
+}
+
+function loadDanhMuc()
+{
   $.ajax({
     url: `https://localhost:7107/api-thukho/QuanLyDanhMuc/get-all-danhmuc`,
     type: "GET",
@@ -97,60 +118,16 @@ window.onload = function () {
         selectAdd.append(option);
         selectEdit.append(option);
       });
-
-
-      // Sau khi có danh mục thì mới tải sản phẩm
-      $.ajax({
-        url: `${API_URL}/get-all-sanpham`,
-        type: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-        success: function (response) {
-          allSanPham = response;
-          console.log("Danh mục:", allDanhMuc);
-          console.log("Sản phẩm:", allSanPham);
-
-          const tableBody = $("#product-list");
-          tableBody.empty();
-
-          allSanPham.forEach(sp => {
-            const dm = allDanhMuc.find(d => d.madanhmuc.trim() === sp.madanhmuc.trim());
-            const tenDanhMuc = dm ? dm.tendanhmuc.trim() : "Không xác định";
-            const row = `
-              <tr>
-                <td>${sp.masp.trim()}</td>
-                <td>${sp.tensp.trim()}</td>
-                <td>${tenDanhMuc}</td>
-                <td>${sp.mavach?.trim() || ""}</td>
-                <td>${sp.mota?.trim() || ""}</td>
-                
-                <td>${sp.dongia}</td>
-                <td>${sp.thuoctinh?.trim() || ""}</td>
-                <td>${sp.thue}</td>
-                <td>${sp.soluongton}</td>
-                <td>
-                  <button class="btn-edit" onclick="openEditProduct('${sp.masp.trim()}')">Sửa</button>
-                  <button class="btn-delete" onclick="deleteProduct('${sp.masp.trim()}')">Xóa</button>
-                </td>
-              </tr>`;
-            tableBody.append(row);
-          });
-
-          renderTable();
-        },
-        error: function (xhr) {
-          console.error("Lỗi khi tải sản phẩm:", xhr);
-          alert("Không thể tải sản phẩm. Kiểm tra token hoặc API.");
-        }
-      });
     },
-    error: function (xhr) {
-      console.error("Lỗi khi tải danh mục:", xhr);
+    error: function(){
       alert("Không thể tải danh mục!");
     }
   });
-};
-
-
+}
+// Gọi khi trang load
+$(document).ready(function () {
+  loadDanhMuc();
+});
 
 function renderTable() {
   const start = (currentPage - 1) * itemsPerPage;
@@ -221,14 +198,14 @@ function addSanPham(event) {
 
 
   const newProduct = {
-    masp: masanpham,     
+    masp: masanpham,
     tensp: tensanpham,
     mavach: mavach,
     mota: mota,
     madanhmuc: madanhmuc,
     dongia: dongia,
     thuoctinh: thuoctinh,
-    thue: thueVAT,     
+    thue: thueVAT,
     soluongton: soluongton
   };
   console.log("Dữ liệu gửi lên API:", newProduct);
@@ -253,7 +230,7 @@ function addSanPham(event) {
 
 //sửa
 function openEditProduct(masanpham) {
-  
+
   document.getElementById("editProduct").style.display = "flex";
   const sanpham = allSanPham.find(sp => sp.masp.trim() === masanpham.trim());
   if (!sanpham) {
@@ -263,7 +240,7 @@ function openEditProduct(masanpham) {
   document.getElementById("editProductId").value = sanpham.masp.trim();
   document.getElementById("editProductName").value = sanpham.tensp.trim();
   document.getElementById("editBarcode").value = sanpham.mavach.trim();
-  document.getElementById("editProductDesc").value= sanpham.mota.trim();
+  document.getElementById("editProductDesc").value = sanpham.mota.trim();
   $("#editCategoryID").val(sanpham.madanhmuc.trim());
   document.getElementById("editPrice").value = sanpham.dongia;
   document.getElementById("editAttributes").value = sanpham.thuoctinh.trim();
@@ -290,14 +267,14 @@ function editSanPham(event) {
   const soluongton = Number(document.getElementById("editStock").value);
 
   const editProduct = {
-    masp: masanpham,     
+    masp: masanpham,
     tensp: tensanpham,
     mavach: mavach,
     mota: mota,
     madanhmuc: madanhmuc,
     dongia: dongia,
     thuoctinh: thuoctinh,
-    thue: thueVAT,     
+    thue: thueVAT,
     soluongton: soluongton
   };
   //console.log("Dữ liệu gửi lên API:", editProduct);

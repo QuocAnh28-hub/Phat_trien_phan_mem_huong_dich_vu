@@ -122,7 +122,7 @@
         <div id="pagination" class="pagination"></div>
         <!-- Phần chi tiết phiếu nhập -->
         <div id="receipt-details" class="receipt-details" style="display:none;">
-          <h3 style="margin-top: 20px;" id = "tieudechitiet">Chi tiết phiếu nhập</h3>
+          <h3 style="margin-top: 20px;" id="tieudechitiet">Chi tiết phiếu nhập</h3>
           <table class="detail-table">
             <thead>
               <tr>
@@ -184,18 +184,7 @@
                     </tr>
                   </thead>
                   <tbody id="chiTietBody">
-                    <tr>
-                      <td>
-                        <select class="maSP" required>
-                          <option value="">-- Chọn sản phẩm --</option>
-                        </select>
-                      </td>
-                      <td><input type="number" class="soLuong" min="1" required></td>
-                      <td><input type="number" class="donGia" min="0" required></td>
-                      <td>
-                        <button type="button" class="btn-delete" onclick="removeChiTietRow(this)">Xóa</button>
-                      </td>
-                    </tr>
+                    
                   </tbody>
 
                 </table>
@@ -216,23 +205,15 @@
             <form id="editPhieuNhapForm">
               <input type="hidden" id="originalPhieuId" value="">
               <div class="form-group">
-                <label for="editPhieuNhapID">Mã phiếu:</label>
-                <input type="text" id="editPhieuNhapID" required>
-              </div>
-
-              <div class="form-group">
-                <label for="editNhaCungCapID">Mã NCC:</label>
-                <input type="text" id="editNhaCungCapID" required>
+                <label for="editNhaCungCapID">Nhà cung cấp:</label>
+                <select id="editNhaCungCapID" required>
+                </select>
               </div>
 
               <div class="form-group">
                 <label for="editNguoiNhap">Người nhập:</label>
-                <input type="text" id="editNguoiNhap" required>
-              </div>
-
-              <div class="form-group">
-                <label for="editThueVAT">Thuế VAT (%):</label>
-                <input type="number" id="editThueVAT" min="0" max="100" required value="0">
+                <select id="editNguoiNhap" required>
+                </select>
               </div>
 
               <div class="form-group">
@@ -247,7 +228,6 @@
                     <thead>
                       <tr>
                         <th>Mã SP</th>
-                        <th>Tên sản phẩm</th>
                         <th>Số lượng</th>
                         <th>Đơn giá</th>
                         <th>Thao tác</th>

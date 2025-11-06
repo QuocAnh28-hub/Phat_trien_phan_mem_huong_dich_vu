@@ -37,23 +37,6 @@ window.onload = function () {
       const tableBody = $("#product-list");
       tableBody.empty();
 
-      allSanPham.forEach(sp => {
-        const row = `
-              <tr>
-                <td>${sp.masp.trim()}</td>
-                <td>${sp.tensp.trim()}</td>
-                <td>${sp.mavach?.trim() || ""}</td>
-                <td>${sp.dongia}</td>
-                <td>${sp.thuoctinh?.trim() || ""}</td>
-                <td>${sp.thue}</td>
-                <td>${sp.soluongton}</td>
-                <td>
-                  <button class="btn-edit" onclick="dieuchitonkho('${sp.masp.trim()}')">Sửa</button>
-                </td>
-              </tr>`;
-        tableBody.append(row);
-      });
-
       renderTable();
     },
     error: function (xhr) {
