@@ -42,5 +42,9 @@ namespace BLL
         {
             return _DAL.GetHoaDonChuaThanhToan();
         }
+        public DataTable UpdateTrangThaiThanhToan(string maHDBan)
+        {
+            return _DAL.UpdateTrangThaiThanhToan(maHDBan);
+        }
     }
 }

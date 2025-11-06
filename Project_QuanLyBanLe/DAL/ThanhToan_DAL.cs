@@ -105,5 +105,23 @@ namespace DAL
                 throw new Exception("Lỗi khi lấy danh sách hóa đơn chưa thanh toán: " + ex.Message);
             }
         }
+
+        public DataTable UpdateTrangThaiThanhToan(string maHDBan)
+        {
+            try
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@MAHDBAN", maHDBan.Trim())
+                };
+
+                DataTable dt = db.GetDataTableFromSP("SP_CAPNHAT_TRANGTHAI_THANHTOANTHANHCONG", parameters);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi cập nhật trạng thái thanh toán: " + ex.Message);
+            }
+        }
     }
 }
