@@ -323,7 +323,7 @@ function editSanPham(event) {
 
 //xoá sản phẩm 
 function deleteProduct(masanpham) {
-  if (!confirm(`Bạn có chắc muốn sửa sản phẩm '${masanpham}' không?`)) return;
+  if (!confirm(`Bạn có chắc muốn xoá sản phẩm '${masanpham}' không?`)) return;
 
   $.ajax({
     url: `${API_URL}/delete-sanpham?masp=${masanpham}`,

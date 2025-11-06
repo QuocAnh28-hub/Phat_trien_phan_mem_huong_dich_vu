@@ -274,7 +274,7 @@ namespace Task2_API_ThuKho.Controllers
                 {
                     list.Add(new
                     {
-                        MANCC = row["MANCC"],
+                        MANCC = row["MANCC"].ToString().Trim(),
                         TENNCC = row["TENNCC"],
                         DIACHI = row["DIACHI"],
                         SDT = row["SDT"],
