@@ -106,17 +106,19 @@ namespace DAL
             }
         }
 
-        public DataTable UpdateTrangThaiThanhToan(string maHDBan)
+        public bool UpdateTrangThaiThanhToan(string maHDBan, string phuongThuc)
         {
             try
             {
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@MAHDBAN", maHDBan.Trim())
+                    new SqlParameter("@MAHDBAN", maHDBan.Trim()),
+                    new SqlParameter("@PHUONGTHUC", phuongThuc.Trim())
                 };
 
-                DataTable dt = db.GetDataTableFromSP("SP_CAPNHAT_TRANGTHAI_THANHTOANTHANHCONG", parameters);
-                return dt;
+                db.GetDataTableFromSP("SP_CAPNHAT_TRANGTHAI_THANHTOANTHANHCONG", parameters);
+
+                return true;
             }
             catch (Exception ex)
             {

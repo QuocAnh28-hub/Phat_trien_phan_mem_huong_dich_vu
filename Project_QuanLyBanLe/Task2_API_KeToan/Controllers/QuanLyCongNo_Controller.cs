@@ -37,29 +37,34 @@ namespace Task2_API_KeToan.Controllers
 
         [Route("update-trangthai-thanhtoan")]
         [HttpPut]
-        public IActionResult UpdateTrangThaiThanhToan([FromQuery] string maHDBan)
+        public IActionResult UpdateTrangThaiThanhToan([FromQuery] string maHDBan, [FromQuery] string phuongThuc)
         {
             try
             {
-                DataTable dt = TT_BLL.UpdateTrangThaiThanhToan(maHDBan);
+                if (string.IsNullOrEmpty(maHDBan))
+                    return BadRequest(new { success = false, message = "Mã hóa đơn không được để trống!" });
 
-                var list = new List<Dictionary<string, object>>();
-                foreach (DataRow row in dt.Rows)
+                if (string.IsNullOrEmpty(phuongThuc))
+                    return BadRequest(new { success = false, message = "Phương thức thanh toán không được để trống!" });
+
+                bool result = TT_BLL.UpdateTrangThaiThanhToan(maHDBan, phuongThuc);
+
+                if (result)
                 {
-                    var dict = new Dictionary<string, object>();
-                    foreach (DataColumn col in dt.Columns)
+                    return Ok(new
                     {
-                        dict[col.ColumnName] = row[col];
-                    }
-                    list.Add(dict);
+                        success = true,
+                        message = "Cập nhật trạng thái, phương thức, số tiền và ngày thanh toán thành công!"
+                    });
                 }
-
-                return Ok(new
+                else
                 {
-                    success = true,
-                    message = "Cập nhật trạng thái thanh toán thành công!",
-                    data = list
-                });
+                    return Ok(new
+                    {
+                        success = false,
+                        message = "⚠Không tìm thấy hóa đơn để cập nhật!"
+                    });
+                }
             }
             catch (Exception ex)
             {
