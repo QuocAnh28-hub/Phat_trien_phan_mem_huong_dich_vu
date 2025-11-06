@@ -35,6 +35,44 @@ namespace Task2_API_KeToan.Controllers
             hdb_bll = new HoaDonBan_BLL(configuration);
         }
 
+        [HttpGet("search-khachhang-chuathanhtoan")]
+        public IActionResult SearchKhachHangChuaThanhToan(string tenKh)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(tenKh))
+                    return BadRequest(new { success = false, message = "Thiếu tên khách hàng." });
+
+                DataTable dt = TT_BLL.GetHoaDonChuaThanhToanTheoTen(tenKh);
+
+                var list = new List<Dictionary<string, object>>();
+                foreach (DataRow row in dt.Rows)
+                {
+                    var dict = new Dictionary<string, object>();
+                    foreach (DataColumn col in dt.Columns)
+                    {
+                        dict[col.ColumnName] = row[col];
+                    }
+                    list.Add(dict);
+                }
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Lấy danh sách hóa đơn chưa thanh toán theo tên khách hàng thành công!",
+                    data = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Lỗi: " + ex.Message
+                });
+            }
+        }
+
         [Route("update-trangthai-thanhtoan")]
         [HttpPut]
         public IActionResult UpdateTrangThaiThanhToan([FromQuery] string maHDBan, [FromQuery] string phuongThuc)

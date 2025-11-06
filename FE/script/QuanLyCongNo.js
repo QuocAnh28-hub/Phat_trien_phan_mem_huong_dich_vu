@@ -95,7 +95,7 @@
     const sdt = list[0].SoDienThoai || "—";
 
     let html = `
-      <h3>Hóa đơn của khách hàng: ${khach} (${sdt})</h3>
+      <h3>Hóa đơn của khách hàng: ${khach} - SĐT: ${sdt}</h3>
       <table class="detail-table">
         <thead>
           <tr>

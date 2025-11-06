@@ -125,5 +125,22 @@ namespace DAL
                 throw new Exception("Lỗi khi cập nhật trạng thái thanh toán: " + ex.Message);
             }
         }
+
+        public DataTable GetHoaDonChuaThanhToanTheoTen(string tenKh)
+        {
+            try
+            {
+                SqlParameter[] parameters = {
+                    new SqlParameter("@TenKhachHang", tenKh.Trim())
+                };
+
+                DataTable dt = db.GetDataTableFromSP("SP_LAY_HOADON_CHUA_THANHTOAN_THEO_TENKH", parameters);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy danh sách hóa đơn chưa thanh toán theo tên khách hàng: " + ex.Message);
+            }
+        }
     }
 }
