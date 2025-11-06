@@ -34,14 +34,18 @@
     return await apiGet(`${API_BASE}/get-hoadon-chuathanhtoan`);
   }
 
+  async function searchUnpaidByCustomer(name) {
+    return await apiGet(`${API_BASE}/search-khachhang-chuathanhtoan?tenKh=${encodeURIComponent(name)}`);
+  }
+
   async function updateInvoiceStatus(maHDBan, phuongThuc) {
     const url = `${API_BASE}/update-trangthai-thanhtoan?maHDBan=${encodeURIComponent(maHDBan)}&phuongThuc=${encodeURIComponent(phuongThuc)}`;
     return await apiPut(url);
   }
 
   // === HIỂN THỊ DANH SÁCH KHÁCH HÀNG CÒN NỢ ===
-  async function renderUnpaidInvoices() {
-    const invoices = await fetchUnpaidInvoices();
+  async function renderUnpaidInvoices(invoices = null) {
+    if (!invoices) invoices = await fetchUnpaidInvoices();
     const tbody = document.querySelector("#debt-table tbody");
     const detail = document.getElementById("detail-area");
 
@@ -75,18 +79,18 @@
         <td>${hoadons.length}</td>
         <td>${money(tongNo)} ₫</td>
         <td>${money(tongNo)} ₫</td>
-        <td><button class="btn ghost" style="background-color: #acacacff" data-view="${kh}">Xem</button></td>
+        <td><button class="btn ghost" style="background-color:#acacacff" data-view="${kh}">Xem</button></td>
       `;
       tbody.appendChild(tr);
     });
 
-    // Sự kiện xem chi tiết hóa đơn
+    // Sự kiện xem chi tiết
     tbody.querySelectorAll("[data-view]").forEach(btn => {
       btn.addEventListener("click", () => showInvoicesOf(btn.getAttribute("data-view"), grouped));
     });
   }
 
-  // === HIỂN THỊ CHI TIẾT CỦA 1 KHÁCH HÀNG ===
+  // === HIỂN THỊ CHI TIẾT HÓA ĐƠN ===
   function showInvoicesOf(khach, grouped) {
     const area = document.getElementById("detail-area");
     const list = grouped[khach];
@@ -123,15 +127,10 @@
     html += `</tbody></table>`;
     area.innerHTML = html;
 
-    // Gán nút thanh toán
     area.querySelectorAll("[data-id]").forEach(btn => {
       btn.addEventListener("click", async () => {
         const id = btn.getAttribute("data-id");
-        const phuongThuc = prompt(
-          `Nhập phương thức thanh toán cho hóa đơn ${id} (VD: Tiền mặt, Chuyển khoản):`,
-          "Tiền mặt"
-        );
-
+        const phuongThuc = prompt(`Nhập phương thức thanh toán cho hóa đơn ${id} (VD: Tiền mặt, Chuyển khoản):`, "Tiền mặt");
         if (!phuongThuc) {
           alert("Bạn đã hủy thao tác thanh toán. Hóa đơn vẫn giữ nguyên trạng thái 'Chưa thanh toán'.");
           return;
@@ -150,5 +149,26 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", renderUnpaidInvoices);
+  // === THANH TÌM KIẾM ===
+  function setupSearchBar() {
+    const searchBar = document.getElementById("search-bar");
+    if (!searchBar) return;
+
+    searchBar.addEventListener("input", async e => {
+      const query = e.target.value.trim();
+      if (query === "") {
+        renderUnpaidInvoices(); // hiển thị lại tất cả
+        return;
+      }
+
+      const results = await searchUnpaidByCustomer(query);
+      renderUnpaidInvoices(results);
+    });
+  }
+
+  // === KHỞI ĐỘNG ===
+  document.addEventListener("DOMContentLoaded", () => {
+    renderUnpaidInvoices();
+    setupSearchBar();
+  });
 })();

@@ -355,3 +355,15 @@ th {
   text-decoration: none;
   color: white;
 }
+
+.search-container{
+  margin-bottom: 20px;
+}
+
+#search-bar{
+  width: 40%; 
+  padding: 8px 12px; 
+  font-size: 14px; 
+  border: 1px solid #ccc; 
+  border-radius: 6px;
+}
