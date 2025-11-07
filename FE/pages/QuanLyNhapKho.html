@@ -268,7 +268,7 @@
             </div>
             <div class="form-group">
               <label for="SoDienThoai">Số điện thoại:</label>
-              <input type="text" id="SoDienThoai" required>
+              <input type="text" maxlength = "10" id="SoDienThoai" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
             </div>
             <div class="form-group">
               <label for="Email">Email:</label>
@@ -299,7 +299,7 @@
             </div>
             <div class="form-group">
               <label for="editSoDienThoai">Số điện thoại:</label>
-              <input type="text" id="editSoDienThoai" required>
+              <input type="text" id="editSoDienThoai" maxlength = "10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
             </div>
             <div class="form-group">
               <label for="editEmail">Email:</label>
@@ -307,7 +307,7 @@
             </div>
 
             <div class="form-actions">
-              <button type="submit" class="btn-primary" onclick="EditNhaCungCap(event)">Lưu thay đổi</button>
+              <button type="submit" class="btn-primary" onclick="editNhaCungCap(event)">Lưu thay đổi</button>
               <button type="button" class="btn-secondary" onclick="closeEditNhaCungCap()">Hủy</button>
             </div>
           </form>

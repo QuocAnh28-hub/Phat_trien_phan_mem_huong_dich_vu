@@ -347,3 +347,44 @@ BEGIN
 END
 
 EXEC SP_LAY_HOADON_CHUA_THANHTOAN_THEO_TENKH @TenKhachHang = N'Lê Thị Lan'
+
+
+
+
+--Tự động cập nhật số lượng bảng SanPham khi thêm, sửa, hoặc xóa ChiTietNhap.
+CREATE OR ALTER TRIGGER TG_CapNhatTonKho_KhiNhapHang
+ON dbo.ChiTietNhap  
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    --Tạo bảng tạm để chứa TẤT CẢ các thay đổi
+    --   +SoLuong cho HÀNG MỚI (từ INSERT hoặc UPDATE)
+    --   -SoLuong cho HÀNG CŨ (từ DELETE hoặc UPDATE)
+    SELECT MaSP, SoLuong AS SoLuongThayDoi
+    INTO #Changes
+    FROM inserted
+
+    UNION ALL
+
+    SELECT MaSP, -SoLuong AS SoLuongThayDoi
+    FROM deleted;
+
+    --Gom nhóm các thay đổi theo từng MaSP (trường hợp 1 phiếu nhập thay đổi nhiều dòng của cùng 1 MaSP)
+    SELECT MaSP, SUM(SoLuongThayDoi) AS NetChange
+    INTO #NetChanges
+    FROM #Changes
+    WHERE MaSP IS NOT NULL
+    GROUP BY MaSP;
+
+    --Cập nhật các sản phẩm ĐÃ CÓ trong bảng
+    UPDATE SANPHAM
+    SET SOLUONGTON = SP.SOLUONGTON + nc.NetChange
+    FROM SANPHAM SP
+    JOIN #NetChanges nc ON SP.MaSP = nc.MaSP;
+
+    --Dọn dẹp các bảng tạm
+    DROP TABLE #Changes;
+    DROP TABLE #NetChanges;
+END;
+GO

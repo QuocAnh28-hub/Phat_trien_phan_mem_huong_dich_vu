@@ -149,6 +149,11 @@ textarea:focus {
   overflow-x: auto;        /* cho phép cuộn ngang nếu bảng to */
   overflow-y: visible;     /* không cắt nội dung bên trong */
 }
+.phieunhap-content h2{
+  color: #1976d2;
+  text-align: center;
+  margin-bottom: 5px;
+}
 /* hiệu ứng mờ nền */
 @keyframes fadeBg {
   from { background: rgba(0,0,0,0); }

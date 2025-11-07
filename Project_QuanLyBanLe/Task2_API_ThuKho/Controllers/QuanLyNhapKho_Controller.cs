@@ -341,7 +341,7 @@ namespace Task2_API_ThuKho.Controllers
             }
         }
 
-        [Route("update-khachhang")]
+        [Route("update-nhacungcap")]
         [HttpPost]
         public IActionResult Update([FromBody] Models.NhaCungCap model)
         {
@@ -350,13 +350,13 @@ namespace Task2_API_ThuKho.Controllers
                 DataTable dt = NCC_BLL.GetById(model.MaNCC);
                 if (dt.Rows.Count < 1)
                 {
-                    return Ok(new { success = false, message = "Không có thông tin khách hàng có mã này" });
+                    return Ok(new { success = false, message = "Không có thông tin nhà cung cấp có mã này" });
 
                 }
                 else
                 {
                     dt = NCC_BLL.Update(model);
-                    return Ok(new { success = true, message = "Thay đổi thông tin khách thành công" });
+                    return Ok(new { success = true, message = "Thay đổi thông tin nhà cung cấp thành công" });
                 }
             }
             catch (Exception ex)

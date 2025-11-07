@@ -30,7 +30,7 @@
   border-radius: 8px;
   animation: zoomIn 0.3s ease;
 }
-.phieunhap-content h2 {
+.phieunhap-content h2, .nhacungcap-content  h2 {
   text-align: center;
   color: #1976d2;
 }

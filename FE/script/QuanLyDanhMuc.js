@@ -109,7 +109,7 @@ function addCategory(event) {
     },
     error: function (xhr) {
       console.error("Lỗi khi thêm mới danh mục:", xhr);
-      alert(`Không thể thêm danh mục do trùng mã '${maDanhmuc}'.`);
+      alert(`Không thể thêm danh mục.`);
     }
   });
 }

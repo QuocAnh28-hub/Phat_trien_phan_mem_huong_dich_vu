@@ -732,7 +732,10 @@ function addNhaCungCap(event) {
   const diachi = $("#DiaChi").val().trim();
   const sdt = $("#SoDienThoai").val().trim();
   const email = $("#Email").val().trim();
-
+  if(sdt.length !== 10){
+    alert("Số điện thoại phải là 10 số!");
+    return;
+  }
   const newNCC = {
     maNCC: manhacungcap,
     tenNCC: tennhacungcap,
@@ -751,7 +754,7 @@ function addNhaCungCap(event) {
     },
     success: function (response) {
       if (response && response.success === false) {
-        alert("Thêm thất bại! Lỗi: " + response.message);
+        alert("Thêm thất bại!");
         return;
       }
       alert("Thêm nhà cung cấp thành công!");
@@ -786,4 +789,55 @@ function closeEditNhaCungCap() {
   document.getElementById("editNhaCungCap").style.display = "none";
   document.getElementById("editNhaCungCapForm").reset();
   return;
+}
+
+// Thêm nhà cung cấp
+function editNhaCungCap(event) {
+  event.preventDefault();
+
+  const manhacungcap = $("#editMaNCC").val().trim();
+  const tennhacungcap = $("#editTenNCC").val().trim();
+  const diachi = $("#editDiaChi").val().trim();
+  const sdt = $("#editSoDienThoai").val().trim();
+  const email = $("#editEmail").val().trim();
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if(sdt.length !== 10){
+    alert("Số điện thoại phải là 10 số!");
+    return;
+  }
+  else if (!emailRegex.test(email)) {
+    alert("Email sai dịnh dạng!");
+    return;
+  }
+  const editNCC = {
+    maNCC: manhacungcap,
+    tenNCC: tennhacungcap,
+    diaChi: diachi,
+    sdt: sdt,
+    email: email
+  };
+
+  $.ajax({
+    url: `${API_URL}/update-nhacungcap`,
+    type: "POST",
+    data: JSON.stringify(editNCC),
+    contentType: "application/json",
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    success: function (response) {
+      if (response && response.success === false) {
+        alert("Sửa thất bại!");
+        return;
+      }
+      alert("Sửa thông tin nhà cung cấp thành công!");
+      closeEditNhaCungCap();
+      loadNhaCungCap(); // tải lại danh sách
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi thay đổi thông tin nhà cung cấp:", xhr);
+      alert("Đã xảy ra lỗi nghiêm trọng. Kiểm tra console.");
+    }
+  });
 }
