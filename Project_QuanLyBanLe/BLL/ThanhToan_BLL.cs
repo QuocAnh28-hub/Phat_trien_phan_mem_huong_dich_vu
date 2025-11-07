@@ -38,5 +38,17 @@ namespace BLL
         {
             return _DAL.Create(model);
         }
+        public DataTable GetHoaDonChuaThanhToan()
+        {
+            return _DAL.GetHoaDonChuaThanhToan();
+        }
+        public bool UpdateTrangThaiThanhToan(string maHDBan, string phuongThuc)
+        {
+            return _DAL.UpdateTrangThaiThanhToan(maHDBan, phuongThuc);
+        }
+        public DataTable GetHoaDonChuaThanhToanTheoTen(string tenKh)
+        {
+            return _DAL.GetHoaDonChuaThanhToanTheoTen(tenKh);
+        }
     }
 }
