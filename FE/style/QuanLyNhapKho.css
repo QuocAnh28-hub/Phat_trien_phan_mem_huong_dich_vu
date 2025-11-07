@@ -119,3 +119,18 @@ textarea:focus {
     opacity: 1;
   }
 }
+
+#searchInputNCC {
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  margin-right: 10px;
+}
+
+#searchInputNCC:focus {
+  border-color: #01ff22;
+  box-shadow: 0 0 5px rgba(0, 255, 8, 0.944);
+  outline: none;
+}

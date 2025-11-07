@@ -668,3 +668,49 @@ function deleteNhaCungCap(MANCC) {
     }
   });
 }
+
+// Tìm phiếu nhập theo mã
+function searchByMaNCC() {
+  const manhacungcap = $("#searchInputNCC").val().trim();
+  if (!manhacungcap) {
+    alert("Vui lòng nhập mã nhà cung cấp cần tìm!");
+    return;
+  }
+
+  $.ajax({
+    url: `${API_URL}/get-byid-nhacungcap?ma=${manhacungcap}`,
+    type: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+    success: function (response) {
+      const nhacungcap = response.data;
+
+      if (!nhacungcap || nhacungcap.length === 0) {
+        alert("Không tìm thấy nhà cung cấp.");
+        return;
+      }
+
+      let rows = "";
+      nhacungcap.forEach(ncc => {
+        rows += `
+            <tr>
+                <td>${ncc.mancc.trim()}</td>
+                <td>${ncc.tenncc.trim()}</td>
+                <td>${(ncc.diachi || "").trim()}</td> 
+                <td>${(ncc.sdt || "").trim()}</td>
+                <td>${(ncc.email || "").trim()}</td>
+                <td>
+                    <button class="btn-edit" onclick="openEditNhaCungCap('${ncc.mancc.trim()}')">Sửa</button>
+                    <button class="btn-delete" onclick="deleteNhaCungCap('${ncc.mancc.trim()}')">Xóa</button>
+                </td>
+            </tr>`;
+      });
+      $("#nhacungcap-list").html(rows);
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi tìm nhà cung cấp:", xhr);
+      alert("Không tìm thấy nhà cung cấp hoặc API bị lỗi.");
+    }
+  });
+}
+
+
