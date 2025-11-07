@@ -261,3 +261,130 @@ BEGIN
 	WHERE MATHANHTOAN = @MATHANHTOAN
 END
 EXEC SP_SUATT'TT007', N'Chuyển khoản', N'Đã thanh toán'
+
+------------------------------------------------------------
+CREATE PROCEDURE SP_CAPNHAT_TRANGTHAI_THANHTOANTHANHCONG
+    @MAHDBAN NVARCHAR(10),
+    @PHUONGTHUC NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Kiểm tra xem hóa đơn có tồn tại trong bảng THANHTOAN không
+    IF EXISTS (SELECT 1 FROM THANHTOAN WHERE MAHDBAN = @MAHDBAN)
+    BEGIN
+        UPDATE THANHTOAN
+        SET 
+            TRANGTHAI = N'Đã thanh toán',
+            PHUONGTHUC = @PHUONGTHUC,
+            SOTIENTHANHTOAN = (
+                SELECT TOP 1 (TONGTIENHANG + THUEVAT - GIAMGIA)
+                FROM HOADONBAN
+                WHERE MAHDBAN = @MAHDBAN
+            ),
+            NGAYTHANHTOAN = GETDATE()
+        WHERE MAHDBAN = @MAHDBAN;
+
+        PRINT N' Cập nhật trạng thái, phương thức, số tiền và ngày thanh toán thành công!';
+    END
+    ELSE
+    BEGIN
+        PRINT N' Hóa đơn không tồn tại trong bảng THANHTOAN!';
+    END
+END
+
+EXEC SP_CAPNHAT_TRANGTHAI_THANHTOANTHANHCONG 
+	@MAHDBAN = 'HD78271906',
+    @PHUONGTHUC = N'Tiền mặt';
+
+
+
+
+
+CREATE PROCEDURE SP_LAY_HOADON_CHUA_THANHTOAN
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        H.MAHDBAN AS MaHoaDon,
+        K.TENKH AS TenKhachHang,
+        K.SDT AS SoDienThoai,
+        H.NGAYLAP AS NgayLap,
+        (H.TONGTIENHANG + H.THUEVAT - H.GIAMGIA) AS SoTienPhaiTra,
+        ISNULL(T.TRANGTHAI, N'Chưa thanh toán') AS TrangThai
+    FROM HOADONBAN H
+        INNER JOIN KHACHHANG K ON H.MAKH = K.MAKH
+        LEFT JOIN THANHTOAN T ON H.MAHDBAN = T.MAHDBAN
+    WHERE ISNULL(T.TRANGTHAI, N'Chưa thanh toán') = N'Chưa thanh toán';
+END
+
+EXEC SP_LAY_HOADON_CHUA_THANHTOAN
+
+
+
+
+
+
+CREATE PROCEDURE SP_LAY_HOADON_CHUA_THANHTOAN_THEO_TENKH
+    @TenKhachHang NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON
+
+    SELECT 
+        H.MAHDBAN AS MaHoaDon,
+        K.TENKH AS TenKhachHang,
+        K.SDT AS SoDienThoai,
+        H.NGAYLAP AS NgayLap,
+        (H.TONGTIENHANG + H.THUEVAT - H.GIAMGIA) AS SoTienPhaiTra,
+        ISNULL(T.TRANGTHAI, N'Chưa thanh toán') AS TrangThai
+    FROM HOADONBAN H
+        INNER JOIN KHACHHANG K ON H.MAKH = K.MAKH
+        LEFT JOIN THANHTOAN T ON H.MAHDBAN = T.MAHDBAN
+    WHERE ISNULL(T.TRANGTHAI, N'Chưa thanh toán') = N'Chưa thanh toán'
+          AND K.TENKH LIKE N'%' + @TenKhachHang + N'%'
+END
+
+EXEC SP_LAY_HOADON_CHUA_THANHTOAN_THEO_TENKH @TenKhachHang = N'Lê Thị Lan'
+
+
+
+
+--Tự động cập nhật số lượng bảng SanPham khi thêm, sửa, hoặc xóa ChiTietNhap.
+CREATE OR ALTER TRIGGER TG_CapNhatTonKho_KhiNhapHang
+ON dbo.ChiTietNhap  
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    --Tạo bảng tạm để chứa TẤT CẢ các thay đổi
+    --   +SoLuong cho HÀNG MỚI (từ INSERT hoặc UPDATE)
+    --   -SoLuong cho HÀNG CŨ (từ DELETE hoặc UPDATE)
+    SELECT MaSP, SoLuong AS SoLuongThayDoi
+    INTO #Changes
+    FROM inserted
+
+    UNION ALL
+
+    SELECT MaSP, -SoLuong AS SoLuongThayDoi
+    FROM deleted;
+
+    --Gom nhóm các thay đổi theo từng MaSP (trường hợp 1 phiếu nhập thay đổi nhiều dòng của cùng 1 MaSP)
+    SELECT MaSP, SUM(SoLuongThayDoi) AS NetChange
+    INTO #NetChanges
+    FROM #Changes
+    WHERE MaSP IS NOT NULL
+    GROUP BY MaSP;
+
+    --Cập nhật các sản phẩm ĐÃ CÓ trong bảng
+    UPDATE SANPHAM
+    SET SOLUONGTON = SP.SOLUONGTON + nc.NetChange
+    FROM SANPHAM SP
+    JOIN #NetChanges nc ON SP.MaSP = nc.MaSP;
+
+    --Dọn dẹp các bảng tạm
+    DROP TABLE #Changes;
+    DROP TABLE #NetChanges;
+END;
+GO

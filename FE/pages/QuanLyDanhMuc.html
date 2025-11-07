@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Quản lý bán lẻ và kho - POS & Inventory</title>
     <link rel="stylesheet" href="../style/QuanLyDanhMuc.css"/>
+    <script src="../js/axios-1.12.2.min.js"></script>
     <script src="../script/QuanLyDanhMuc.js"></script>
-    <script src="../script/jquery-3.3.1.min.js"></script>
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    
     <script src="../script/auth.js"></script>
     <script src="../script/login.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -65,8 +67,20 @@
         </div>
             <div class="card-header">
               <h2>Danh sách danh mục</h2>
+              <div class="search-container">
+                <input 
+                  type="text" 
+                  id="searchInput" 
+                  placeholder="🔍 Nhập mã danh mục cần tìm..."
+                >
+                <button class="btn-primary" onclick="searchByMaDanhMuc()">Tìm kiếm</button>
+                <button class="btn-secondary" onclick="loadAllCategories()">Làm mới</button>
+              </div>
+              
               <button class="btn-primary" onclick="openAddModal()">+ Thêm danh mục mới</button>
             </div>
+            
+            <div class="card-body">
               <table class="table">
                 <thead>
                   <tr>
@@ -77,31 +91,19 @@
                   </tr>
                 </thead>
                 <tbody id="category-list">
-                  <tr>
-                    <td>DM001</td>
-                    <td>Điện thoại</td>
-                    <td>Các loại điện thoại di động</td>
-                    <td>
-                      <button class="btn-edit" onclick="openEditModal(1)">Sửa</button>
-                      <button class="btn-delete" onclick="deleteCategory(1)">Xóa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>DM002</td>
-                    <td>Laptop</td>
-                    <td>Laptop, PC, linh kiện</td>
-                    <td>
-                      <button class="btn-edit" onclick="openEditModal(2)">Sửa</button>
-                      <button class="btn-delete" onclick="deleteCategory(2)">Xóa</button>
-                    </td>
-                  </tr>
+                  
                 </tbody>
               </table>
-
+            </div>
+        <div id="pagination" class="pagination"></div>
         <div id="addModal" class="modal">
           <div class="modal-content">
             <h2>Thêm danh mục mới</h2>
             <form id="addCategoryForm">
+              <div class="form-group">
+                <label for="categoryName">Mã danh mục:</label>
+                <input type="text" id="categoryID" required>
+              </div>
               <div class="form-group">
                 <label for="categoryName">Tên danh mục:</label>
                 <input type="text" id="categoryName" required>
@@ -111,7 +113,7 @@
                 <textarea id="categoryDesc" rows="3"></textarea>
               </div>
               <div class="form-actions">
-                <button type="submit" class="btn-primary">Lưu</button>
+                <button type="submit" class="btn-primary" onclick="addCategory(event)">Lưu</button>
                 <button type="button" class="btn-secondary" onclick="closeAddModal()">Hủy</button>
               </div>
             </form>
@@ -132,7 +134,7 @@
                 <textarea id="editCategoryDesc" rows="3"></textarea>
               </div>
               <div class="form-actions">
-                <button type="submit" class="btn-primary">Cập nhật</button>
+                <button type="submit" class="btn-primary" onclick="editCategory(event)">Cập nhật</button>
                 <button type="button" class="btn-secondary" onclick="closeEditModal()">Hủy</button>
               </div>
             </form>

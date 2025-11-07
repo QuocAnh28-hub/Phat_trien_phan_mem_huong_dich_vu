@@ -54,3 +54,10 @@ build/
 dist/
 .env
 .env.*
+
+# Ignore build outputs
+bin/
+obj/
+*.dll
+*.pdb
+*.deps.json
