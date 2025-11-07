@@ -605,14 +605,14 @@ function deleteReceipt(maphieunhap) {
 
 //NHÀ CUNG CẤP
 function renderNccTable() {
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const dataToShow = allNhaCungCap.slice(start, end);
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const dataToShow = allNhaCungCap.slice(start, end);
 
-    const tableBody = document.getElementById("nhacungcap-list");
-    tableBody.innerHTML = "";
-    dataToShow.forEach(ncc => {
-        const row = `
+  const tableBody = document.getElementById("nhacungcap-list");
+  tableBody.innerHTML = "";
+  dataToShow.forEach(ncc => {
+    const row = `
             <tr>
                 <td>${ncc.mancc.trim()}</td>
                 <td>${ncc.tenncc.trim()}</td>
@@ -624,27 +624,27 @@ function renderNccTable() {
                     <button class="btn-delete" onclick="deleteNhaCungCap('${ncc.mancc.trim()}')">Xóa</button>
                 </td>
             </tr>`;
-        tableBody.innerHTML += row;
-    });
+    tableBody.innerHTML += row;
+  });
 
-    renderNccPagination();
+  renderNccPagination();
 }
 
 function renderNccPagination() {
-    const totalPages = Math.ceil(allNhaCungCap.length / itemsPerPage);
-    const pagination = document.getElementById("paginationNCC");
-    pagination.innerHTML = "";
+  const totalPages = Math.ceil(allNhaCungCap.length / itemsPerPage);
+  const pagination = document.getElementById("paginationNCC");
+  pagination.innerHTML = "";
 
-    for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.innerText = i;
-        btn.className = i === currentPage ? "active" : "";
-        btn.onclick = function () {
-            currentPage = i;
-            renderNccTable();
-        };
-        pagination.appendChild(btn);
-    }
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.innerText = i;
+    btn.className = i === currentPage ? "active" : "";
+    btn.onclick = function () {
+      currentPage = i;
+      renderNccTable();
+    };
+    pagination.appendChild(btn);
+  }
 }
 
 //xoá
@@ -714,3 +714,76 @@ function searchByMaNCC() {
 }
 
 
+function openAddNhaCungCap() {
+  document.getElementById('addNhaCungCap').style.display = 'block';
+}
+function closeAddNhaCungCap() {
+  document.getElementById('addNhaCungCap').style.display = 'none';
+  document.getElementById('addNhaCungCapForm').reset();
+}
+
+
+// Thêm nhà cung cấp
+function addNhaCungCap(event) {
+  event.preventDefault();
+
+  const manhacungcap = $("#MaNCC").val().trim();
+  const tennhacungcap = $("#TenNCC").val().trim();
+  const diachi = $("#DiaChi").val().trim();
+  const sdt = $("#SoDienThoai").val().trim();
+  const email = $("#Email").val().trim();
+
+  const newNCC = {
+    maNCC: manhacungcap,
+    tenNCC: tennhacungcap,
+    diaChi: diachi,
+    sdt: sdt,
+    email: email
+  };
+
+  $.ajax({
+    url: `${API_URL}/create-nhacungcap`,
+    type: "POST",
+    data: JSON.stringify(newNCC),
+    contentType: "application/json",
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    success: function (response) {
+      if (response && response.success === false) {
+        alert("Thêm thất bại! Lỗi: " + response.message);
+        return;
+      }
+      alert("Thêm nhà cung cấp thành công!");
+      closeAddNhaCungCap();
+      loadNhaCungCap(); // tải lại danh sách
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi thêm mới nhà cung cấp:", xhr);
+      alert("Đã xảy ra lỗi nghiêm trọng. Kiểm tra console.");
+    }
+  });
+}
+
+
+
+function openEditNhaCungCap(maNCC) {
+  document.getElementById("editNhaCungCap").style.display = "flex";
+
+  const nhacungCap = allNhaCungCap.find(ncc => ncc.mancc.trim() === maNCC.trim());
+  if (!nhacungCap) {
+    alert("Không tìm thấy nhà cung cấp cần sửa!");
+    return;
+  }
+
+  document.getElementById("editMaNCC").value = nhacungCap.mancc.trim();
+  document.getElementById("editTenNCC").value = nhacungCap.tenncc.trim();
+  document.getElementById("editDiaChi").value = nhacungCap.diachi.trim();
+  document.getElementById("editSoDienThoai").value = nhacungCap.sdt.trim();
+  document.getElementById("editEmail").value = nhacungCap.email.trim();
+}
+function closeEditNhaCungCap() {
+  document.getElementById("editNhaCungCap").style.display = "none";
+  document.getElementById("editNhaCungCapForm").reset();
+  return;
+}

@@ -246,9 +246,8 @@
           <tbody id="nhacungcap-list">
           </tbody>
         </table>
-         <div id="paginationNCC" class="pagination"></div>
       </div>
-
+      <div id="paginationNCC" class="pagination"></div>
       <div id="addNhaCungCap" class="phieunhap">
         <div class="phieunhap-content">
           <h2>Thêm nhà cung cấp mới</h2>
@@ -277,7 +276,7 @@
             </div>
 
             <div class="form-actions">
-              <button type="submit" class="btn-primary">Lưu nhà cung cấp</button>
+              <button type="submit" class="btn-primary" onclick="addNhaCungCap(event)">Lưu nhà cung cấp</button>
               <button type="button" class="btn-secondary" onclick="closeAddNhaCungCap()">Hủy</button>
             </div>
           </form>
@@ -285,17 +284,11 @@
       </div>
 
       <div id="editNhaCungCap" class="phieunhap" style="display:none;">
-        <div class="phieunhap-content">
+        <div class="nhacungcap-content">
           <h2>Sửa nhà cung cấp</h2>
 
           <form id="editNhaCungCapForm" onsubmit="editNhaCungCap(event)">
-
-            <input type="hidden" id="originalNccId" value="">
-
-            <div class="form-group">
-              <label for="editMaNCC">Mã nhà cung cấp:</label>
-              <input type="text" id="editMaNCC" readonly>
-            </div>
+            <input type="hidden" id="editMaNCC" readonly>
             <div class="form-group">
               <label for="editTenNCC">Tên nhà cung cấp:</label>
               <input type="text" id="editTenNCC" required>
@@ -314,7 +307,7 @@
             </div>
 
             <div class="form-actions">
-              <button type="submit" class="btn-primary">Lưu thay đổi</button>
+              <button type="submit" class="btn-primary" onclick="EditNhaCungCap(event)">Lưu thay đổi</button>
               <button type="button" class="btn-secondary" onclick="closeEditNhaCungCap()">Hủy</button>
             </div>
           </form>

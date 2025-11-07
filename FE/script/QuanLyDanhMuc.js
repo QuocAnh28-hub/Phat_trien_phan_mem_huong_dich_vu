@@ -102,7 +102,7 @@ function addCategory(event) {
     headers: {
       Authorization: `Bearer ${token}`
     },
-    success: function (response) {
+    success: function () {
       alert("Thêm danh mục thành công!");
       closeAddModal();
       location.reload(); // tải lại danh sách
