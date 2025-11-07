@@ -5,13 +5,16 @@ const token = localStorage.getItem("token");
 const tableBody = document.getElementById("receipt-list");
 
 
+
 let allPhieuNhap = [];
 let allCTPhieuNhap = [];
 let allNhaCungCap = [];
 let allSanPham = [];
+let allNhanVien = [];
+
 
 let currentPage = 1;
-const itemsPerPage = 8;
+const itemsPerPage = 5;
 // Format tiền tệ
 function formatCurrency(amount) {
   return new Intl.NumberFormat('vi-VN', {
@@ -45,12 +48,17 @@ function renderTable() {
   const tableBody = document.getElementById("receipt-list");
   tableBody.innerHTML = "";
 
+
   dataToShow.forEach(pn => {
+    const nhacungCap = allNhaCungCap.find(ncc => ncc.mancc.trim() === pn.mancc.trim());
+    const nhanVien = allNhanVien.find(nv => nv.manv.trim() === pn.manv.trim());
+    const tenNCC = nhacungCap ? nhacungCap.tenncc.trim() : "Không xác định";
+    const tenNV = nhanVien ? nhanVien.tennv.trim() : "Không xác định";
     const row = `
           <tr>
             <td>${pn.maphieunhap.trim()}</td>
-            <td>${pn.mancc.trim()}</td>
-            <td>${pn.manv.trim()}</td>
+            <td>${tenNCC}</td>
+            <td>${tenNV}</td>
             <td>${new Date(pn.ngaylap).toLocaleDateString("vi-VN")}</td>
             <td>
               <button class="btn-view" onclick="viewCTPhieuNhap('${pn.maphieunhap.trim()}')">Xem</button>
@@ -105,11 +113,15 @@ function searchByMaPhieuNhap() {
 
       let rows = "";
       phieunhap.forEach(pn => {
+        const nhacungCap = allNhaCungCap.find(ncc => ncc.mancc.trim() === pn.mancc.trim());
+        const nhanVien = allNhanVien.find(nv => nv.manv.trim() === pn.manv.trim());
+        const tenNCC = nhacungCap ? nhacungCap.tenncc.trim() : "Không xác định";
+        const tenNV = nhanVien ? nhanVien.tennv.trim() : "Không xác định";
         rows += `
           <tr>
             <td>${pn.maphieunhap}</td>
-            <td>${pn.mancc}</td>
-            <td>${pn.manv}</td>
+            <td>${tenNCC}</td>
+            <td>${tenNV}</td>
             <td>${new Date(pn.ngaylap).toLocaleDateString("vi-VN")}</td>
             <td>
               <button class="btn-view" onclick="viewCTPhieuNhap('${pn.maphieunhap}')">Xem</button>
@@ -171,9 +183,12 @@ function viewCTPhieuNhap(maphieunhap) {
   }
   else {
     chitiet.forEach(pn => {
+      const sanpham = allSanPham.find(sp => sp.masp.trim() === pn.masp.trim());
+      const tenSP = sanpham ? sanpham.tensp.trim() : "Không xác định";
       const row = `
                 <tr>
                   <td>${pn.masp}</td>
+                  <td>${tenSP}</td>
                   <td>${pn.soluong}</td>
                   <td>${formatCurrency(pn.dongianhap)}</td>
                   <td>${formatCurrency(pn.thanhtien)}</td>
@@ -236,7 +251,8 @@ function loadNhaCungCap() {
       const selectEdit = document.getElementById("editNhaCungCapID");
       select.innerHTML = '<option value="">-- Chọn nhà cung cấp --</option>';
       selectEdit.innerHTML = '<option value="">-- Chọn nhà cung cấp --</option>';
-      //console.log(response.data);
+      allNhaCungCap = response.data;
+      console.log("Nhà cung cấp: ", allNhaCungCap);
       response.data.forEach(ncc => {
         const option = document.createElement("option");
         option.value = ncc.mancc;
@@ -261,6 +277,8 @@ function loadNhanVien() {
       select.innerHTML = '<option value="">-- Chọn người nhập --</option>';
       const selectedit = document.getElementById("editNguoiNhap");
       selectedit.innerHTML = '<option value="">-- Chọn người nhập --</option>';
+      allNhanVien = response.data;
+      console.log("Nhân viên: ", allNhanVien)
       response.data.forEach(nv => {
         const option = document.createElement("option");
         option.value = nv.manv;
@@ -476,6 +494,86 @@ function closeEditPhieuNhap() {
   return;
 }
 
+
+function collecteditChiTietNhap() {
+  const rows = document.querySelectorAll("#editChiTietBody tr");
+  const maphieunhap = document.getElementById("originalPhieuId").value.trim();
+  const chitiet = [];
+
+  rows.forEach(row => {
+    const masp = row.querySelector(".maSP")?.value.trim();
+    const soluong = Number(row.querySelector(".soLuong")?.value.trim());
+    const dongia = Number(row.querySelector(".donGia")?.value.trim());
+    const thanhtien = soluong * dongia;
+
+    if (masp) { // chỉ lấy nếu có mã sản phẩm
+      chitiet.push({
+        maphieunhap,
+        masp,
+        soluong,
+        dongianhap: dongia,
+        thanhtien
+      });
+    }
+  });
+
+  return chitiet;
+}
+
+//sửa phiếu nhập
+function editPhieuNhap(event) {
+  event.preventDefault();
+
+  const maphieunhap = document.getElementById("originalPhieuId").value.trim();
+  const manhacungcap = document.getElementById("editNhaCungCapID").value.trim();
+  const manhanvien = document.getElementById("editNguoiNhap").value.trim();
+  const ngaynhap = document.getElementById("editNgayNhap").value.trim();
+
+  const listChiTiet = collecteditChiTietNhap();
+  if (listChiTiet.length === 0) {
+    alert("Hãy thêm chi tiết cho phiếu nhập!");
+    return;
+  }
+
+  //chuyển ngày sang ISO dạng bên backend nhận
+  const ngaylapISO = `${ngaynhap}T00:00:00.000Z`; // yyyy-mm-dd
+
+  const editPhieuNhap = {
+    maphieunhap: maphieunhap,
+    mancc: manhacungcap,
+    manv: manhanvien,
+    ngaylap: ngaylapISO,
+    listjson_chitietnhap: listChiTiet
+  };
+
+  if (!confirm(`Bạn có chắc muốn sửa phiếu nhập '${maphieunhap}' này không?`)) return;
+
+  console.log("Dữ liệu gửi lên API:", editPhieuNhap);
+  $.ajax({
+    url: `${API_URL}/update-phieunhapkho`,
+    type: "POST",
+    data: JSON.stringify(editPhieuNhap),
+    contentType: "application/json",
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    success: function (response) {
+      console.log("listChiTiet:", listChiTiet);
+      console.log(response)
+      if (response.success === false) {
+        alert("Sửa phiếu nhập thất bại!");
+        return;
+      }
+      alert("Sửa phiếu nhập thành công!");
+      closeEditPhieuNhap();
+      loadAllPhieuNhap();
+    },
+    error: function (xhr) {
+      console.error("Lỗi khi sửa phiếu nhập:", xhr.responseText);
+      alert("Sửa phiếu nhập thất bại! Kiểm tra console để xem chi tiết lỗi.");
+    }
+  })
+}
 //xoá
 function deleteReceipt(maphieunhap) {
   if (!confirm(`Bạn có chắc muốn xoá phiếu nhập '${maphieunhap}' này không?`)) return;

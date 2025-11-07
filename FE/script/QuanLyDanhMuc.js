@@ -4,7 +4,7 @@ const token = localStorage.getItem("token");
 
 
 let currentPage = 1;
-const itemsPerPage = 8;
+const itemsPerPage = 5;
 let allCategories = [];
 
 function openAddModal() {

@@ -70,7 +70,9 @@
       </div>
       <div class="card-header">
         <h2>Danh sách phiếu nhập kho</h2>
-
+        <input type="text" id="searchInput" placeholder="🔍 Nhập mã phiếu nhập cần tìm...">
+        <button class="btn-primary" onclick="searchByMaPhieuNhap()">Tìm kiếm</button>
+        <button class="btn-secondary" onclick="loadAllPhieuNhap()">Làm mới</button>
         <button class="btn-primary" onclick="openAddPhieuNhap()">+ Thêm phiếu nhập kho mới</button>
       </div>
 
@@ -78,9 +80,7 @@
       <!-- Thay đổi phần table trong card-body -->
       <div class="card-body">
         <table class="table">
-          <input type="text" id="searchInput" placeholder="🔍 Nhập mã phiếu nhập cần tìm...">
-          <button class="btn-primary" onclick="searchByMaPhieuNhap()">Tìm kiếm</button>
-          <button class="btn-secondary" onclick="loadAllPhieuNhap()">Làm mới</button>
+          
           <thead>
             <tr>
               <th>Mã phiếu</th>
@@ -127,6 +127,7 @@
             <thead>
               <tr>
                 <th>Mã sản phẩm</th>
+                <th>Tên sản phẩm</th>
                 <th>Số lượng</th>
                 <th>Đơn giá nhập</th>
                 <th>Thành tiền</th>
@@ -242,7 +243,7 @@
               </div>
 
               <div class="form-actions">
-                <button type="submit" class="btn-primary">Lưu thay đổi</button>
+                <button type="submit" class="btn-primary" onclick="editPhieuNhap(event)">Lưu thay đổi</button>
                 <button type="button" class="btn-secondary" onclick="closeEditPhieuNhap()">Hủy</button>
               </div>
             </form>

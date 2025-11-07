@@ -3,7 +3,7 @@ const token = localStorage.getItem("token");
 const tableBody = document.getElementById("product-list");
 
 let currentPage = 1;
-const itemsPerPage = 8;
+const itemsPerPage = 4;
 let allSanPham = [];
 let allDanhMuc = [];
 
