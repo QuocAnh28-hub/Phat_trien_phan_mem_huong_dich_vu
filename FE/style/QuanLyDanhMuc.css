@@ -571,14 +571,15 @@ textarea:focus {
 
 .pagination {
   margin-top: 10px;
+  text-align: center;
 }
 .pagination button {
   padding: 6px 12px;
   margin: 2px;
-  border: 1px solid #ccc;
+  border: 1px solid #0bc4e5;
   background: #f8f8f8;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 111px;
 }
 .pagination button.active {
   background: #007bff;

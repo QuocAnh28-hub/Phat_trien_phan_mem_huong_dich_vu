@@ -261,3 +261,89 @@ BEGIN
 	WHERE MATHANHTOAN = @MATHANHTOAN
 END
 EXEC SP_SUATT'TT007', N'Chuyển khoản', N'Đã thanh toán'
+
+------------------------------------------------------------
+CREATE PROCEDURE SP_CAPNHAT_TRANGTHAI_THANHTOANTHANHCONG
+    @MAHDBAN NVARCHAR(10),
+    @PHUONGTHUC NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Kiểm tra xem hóa đơn có tồn tại trong bảng THANHTOAN không
+    IF EXISTS (SELECT 1 FROM THANHTOAN WHERE MAHDBAN = @MAHDBAN)
+    BEGIN
+        UPDATE THANHTOAN
+        SET 
+            TRANGTHAI = N'Đã thanh toán',
+            PHUONGTHUC = @PHUONGTHUC,
+            SOTIENTHANHTOAN = (
+                SELECT TOP 1 (TONGTIENHANG + THUEVAT - GIAMGIA)
+                FROM HOADONBAN
+                WHERE MAHDBAN = @MAHDBAN
+            ),
+            NGAYTHANHTOAN = GETDATE()
+        WHERE MAHDBAN = @MAHDBAN;
+
+        PRINT N' Cập nhật trạng thái, phương thức, số tiền và ngày thanh toán thành công!';
+    END
+    ELSE
+    BEGIN
+        PRINT N' Hóa đơn không tồn tại trong bảng THANHTOAN!';
+    END
+END
+
+EXEC SP_CAPNHAT_TRANGTHAI_THANHTOANTHANHCONG 
+	@MAHDBAN = 'HD78271906',
+    @PHUONGTHUC = N'Tiền mặt';
+
+
+
+
+
+CREATE PROCEDURE SP_LAY_HOADON_CHUA_THANHTOAN
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        H.MAHDBAN AS MaHoaDon,
+        K.TENKH AS TenKhachHang,
+        K.SDT AS SoDienThoai,
+        H.NGAYLAP AS NgayLap,
+        (H.TONGTIENHANG + H.THUEVAT - H.GIAMGIA) AS SoTienPhaiTra,
+        ISNULL(T.TRANGTHAI, N'Chưa thanh toán') AS TrangThai
+    FROM HOADONBAN H
+        INNER JOIN KHACHHANG K ON H.MAKH = K.MAKH
+        LEFT JOIN THANHTOAN T ON H.MAHDBAN = T.MAHDBAN
+    WHERE ISNULL(T.TRANGTHAI, N'Chưa thanh toán') = N'Chưa thanh toán';
+END
+
+EXEC SP_LAY_HOADON_CHUA_THANHTOAN
+
+
+
+
+
+
+CREATE PROCEDURE SP_LAY_HOADON_CHUA_THANHTOAN_THEO_TENKH
+    @TenKhachHang NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON
+
+    SELECT 
+        H.MAHDBAN AS MaHoaDon,
+        K.TENKH AS TenKhachHang,
+        K.SDT AS SoDienThoai,
+        H.NGAYLAP AS NgayLap,
+        (H.TONGTIENHANG + H.THUEVAT - H.GIAMGIA) AS SoTienPhaiTra,
+        ISNULL(T.TRANGTHAI, N'Chưa thanh toán') AS TrangThai
+    FROM HOADONBAN H
+        INNER JOIN KHACHHANG K ON H.MAKH = K.MAKH
+        LEFT JOIN THANHTOAN T ON H.MAHDBAN = T.MAHDBAN
+    WHERE ISNULL(T.TRANGTHAI, N'Chưa thanh toán') = N'Chưa thanh toán'
+          AND K.TENKH LIKE N'%' + @TenKhachHang + N'%'
+END
+
+EXEC SP_LAY_HOADON_CHUA_THANHTOAN_THEO_TENKH @TenKhachHang = N'Lê Thị Lan'

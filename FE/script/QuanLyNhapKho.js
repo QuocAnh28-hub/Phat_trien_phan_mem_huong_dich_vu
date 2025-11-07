@@ -259,6 +259,12 @@ function loadNhaCungCap() {
         option.textContent = ncc.tenncc;
         select.appendChild(option);
         selectEdit.appendChild(option.cloneNode(true));
+
+
+        $("#searchInput").val(""); // Xóa thanh tìm kiếm
+        renderNccTable(); // Gọi hàm mới để vẽ bảng
+
+
       });
     },
     error: function (xhr) {
@@ -592,6 +598,73 @@ function deleteReceipt(maphieunhap) {
     },
     error: function (xhr) {
       alert(`Không thể thêm xoá phiếu nhập!.`);
+    }
+  });
+}
+
+
+//NHÀ CUNG CẤP
+function renderNccTable() {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const dataToShow = allNhaCungCap.slice(start, end);
+
+    const tableBody = document.getElementById("nhacungcap-list");
+    tableBody.innerHTML = "";
+    dataToShow.forEach(ncc => {
+        const row = `
+            <tr>
+                <td>${ncc.mancc.trim()}</td>
+                <td>${ncc.tenncc.trim()}</td>
+                <td>${(ncc.diachi || "").trim()}</td> 
+                <td>${(ncc.sdt || "").trim()}</td>
+                <td>${(ncc.email || "").trim()}</td>
+                <td>
+                    <button class="btn-edit" onclick="openEditNhaCungCap('${ncc.mancc.trim()}')">Sửa</button>
+                    <button class="btn-delete" onclick="deleteNhaCungCap('${ncc.mancc.trim()}')">Xóa</button>
+                </td>
+            </tr>`;
+        tableBody.innerHTML += row;
+    });
+
+    renderNccPagination();
+}
+
+function renderNccPagination() {
+    const totalPages = Math.ceil(allNhaCungCap.length / itemsPerPage);
+    const pagination = document.getElementById("paginationNCC");
+    pagination.innerHTML = "";
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.innerText = i;
+        btn.className = i === currentPage ? "active" : "";
+        btn.onclick = function () {
+            currentPage = i;
+            renderNccTable();
+        };
+        pagination.appendChild(btn);
+    }
+}
+
+//xoá
+function deleteNhaCungCap(MANCC) {
+  if (!confirm(`Bạn có chắc muốn xoá nhà cung cấp '${MANCC}' này không?`)) return;
+
+  $.ajax({
+    url: `${API_URL}/del-nhacungcap?ma=${MANCC}`,
+    type: "DELETE",
+    contentType: "application/json",
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    success: function (response) {
+      //console.log(response.data)
+      alert("Xoá nhà cung cấp thành công!");
+      location.reload(); // tải lại danh sách
+    },
+    error: function (xhr) {
+      alert(`Không thể thêm xoá nhà cung cấp!.`);
     }
   });
 }

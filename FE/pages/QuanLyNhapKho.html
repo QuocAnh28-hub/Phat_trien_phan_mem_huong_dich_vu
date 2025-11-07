@@ -80,7 +80,7 @@
       <!-- Thay đổi phần table trong card-body -->
       <div class="card-body">
         <table class="table">
-          
+
           <thead>
             <tr>
               <th>Mã phiếu</th>
@@ -91,32 +91,7 @@
             </tr>
           </thead>
           <tbody id="receipt-list">
-            <!-- <tr>
-                  <td>PN001</td>
-                  <td>NCC001</td>
-                  <td>NV001</td>
-                  <td>10%</td>
-                  <td>2025-01-05</td>
-                  <td>
-                    <button class="btn-view" onclick="toggleDetails('PN001')">Xem chi tiết</button>
-                    <button class="btn-edit" onclick="openEditPhieuNhap('PN001')">Sửa</button>
-                    <button class="btn-delete" onclick="deleteReceipt('PN001')">Xóa</button>
-                  </td>
-                </tr>
-              </tbody>
-              <tbody id="receipt-list">
-                <tr>
-                  <td>PN002</td>
-                  <td>NCC002</td>
-                  <td>NV002</td>
-                  <td>10%</td>
-                  <td>2025-01-05</td>
-                  <td>
-                    <button class="btn-view" onclick="toggleDetails('PN002')">Xem chi tiết</button>
-                    <button class="btn-edit" onclick="openEditPhieuNhap('PN002')">Sửa</button>
-                    <button class="btn-delete" onclick="deleteReceipt('PN002')">Xóa</button>
-                  </td>
-                </tr> -->
+
           </tbody>
         </table>
         <div id="pagination" class="pagination"></div>
@@ -134,12 +109,7 @@
               </tr>
             </thead>
             <tbody id="detail-table-body">
-              <!-- <tr>
-                  <td>SP001</td>
-                  <td>10</td>
-                  <td>15,000,000₫</td>
-                  <td>150,000,000₫</td>
-                </tr> -->
+
             </tbody>
           </table>
         </div>
@@ -185,7 +155,7 @@
                     </tr>
                   </thead>
                   <tbody id="chiTietBody">
-                    
+
                   </tbody>
 
                 </table>
@@ -249,6 +219,107 @@
             </form>
           </div>
         </div>
+      </div>
+
+
+
+      <div style="margin-top: 20px;" class="card-header">
+        <h2>Danh sách nhà cung cấp</h2>
+        <input type="text" id="searchInput" placeholder="🔍 Nhập mã nhà cung cấp cần tìm...">
+        <button class="btn-primary" onclick="searchByMaNCC()">Tìm kiếm</button>
+        <button class="btn-secondary" onclick="loadNhaCungCap()">Làm mới</button>
+        <button class="btn-primary" onclick="openAddNhaCungCap()">+ Thêm nhà cung cấp mới</button>
+      </div>
+
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Mã nhà cung cấp</th>
+              <th>Tên nhà cung cấp</th>
+              <th>Địa chỉ</th>
+              <th>Số điện thoại</th>
+              <th>Email</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="nhacungcap-list">
+          </tbody>
+        </table>
+         <div id="paginationNCC" class="pagination"></div>
+      </div>
+
+      <div id="addNhaCungCap" class="phieunhap">
+        <div class="phieunhap-content">
+          <h2>Thêm nhà cung cấp mới</h2>
+
+          <form id="addNhaCungCapForm" onsubmit="addNhaCungCap(event)">
+
+            <div class="form-group">
+              <label for="MaNCC">Mã nhà cung cấp:</label>
+              <input type="text" id="MaNCC" required>
+            </div>
+            <div class="form-group">
+              <label for="TenNCC">Tên nhà cung cấp:</label>
+              <input type="text" id="TenNCC" required>
+            </div>
+            <div class="form-group">
+              <label for="DiaChi">Địa chỉ:</label>
+              <input type="text" id="DiaChi" required>
+            </div>
+            <div class="form-group">
+              <label for="SoDienThoai">Số điện thoại:</label>
+              <input type="text" id="SoDienThoai" required>
+            </div>
+            <div class="form-group">
+              <label for="Email">Email:</label>
+              <input type="email" id="Email" required>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Lưu nhà cung cấp</button>
+              <button type="button" class="btn-secondary" onclick="closeAddNhaCungCap()">Hủy</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div id="editNhaCungCap" class="phieunhap" style="display:none;">
+        <div class="phieunhap-content">
+          <h2>Sửa nhà cung cấp</h2>
+
+          <form id="editNhaCungCapForm" onsubmit="editNhaCungCap(event)">
+
+            <input type="hidden" id="originalNccId" value="">
+
+            <div class="form-group">
+              <label for="editMaNCC">Mã nhà cung cấp:</label>
+              <input type="text" id="editMaNCC" readonly>
+            </div>
+            <div class="form-group">
+              <label for="editTenNCC">Tên nhà cung cấp:</label>
+              <input type="text" id="editTenNCC" required>
+            </div>
+            <div class="form-group">
+              <label for="editDiaChi">Địa chỉ:</label>
+              <input type="text" id="editDiaChi" required>
+            </div>
+            <div class="form-group">
+              <label for="editSoDienThoai">Số điện thoại:</label>
+              <input type="text" id="editSoDienThoai" required>
+            </div>
+            <div class="form-group">
+              <label for="editEmail">Email:</label>
+              <input type="email" id="editEmail" required>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Lưu thay đổi</button>
+              <button type="button" class="btn-secondary" onclick="closeEditNhaCungCap()">Hủy</button>
+            </div>
+          </form>
+        </div>
+      </div>
 
     </main>
   </div>
