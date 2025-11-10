@@ -210,7 +210,6 @@ namespace Task2_API_KeToan.Controllers
                                    SOLUONG = x.SOLUONG,
                                    DONGIANHAP = x.DONGIANHAP,
                                    THANHTIEN = x.THANHTIEN,
-                                   NGAYNHAPKHO = x.NGAYNHAPKHO
                                })
                                .ToList();
 
@@ -237,7 +236,6 @@ namespace Task2_API_KeToan.Controllers
                     SOLUONG = x.SOLUONG,
                     DONGIANHAP = x.DONGIANHAP,
                     THANHTIEN = x.THANHTIEN,
-                    NGAYNHAPKHO = x.NGAYNHAPKHO
                 })
                                .ToList();
 

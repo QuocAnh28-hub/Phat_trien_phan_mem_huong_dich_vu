@@ -25,12 +25,162 @@ namespace Task2_API_KeToan.Controllers
         private readonly NhaCungCap_BLL NCC_BLL;
         private readonly KhachHang_BLL KH_BLL;
         private readonly ThanhToan_BLL TT_BLL;
+        private readonly HoaDonBan_BLL hdb_bll;
 
         public QuanLyCongNo_Controller(IConfiguration configuration)
         {
             NCC_BLL = new NhaCungCap_BLL(configuration);
             KH_BLL = new KhachHang_BLL(configuration);
             TT_BLL = new ThanhToan_BLL(configuration);
+            hdb_bll = new HoaDonBan_BLL(configuration);
+        }
+
+        [HttpGet("search-khachhang-chuathanhtoan")]
+        public IActionResult SearchKhachHangChuaThanhToan(string tenKh)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(tenKh))
+                    return BadRequest(new { success = false, message = "Thiếu tên khách hàng." });
+
+                DataTable dt = TT_BLL.GetHoaDonChuaThanhToanTheoTen(tenKh);
+
+                var list = new List<Dictionary<string, object>>();
+                foreach (DataRow row in dt.Rows)
+                {
+                    var dict = new Dictionary<string, object>();
+                    foreach (DataColumn col in dt.Columns)
+                    {
+                        dict[col.ColumnName] = row[col];
+                    }
+                    list.Add(dict);
+                }
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Lấy danh sách hóa đơn chưa thanh toán theo tên khách hàng thành công!",
+                    data = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Lỗi: " + ex.Message
+                });
+            }
+        }
+
+        [Route("update-trangthai-thanhtoan")]
+        [HttpPut]
+        public IActionResult UpdateTrangThaiThanhToan([FromQuery] string maHDBan, [FromQuery] string phuongThuc)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(maHDBan))
+                    return BadRequest(new { success = false, message = "Mã hóa đơn không được để trống!" });
+
+                if (string.IsNullOrEmpty(phuongThuc))
+                    return BadRequest(new { success = false, message = "Phương thức thanh toán không được để trống!" });
+
+                bool result = TT_BLL.UpdateTrangThaiThanhToan(maHDBan, phuongThuc);
+
+                if (result)
+                {
+                    return Ok(new
+                    {
+                        success = true,
+                        message = "Cập nhật trạng thái, phương thức, số tiền và ngày thanh toán thành công!"
+                    });
+                }
+                else
+                {
+                    return Ok(new
+                    {
+                        success = false,
+                        message = "⚠Không tìm thấy hóa đơn để cập nhật!"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Lỗi: " + ex.Message
+                });
+            }
+        }
+
+        [Route("get-hoadon-chuathanhtoan")]
+        [HttpGet]
+        public IActionResult GetHoaDonChuaThanhToan()
+        {
+            try
+            {
+                DataTable dt = TT_BLL.GetHoaDonChuaThanhToan();
+
+                var list = new List<Dictionary<string, object>>();
+                foreach (DataRow row in dt.Rows)
+                {
+                    var dict = new Dictionary<string, object>();
+                    foreach (DataColumn col in dt.Columns)
+                    {
+                        dict[col.ColumnName] = row[col];
+                    }
+                    list.Add(dict);
+                }
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Lấy danh sách hóa đơn chưa thanh toán thành công!",
+                    data = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Lỗi: " + ex.Message
+                });
+            }
+        }
+
+        [Route("get-all-hoadonban")]
+        [HttpGet]
+        public IActionResult GetAll_HDB()
+        {
+            try
+            {
+                var result = hdb_bll.LayTatCa();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
+
+        [Route("get-hoadonban-by-id")]
+        [HttpGet]
+        public IActionResult Get_HDB_ByID(string maHoaDon)
+        {
+            try
+            {
+                var result = hdb_bll.LayTheoID(maHoaDon);
+                if (result == null || result.Count == 0)
+                    return NotFound("Không tìm thấy hóa đơn.");
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
         }
 
         private List<object> ChuyenThanhList(DataTable dt)

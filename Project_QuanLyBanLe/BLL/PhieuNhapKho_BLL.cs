@@ -32,7 +32,6 @@ namespace BLL
         {
             if (pnk == null) return false;
             if (string.IsNullOrWhiteSpace(pnk.MAPHIEUNHAP) ||
-                string.IsNullOrWhiteSpace(pnk.MASP) ||
                 string.IsNullOrWhiteSpace(pnk.MANCC) ||
                 string.IsNullOrWhiteSpace(pnk.MANV))
                 return false;

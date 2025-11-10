@@ -568,3 +568,38 @@ textarea:focus {
   text-decoration: none;
   color: white;
 }
+
+.pagination {
+  margin-top: 10px;
+  text-align: center;
+}
+.pagination button {
+  padding: 6px 12px;
+  margin: 2px;
+  border: 1px solid #0bc4e5;
+  background: #f8f8f8;
+  cursor: pointer;
+  border-radius: 111px;
+}
+.pagination button.active {
+  background: #007bff;
+  color: #fff;
+  font-weight: bold;
+}
+
+
+
+#searchInput {
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  margin-right: 10px;
+}
+
+#searchInput:focus {
+  border-color: #01ff22;
+  box-shadow: 0 0 5px rgba(0, 255, 8, 0.944);
+  outline: none;
+}

@@ -52,7 +52,7 @@ namespace DAL
             try
             {
                 var list = new List<ChiTietNhap>();
-                string sql = @"SELECT MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN, NGAYNHAPKHO
+                string sql = @"SELECT MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN
                                FROM CHITIETNHAP";
                 var dt = _dbHelper.ExecuteQuery(sql);
 
@@ -65,7 +65,6 @@ namespace DAL
                         SOLUONG = row["SOLUONG"] == DBNull.Value ? 0 : Convert.ToInt32(row["SOLUONG"]),
                         DONGIANHAP = row["DONGIANHAP"] == DBNull.Value ? 0 : Convert.ToDecimal(row["DONGIANHAP"]),
                         THANHTIEN = row["THANHTIEN"] == DBNull.Value ? 0 : Convert.ToDecimal(row["THANHTIEN"]),
-                        NGAYNHAPKHO = row["NGAYNHAPKHO"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["NGAYNHAPKHO"])
                     });
                 }
                 return list;
@@ -81,7 +80,7 @@ namespace DAL
             try
             {
                 var list = new List<ChiTietNhap>();
-                string sql = @"SELECT MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN, NGAYNHAPKHO
+                string sql = @"SELECT MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN
                                FROM CHITIETNHAP
                                WHERE MAPHIEUNHAP = @MAPHIEUNHAP";
                 SqlParameter[] p = { new SqlParameter("@MAPHIEUNHAP", maphieunhap) };
@@ -96,7 +95,6 @@ namespace DAL
                         SOLUONG = row["SOLUONG"] == DBNull.Value ? 0 : Convert.ToInt32(row["SOLUONG"]),
                         DONGIANHAP = row["DONGIANHAP"] == DBNull.Value ? 0 : Convert.ToDecimal(row["DONGIANHAP"]),
                         THANHTIEN = row["THANHTIEN"] == DBNull.Value ? 0 : Convert.ToDecimal(row["THANHTIEN"]),
-                        NGAYNHAPKHO = row["NGAYNHAPKHO"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["NGAYNHAPKHO"])
                     });
                 }
                 return list;
@@ -112,7 +110,7 @@ namespace DAL
             try
             {
                 var list = new List<ChiTietNhap>();
-                string sql = @"SELECT MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN, NGAYNHAPKHO
+                string sql = @"SELECT MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN
                                FROM CHITIETNHAP
                                WHERE MAPHIEUNHAP = @MAPHIEUNHAP AND MASP = @MASP";
                 SqlParameter[] p =
@@ -131,7 +129,6 @@ namespace DAL
                         SOLUONG = row["SOLUONG"] == DBNull.Value ? 0 : Convert.ToInt32(row["SOLUONG"]),
                         DONGIANHAP = row["DONGIANHAP"] == DBNull.Value ? 0 : Convert.ToDecimal(row["DONGIANHAP"]),
                         THANHTIEN = row["THANHTIEN"] == DBNull.Value ? 0 : Convert.ToDecimal(row["THANHTIEN"]),
-                        NGAYNHAPKHO = row["NGAYNHAPKHO"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["NGAYNHAPKHO"])
                     });
                 }
                 return list;
@@ -148,8 +145,8 @@ namespace DAL
             try
             {
                 string sql = @"
-                    INSERT INTO CHITIETNHAP (MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN, NGAYNHAPKHO)
-                    VALUES (@MAPHIEUNHAP, @MASP, @SOLUONG, @DONGIANHAP, (@SOLUONG * @DONGIANHAP), @NGAYNHAPKHO)";
+                    INSERT INTO CHITIETNHAP (MAPHIEUNHAP, MASP, SOLUONG, DONGIANHAP, THANHTIEN)
+                    VALUES (@MAPHIEUNHAP, @MASP, @SOLUONG, @DONGIANHAP, (@SOLUONG * @DONGIANHAP))";
 
                 SqlParameter[] p =
                 {
@@ -157,7 +154,6 @@ namespace DAL
                     new SqlParameter("@MASP",        ctn.MASP),
                     new SqlParameter("@SOLUONG",     ctn.SOLUONG),
                     new SqlParameter("@DONGIANHAP",  ctn.DONGIANHAP),
-                    new SqlParameter("@NGAYNHAPKHO", ctn.NGAYNHAPKHO)
                 };
 
                 int rows = _dbHelper.ExecuteNonQuery(sql, p);
@@ -185,7 +181,6 @@ namespace DAL
                     SET SOLUONG = @SOLUONG,
                         DONGIANHAP = @DONGIANHAP,
                         THANHTIEN = (@SOLUONG * @DONGIANHAP),
-                        NGAYNHAPKHO = @NGAYNHAPKHO
                     WHERE MAPHIEUNHAP = @MAPHIEUNHAP AND MASP = @MASP";
 
                 SqlParameter[] p =
@@ -194,7 +189,6 @@ namespace DAL
                     new SqlParameter("@MASP",        ctn.MASP),
                     new SqlParameter("@SOLUONG",     ctn.SOLUONG),
                     new SqlParameter("@DONGIANHAP",  ctn.DONGIANHAP),
-                    new SqlParameter("@NGAYNHAPKHO", ctn.NGAYNHAPKHO)
                 };
 
                 int rows = _dbHelper.ExecuteNonQuery(sql, p);
