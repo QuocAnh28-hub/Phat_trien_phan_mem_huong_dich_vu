@@ -1,95 +1,76 @@
-function dangNhap(event) {
-  event.preventDefault(); // Ngăn reload trang
+(function () {
+  'use strict';
 
-  const user = document.getElementById('username').value.trim();
-  const pass = document.getElementById('password').value.trim();
+  angular.module('dahApp')
+    .constant('AUTH_API', 'https://localhost:7107/api-common/Login')
 
-  if (!user || !pass) {
-    alert("Vui lòng nhập đầy đủ tài khoản và mật khẩu!");
-    return;
-  }
+    .factory('AuthService', function ($http, AUTH_API, $window, $q) {
 
-  // Gọi API đăng nhập qua Gateway
-  axios.post(`https://localhost:7107/api-common/Login/login?username=${user}&pass=${pass}`)
-    .then(res => {
-      console.log("Kết quả API:", res.data);
-
-      if (res.data.success) {
-        alert(res.data.message); // "Đăng nhập thành công!"
-
-        // Lưu token và trạng thái
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("isLoggedIn", "true");
-
-      // Lưu user: nếu API không trả user -> vẫn lưu tối thiểu username để hiện lên UI
-      const userObj = res.data.user || { username: user };
-      localStorage.setItem("user", JSON.stringify(userObj));
-
-        // Gọi thêm API lấy quyền
-        return axios.get(`https://localhost:7107/api-common/Login/get-role?username=${user}`);
-      } else {
-        throw new Error(res.data.message || "Sai thông tin đăng nhập!");
+      function persistLogin(payload, usernameFallback) {
+        localStorage.setItem('token', payload.token || '');
+        localStorage.setItem('isLoggedIn', 'true');
+        const userObj = payload.user || { username: usernameFallback };
+        localStorage.setItem('user', JSON.stringify(userObj));
       }
+
+      function routeByRole(role) {
+        switch (role) {
+          case 4: $window.location.href = '../pages/QuanLyTaiKhoan.html'; break; // Admin
+          case 3: $window.location.href = '../pages/QuanLyDanhMuc.html';  break; // Quản lý/Kho
+          case 2: $window.location.href = '../pages/QuanLyBanHang.html';  break; // Thu ngân
+          case 1: $window.location.href = '../pages/QuanLyCongNo.html';   break; // Kế toán
+          default: $window.location.href = '../pages/index.html';
+        }
+      }
+
+      function fetchRoleAndRoute(username) {
+        const u = encodeURIComponent(username);
+        return $http.get(`${AUTH_API}/get-role?username=${u}`).then((res) => {
+          const data = res?.data?.data || res?.data || {};
+          const role = parseInt(data.quyen, 10);
+          if (Number.isNaN(role)) throw new Error('Không xác định được quyền.');
+          localStorage.setItem('role', String(role));
+          routeByRole(role);
+        });
+      }
+
+      function login(username, password) {
+        if (!username || !password) return $q.reject(new Error('Vui lòng nhập tài khoản và mật khẩu!'));
+        const u = encodeURIComponent(username);
+        const p = encodeURIComponent(password);
+
+        return $http.post(`${AUTH_API}/login?username=${u}&pass=${p}`)
+          .then((res) => {
+            const d = res?.data || {};
+            if (!d.success) throw new Error(d.message || 'Sai thông tin đăng nhập!');
+            persistLogin(d, username);
+            return fetchRoleAndRoute(username);
+          });
+      }
+
+      return { login };
     })
-    .then(roleRes => {
-      console.log("Dữ liệu quyền:", roleRes.data);
 
-      // Lấy quyền đúng cấu trúc
-      const role = parseInt(roleRes.data.data.quyen);
+    .controller('LoginCtrl', function (AuthService) {
+      const vm = this;
+      vm.form = { username: '', password: '' };
+      vm.showPwd = false;
+      vm.isBusy = false;
 
-      // Lưu quyền vào localStorage
-      localStorage.setItem("role", role);
-
-      // Chuyển hướng theo quyền
-      if (role === 4) {
-        window.location.href = "../pages/QuanLyTaiKhoan.html";
-      } else if (role === 3) {
-        window.location.href = "../pages/QuanLyDanhMuc.html";
-      } else if (role === 2) {
-        window.location.href = "../pages/QuanLyBanHang.html";
-      } else if (role === 1) {
-        window.location.href = "../pages/QuanLyCongNo.html";
-      } else {
-        window.location.href = "../pages/index.html";
-      }
-    })
-    .catch(err => {
-      console.error("Lỗi khi đăng nhập hoặc lấy quyền:", err);
-      alert("Không thể kết nối đến API hoặc tài khoản không hợp lệ!");
+      vm.submit = function (e) {
+        e?.preventDefault?.();
+        if (!vm.form.username || !vm.form.password) {
+          alert('Vui lòng nhập đầy đủ tài khoản và mật khẩu!');
+          return;
+        }
+        vm.isBusy = true;
+        AuthService.login(vm.form.username, vm.form.password)
+          .catch((err) => {
+            console.error('Login error:', err);
+            alert(err?.message || 'Không thể kết nối đến API hoặc tài khoản không hợp lệ!');
+          })
+          .finally(() => { vm.isBusy = false; });
+      };
     });
-}
 
-document.addEventListener("DOMContentLoaded", () => {
-  const logoutBtn = document.querySelector(".logout a");
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", (event) => {
-      event.preventDefault();
-
-      if (confirm("Bạn có chắc muốn đăng xuất không?")) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("role");
-        localStorage.removeItem("isLoggedIn");
-        window.location.href = "../pages/index.html";
-      } else {
-      }
-    });
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  // Lấy thông tin người dùng từ localStorage
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  // Kiểm tra có user không
-  if (user && (user.userName || user.username)) {
-    const userName = user.userName || user.username;
-
-    // Tìm đến thẻ <strong> trong quick-stats và thay nội dung
-    const strongTag = document.querySelector(".quick-stats .row strong");
-    if (strongTag) {
-      strongTag.textContent = userName;
-    }
-  }
-});
+})();
