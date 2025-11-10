@@ -1,15 +1,25 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" ng-app="dahApp">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Quản lý nhân viên - DAH</title>
-  <script src="../script/auth.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../style/QuanLyNhanVien.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+
+  <!-- AngularJS 1.x -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+  <script src="../angular/angular.min.js"></script>
+  <!-- Optional nền -->
   <script src="../script/login.js"></script>
-  <link rel="stylesheet" href="../style/QuanLyNhanVien.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="../script/auth.js"></script>
+
+  <!-- App Angular của trang -->
+  <script defer src="../script/QuanLyNhanVien.js"></script>
 </head>
-<body>
+<body ng-controller="NhanVienCtrl as vm">
   <div class="warp">
     <aside class="sidebar">
       <div class="brand">
@@ -20,7 +30,7 @@
       <nav class="nav">
         <div class="section-title">ADMIN</div>
         <a href="QuanLyTaiKhoan.html">🛠️ Quản lý tài khoản</a>
-        <a href="QuanLyNhanVien.html">🧑‍💼 Quản lý nhân viên</a>
+        <a href="QuanLyNhanVien.html" class="active">🧑‍💼 Quản lý nhân viên</a>
         <a href="QuanLyKhuyenMai.html">🎁 Quản lý khuyến mãi</a>
 
         <div class="section-title" style="margin-top:20px;font-weight:700;">Kế toán</div>
@@ -41,7 +51,7 @@
       <div class="section-title">Tài khoản</div>
       <div class="quick-stats">
         <div class="row" style="justify-content:space-between">
-          <span>Người dùng:</span><strong>DAH</strong>
+          <span>Người dùng:</span><strong>{{ vm.currentUser }}</strong>
         </div>
       </div>
       <div class="small muted">© DAH</div>
@@ -59,13 +69,13 @@
         <div class="actions"><div class="pill">Ngôn ngữ: VN</div></div>
       </div>
 
-      <!-- Danh sách nhân viên (schema: MANV, TENNV, SDT, DIACHI) -->
+      <!-- Danh sách -->
       <section class="card">
         <div class="row" style="justify-content:space-between">
           <h2 class="h2">Danh sách nhân viên</h2>
           <div class="row" style="gap:10px;flex:1;justify-content:flex-end">
-            <input class="input" placeholder="Tìm theo MANV, TENNV, SDT..." style="max-width:320px">
-            <a class="btn" href="#">+ Thêm nhân viên</a>
+            <input class="input" ng-model="vm.searchText" placeholder="Tìm theo MANV, TENNV, SDT..." style="max-width:320px" />
+            <a class="btn" href ng-click="vm.openAdd()">+ Thêm nhân viên</a>
           </div>
         </div>
 
@@ -81,59 +91,99 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>NV001</td>
-                <td>Nguyễn Văn Nam</td>
-                <td>0912345678</td>
-                <td>Q.1, TP.HCM</td>
-                <td class="table-actions">
-                  <a class="btn small neutral" href="#">Sửa</a>
-                  <a class="btn small warn" href="#">Xóa</a>
-                </td>
+              <tr ng-if="!(vm.filtered && vm.filtered.length)">
+                <td colspan="5" style="text-align:center">Không có dữ liệu</td>
               </tr>
-              <tr>
-                <td>NV002</td>
-                <td>Trần Thu Hương</td>
-                <td>0987654321</td>
-                <td>Cầu Giấy, Hà Nội</td>
-                <td class="table-actions">
-                  <a class="btn small neutral" href="#">Sửa</a>
-                  <a class="btn small warn" href="#">Xóa</a>
+              <tr ng-repeat="nv in (vm.filtered = (vm.list | filter:vm.searchFilter)) | limitTo: vm.perPage : (vm.page-1)*vm.perPage track by nv.manv">
+                <td>{{ nv.manv }}</td>
+                <td>{{ nv.tennv }}</td>
+                <td>{{ nv.sdt }}</td>
+                <td>{{ nv.diachi }}</td>
+                <td class="action-buttons">
+                  <button class="icon-btn edit"   title="Sửa" ng-click="vm.openEdit(nv)"><i class="fa-solid fa-pen-to-square"></i></button>
+                  <button class="icon-btn delete" title="Xóa" ng-click="vm.confirmDelete(nv)"><i class="fa-solid fa-trash"></i></button>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <!-- Phân trang -->
+        <div id="nv-pagination" style="margin-top:10px" ng-if="vm.filtered.length">
+          <button ng-disabled="vm.page===1" ng-click="vm.page=vm.page-1">«</button>
+          <button ng-repeat="p in vm.pages()" ng-class="{active: vm.page===p}" ng-click="vm.page=p">{{p}}</button>
+          <button ng-disabled="vm.page===vm.totalPages()" ng-click="vm.page=vm.page+1">»</button>
+        </div>
       </section>
 
-      <!-- Form thêm/sửa -->
-      <section class="card" style="margin-top:16px">
-        <h3 class="h3">Thêm / Sửa nhân viên</h3>
-        <form>
-          <div class="row form-grid">
-            <div>
-              <label class="small muted">MANV *</label>
-              <input class="input" placeholder="vd: NV003">
-            </div>
-            <div>
-              <label class="small muted">TENNV *</label>
-              <input class="input" placeholder="vd: Nguyễn Văn A">
-            </div>
-            <div>
-              <label class="small muted">SDT</label>
-              <input class="input" placeholder="vd: 09xxxxxxxx">
-            </div>
-            <div>
-              <label class="small muted">DIACHI</label>
-              <input class="input" placeholder="vd: Quận/Huyện, Tỉnh/TP">
-            </div>
+      <!-- Modal Thêm -->
+      <div id="nvAddModal" class="modal" ng-show="vm.modalAdd">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Thêm nhân viên</h3>
+            <button class="close" ng-click="vm.closeAdd()">×</button>
           </div>
-          <div class="row" style="gap:10px;justify-content:flex-end;margin-top:12px">
-            <a class="btn secondary" href="#">Hủy</a>
-            <a class="btn" href="#">Lưu</a>
+          <form ng-submit="vm.create()">
+            <div class="row form-grid">
+              <div>
+                <label class="small muted">MANV *</label>
+                <input class="input" ng-model="vm.add.manv" placeholder="VD: NV001" required />
+              </div>
+              <div>
+                <label class="small muted">TENNV *</label>
+                <input class="input" ng-model="vm.add.tennv" placeholder="VD: Nguyễn Văn A" required />
+              </div>
+              <div>
+                <label class="small muted">SDT</label>
+                <input class="input" ng-model="vm.add.sdt" placeholder="VD: 09xxxxxxxx" />
+              </div>
+              <div>
+                <label class="small muted">DIACHI</label>
+                <input class="input" ng-model="vm.add.diachi" placeholder="VD: Quận/Huyện, Tỉnh/TP" />
+              </div>
+            </div>
+            <div class="row" style="gap:10px;justify-content:flex-end;margin-top:12px">
+              <button type="button" class="btn secondary" ng-click="vm.closeAdd()">Hủy</button>
+              <button type="submit" class="btn">Lưu</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal Sửa -->
+      <div id="nvEditModal" class="modal" ng-show="vm.modalEdit">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Sửa nhân viên</h3>
+            <button class="close" ng-click="vm.closeEdit()">×</button>
           </div>
-        </form>
-      </section>
+          <form ng-submit="vm.update()">
+            <div class="row form-grid">
+              <div>
+                <label class="small muted">MANV *</label>
+                <input class="input" ng-model="vm.edit.manv" readonly />
+              </div>
+              <div>
+                <label class="small muted">TENNV *</label>
+                <input class="input" ng-model="vm.edit.tennv" required />
+              </div>
+              <div>
+                <label class="small muted">SDT</label>
+                <input class="input" ng-model="vm.edit.sdt" />
+              </div>
+              <div>
+                <label class="small muted">DIACHI</label>
+                <input class="input" ng-model="vm.edit.diachi" />
+              </div>
+            </div>
+            <div class="row" style="gap:10px;justify-content:flex-end;margin-top:12px">
+              <button type="button" class="btn secondary" ng-click="vm.closeEdit()">Hủy</button>
+              <button type="submit" class="btn">Lưu</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </main>
   </div>
 </body>
