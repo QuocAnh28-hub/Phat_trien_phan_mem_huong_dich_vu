@@ -1,94 +1,68 @@
 <!DOCTYPE html>
-<html lang="vi" ng-app="dahApp">
+<html lang="vi">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Đăng nhập — DAH</title>
-
-  <!-- CSS -->
   <link rel="stylesheet" href="../style/index.css" />
-
-  <!-- AngularJS -->
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <script src="../angular/angular.min.js"></script>
-  <!-- Module + Interceptor -->
-  <script>
-  (function () {
-    'use strict';
-    angular.module('dahApp', [])
-      .factory('AuthInterceptor', function () {
-        return {
-          request: function (cfg) {
-            const t = localStorage.getItem('token');
-            if (t) cfg.headers.Authorization = 'Bearer ' + t;
-            return cfg;
-          }
-        };
-      })
-      .config(function ($httpProvider) {
-        $httpProvider.interceptors.push('AuthInterceptor');
-      });
-  })();
-  </script>
-
-  <!-- Login logic -->
   <script src="../script/login.js"></script>
+
 </head>
-
-<body>
-  <!-- Cả body dùng flex để căn giữa -->
-  <div class="login-page" ng-controller="LoginCtrl as vm">
+<body ng-app="dahApp">
+  <main class="login-page" aria-labelledby="loginTitle">
     <section class="login-card" role="region" aria-label="Form đăng nhập">
-      <h1 class="title">Đăng nhập</h1>
+      <h1 id="loginTitle" class="title">Đăng nhập</h1>
 
-      <form class="form" ng-submit="vm.submit($event)" autocomplete="on" novalidate>
-        <!-- Tài khoản -->
-        <label class="label" for="username">Tài khoản</label>
+      <form onsubmit="return dangNhap(event)" id="loginForm" class="form" method="post" action="#" autocomplete="on">
+        <label for="username" class="label">Tài khoản</label>
         <input
           id="username"
-          class="input"
+          name="username"
           type="text"
+          class="input"
           placeholder="Nhập tài khoản"
-          ng-model="vm.form.username"
           required
           autofocus
         />
 
-        <!-- Mật khẩu -->
-        <label class="label" for="password">Mật khẩu</label>
+        <label for="password" class="label">Mật khẩu</label>
         <div class="password-wrapper">
           <input
             id="password"
+            name="password"
+            type="password"
             class="input"
-            type="{{ vm.showPwd ? 'text' : 'password' }}"
             placeholder="Nhập mật khẩu"
-            ng-model="vm.form.password"
             required
+            minlength="1"
           />
-          <button
-            type="button"
-            class="btn-toggle"
-            ng-attr-aria-label="{{ vm.showPwd ? 'Ẩn mật khẩu' : 'Hiện mật khẩu' }}"
-            ng-click="vm.showPwd = !vm.showPwd">
-            {{ vm.showPwd ? '🙈' : '👁️' }}
+          <button type="button" id="togglePwd" class="btn-toggle" aria-label="Hiện mật khẩu">
+            👁️
           </button>
         </div>
 
-        <!-- Quên mật khẩu -->
         <div class="row-between">
-          <a href="#"
-             class="forgot"
-             ng-click="$event.preventDefault(); alert('Vui lòng liên hệ Admin để được cấp lại mật khẩu.');">
-            Quên mật khẩu?
-          </a>
+          <a href="#" class="forgot" onclick="alert('Vui lòng liên hệ Admin để được cấp lại mật khẩu.'); return false;">Quên mật khẩu?</a>
         </div>
 
-        <!-- Nút đăng nhập -->
-        <button type="submit" class="btn-submit" ng-disabled="vm.isBusy">
-          {{ vm.isBusy ? 'Đang xử lý...' : 'Đăng nhập' }}
-        </button>
+        <button type="submit" class="btn-submit" onclick="dangNhap(event)">Đăng nhập</button>
       </form>
+
     </section>
-  </div>
+  </main>
+
+  <script>
+    (function () {
+      const pwd = document.getElementById('password');
+      const btn = document.getElementById('togglePwd');
+      btn.addEventListener('click', function () {
+        const showing = pwd.type === 'text';
+        pwd.type = showing ? 'password' : 'text';
+        btn.setAttribute('aria-label', showing ? 'Hiện mật khẩu' : 'Ẩn mật khẩu');
+        btn.textContent = showing ? '👁️' : '🙈';
+      });
+    })();
+  </script>
 </body>
 </html>
