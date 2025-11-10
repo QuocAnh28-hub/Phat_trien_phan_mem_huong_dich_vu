@@ -260,3 +260,42 @@ th {
   text-decoration: none;
   color: white;
 }
+
+/* ===== Nút hành động trong bảng ===== */
+.action-buttons {
+  display: flex;
+}
+
+.icon-btn {
+  border: none;
+  background: #f1f1f1;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-btn i {
+  pointer-events: none;
+}
+
+/* Nút Sửa */
+.icon-btn.edit {
+  color: #0066cc;
+}
+
+.icon-btn.edit:hover {
+  background: #cce5ff;
+  color: #004a99;
+}
+
+/* Nút Xóa */
+.icon-btn.delete {
+  color: #cc0000;
+}
+
+.icon-btn.delete:hover {
+  background: #ffcccc;
+  color: #990000;
+}
