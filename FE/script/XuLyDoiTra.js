@@ -239,7 +239,6 @@
         vm.fetchInvoice();
       };
 
-      // recent
       (async function init() {
         try {
           const res = await Gateway.getAllInvoices();
