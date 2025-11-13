@@ -142,7 +142,6 @@ namespace DAL
                 throw new Exception("Lỗi khi lấy danh sách hóa đơn chưa thanh toán theo tên khách hàng: " + ex.Message);
             }
         }
-<<<<<<< HEAD
 
         public DataTable GetByHoaDon(string maHDBan)
         {
@@ -184,10 +183,5 @@ namespace DAL
                 throw new Exception("Lỗi khi reset số tiền thanh toán: " + ex.Message);
             }
         }
-
-
-
-=======
->>>>>>> d4eb1b37fb7024f9b0d935584854d581ce207fef
     }
 }

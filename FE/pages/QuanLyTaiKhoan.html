@@ -4,25 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Quản lý tài khoản - DAH</title>
-
-  <!-- CSS -->
   <link rel="stylesheet" href="../style/QuanLyTaiKhoan.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-
-  <!-- AngularJS 1.x -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
   <script src="../angular/angular.min.js"></script>
-
-  <!-- Optional -->
   <script src="../script/login.js"></script>
   <script src="../script/auth.js"></script>
-
-  <!-- App Angular của trang -->
   <script defer src="../script/QuanLyTaiKhoan.js"></script>
 </head>
 <body ng-controller="TaiKhoanCtrl as vm">
   <div class="warp">
-    <!-- ========== SIDEBAR ========== -->
     <aside class="sidebar">
       <div class="brand">
         <div class="logo">DAH</div>
@@ -146,8 +137,8 @@
                 <label class="small muted">QUYỀN *</label>
                 <select class="input" ng-model="vm.add.quyen" required>
                   <option value="4">Admin</option>
-                  <option value="3">Quản lý</option>
-                  <option value="2">Nhân viên</option>
+                  <option value="3">Thủ kho</option>
+                  <option value="2">Thu ngân</option>
                   <option value="1">Kế toán</option>
                 </select>
               </div>
