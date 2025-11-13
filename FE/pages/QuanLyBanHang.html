@@ -4,13 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DAH — Quản lý bán hàng (Thu ngân)</title>
+  <script src="../angular/angular.min.js"></script>
   <script src="../script/auth.js"></script>
   <script src="../script/login.js"></script>
-  <script src="../js/axios-1.12.2.min.js"></script>
+  <script src="../script/QuanLyBanHang.js"></script>
   <link rel="stylesheet" href="../style/QuanLyBanHang.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body>
+<body ng-app="dahApp" ng-controller="BanHangCtrl">
   <div class="warp">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -62,118 +63,92 @@
         <div class="actions"><div class="pill">Ngôn ngữ: VN</div></div>
       </div>
 
-      <!-- ===== VIEW: Hóa đơn bán ===== -->
-      <section id="hoa-don" class="view is-active">
-        <section class="card">
-          <div class="row" style="gap:12px;flex-wrap:wrap;align-items:flex-end">
-            <div>
-              <div class="small muted">Từ ngày</div>
-              <input class="input" type="date">
-            </div>
-            <div>
-              <div class="small muted">Đến ngày</div>
-              <input class="input" type="date">
-            </div>
-            <div>
-              <div class="small muted">Khách hàng</div>
-              <input class="input" placeholder="Tên / SĐT khách...">
-            </div>
-            <div>
-              <div class="small muted">Trạng thái</div>
-              <select class="input">
-                <option value="">-- Tất cả --</option>
-                <option>Nháp</option>
-                <option>Đã thanh toán</option>
-                <option>Đã hủy</option>
-              </select>
-            </div>
-            <div style="flex:1;min-width:200px">
-              <div class="small muted">Tìm nhanh</div>
-              <input class="input" placeholder="Mã HĐ / ghi chú...">
-            </div>
-            <div class="row" style="gap:8px">
-              <a class="btn secondary" href="#hoa-don">Làm mới</a>
-              <a class="btn" href="#tao-hoa-don">+ Tạo hóa đơn</a>
-            </div>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>MÃ HĐ</th>
-                  <th>KHÁCH HÀNG</th>
-                  <th>NGÀY</th>
-                  <th>TỔNG TIỀN</th>
-                  <th>TRẠNG THÁI</th>
-                  <th style="width:160px">THAO TÁC</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>HD0001</td>
-                  <td>Nguyễn Văn An</td>
-                  <td>10/09/2025</td>
-                  <td>2.350.000 ₫</td>
-                  <td><span class="pill">Đã thanh toán</span></td>
-                  <td class="table-actions">
-                    <a class="btn small neutral" href="#chi-tiet">Xem</a>
-                    <a class="btn small warn" href="#">Hủy</a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </section>
-
       <!-- ===== VIEW: Tạo hóa đơn ===== -->
-      <section id="tao-hoa-don" class="view">
+      <section id="tao-hoa-don" class="view is-active">
         <div class="card">
           <h3 class="h3">Tạo hóa đơn mới</h3>
+
+          <!-- Thông tin khách hàng -->
           <div class="row" style="gap:12px;flex-wrap:wrap">
-            <div style="flex:1;min-width:250px">
-              <div class="small muted">Khách hàng</div>
-              <input class="input" placeholder="Tên hoặc SĐT khách...">
+            <div style="flex:1;min-width:150px">
+              <div class="small muted">Mã khách hàng</div>
+              <input id="ma-kh" class="input" placeholder="VD: KH001"
+                    ng-model="khachHang.ma"
+                    ng-blur="kiemTraKhachHang()">
             </div>
-            <div style="flex:1;min-width:250px">
-              <div class="small muted">Ghi chú</div>
-              <input class="input" placeholder="Ghi chú đơn hàng...">
+
+            <div style="flex:1;min-width:200px">
+              <div class="small muted">Tên khách hàng</div>
+              <input id="tenkh" class="input" ng-model="khachHang.ten"
+                    placeholder="Tên khách hàng"
+                    ng-readonly="!khachHang.moi">
+            </div>
+
+            <div style="flex:1;min-width:200px">
+              <div class="small muted">Số điện thoại</div>
+              <input id="sdt" class="input" ng-model="khachHang.sdt"
+                    placeholder="0999123456"
+                    ng-readonly="!khachHang.moi">
+            </div>
+
+            <div style="flex:1;min-width:200px">
+              <div class="small muted">Địa chỉ</div>
+              <input id="diachi" class="input" ng-model="khachHang.diachi"
+                    placeholder="Địa chỉ khách hàng"
+                    ng-readonly="!khachHang.moi">
             </div>
           </div>
 
+          <hr style="margin:20px 0;border:dashed 1px #ccc">
+
+          <!-- Nhập sản phẩm -->
+          <div class="row" style="gap:12px;align-items:flex-end;flex-wrap:wrap">
+            <div>
+              <div class="small muted">Mã sản phẩm</div>
+              <input id="ma-sp" class="input" ng-model="sanPham.ma" placeholder="VD: SP001">
+            </div>
+            <div>
+              <div class="small muted">Số lượng</div>
+              <input id="sl" class="input" type="number" min="1" ng-model="sanPham.sl" value="1">
+            </div>
+            <div>
+              <button id="btn-them-sp" class="btn" ng-click="themSanPham()" style="cursor: pointer;">+ Thêm sản phẩm</button>
+            </div>
+          </div>
+
+          <!-- Bảng chi tiết -->
           <div class="table-wrap" style="margin-top:12px">
-            <table>
+            <table id="bang-ct">
               <thead>
                 <tr>
                   <th>MÃ SP</th>
                   <th>TÊN SẢN PHẨM</th>
                   <th>SL</th>
                   <th>GIÁ</th>
-                  <th>CK</th>
                   <th>THÀNH TIỀN</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>SP001</td>
-                  <td>Bánh quy</td>
-                  <td><input class="input" style="width:60px" value="2"></td>
-                  <td>25.000</td>
-                  <td><input class="input" style="width:60px" value="0"></td>
-                  <td>50.000</td>
-                  <td><a class="btn small warn" href="#">Xóa</a></td>
+                <tr ng-repeat="sp in danhSachCT track by $index">
+                  <td>{{sp.masp}}</td>
+                  <td>{{sp.tensp}}</td>
+                  <td><input type="number" ng-model="sp.soluong" ng-change="capNhatTongTien()" min="1" style="width:60px"></td>
+                  <td>{{sp.dongia | number}} ₫</td>
+                  <td>{{sp.tongtien | number}} ₫</td>
+                  <td><button class="btn small warn" ng-click="xoaSanPham($index)" style="cursor: pointer;">Xóa</button></td>
                 </tr>
               </tbody>
             </table>
           </div>
 
+          <div style="text-align:right;margin-top:10px;font-weight:600">
+            Tổng tiền hàng: {{tongTien | number}} ₫
+          </div>
+
           <div class="row" style="justify-content:flex-end;margin-top:12px;gap:8px">
             <a class="btn secondary" href="#hoa-don">Hủy</a>
-            <a class="btn" href="#hoa-don">Lưu hóa đơn</a>
+            <a class="btn" id="btn-luu-hoa-don" ng-click="luuHoaDon()" style="cursor: pointer;">Lưu hóa đơn</a>
           </div>
         </div>
       </section>
@@ -182,9 +157,6 @@
       <section id="chi-tiet" class="view">
         <div class="card">
           <h3 class="h3">Chi tiết hóa đơn</h3>
-          <p><strong>Mã HĐ:</strong> HD0001</p>
-          <p><strong>Khách hàng:</strong> Nguyễn Văn An</p>
-          <p><strong>Ngày lập:</strong> 10/09/2025</p>
 
           <div class="table-wrap">
             <table>
@@ -213,6 +185,26 @@
         </div>
       </section>
     </main>
+  </div>
+  <!-- POPUP THANH TOÁN -->
+  <div class="modal-overlay" ng-show="showPaymentModal">
+    <div class="modal">
+      <h3 class="modal-title">Chọn phương thức thanh toán</h3>
+      <div class="modal-body">
+        <label class="radio-option">
+          <input type="radio" ng-model="thanhToan.phuongThuc" value="Tiền mặt"> Tiền mặt
+        </label>
+        <label class="radio-option">
+          <input type="radio" ng-model="thanhToan.phuongThuc" value="Chuyển khoản"> Chuyển khoản
+        </label>
+        <label class="radio-option">
+          <input type="radio" ng-model="thanhToan.phuongThuc" value="Ghi nợ"> Ghi nợ
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" ng-click="xacNhanThanhToan()">Xác nhận</button>
+      </div>
+    </div>
   </div>
 </body>
 </html>

@@ -50,6 +50,7 @@ namespace BLL
         {
             return _DAL.GetHoaDonChuaThanhToanTheoTen(tenKh);
         }
+<<<<<<< HEAD
         public DataTable GetByHoaDon(string maHDBan)
         {
             return _DAL.GetByHoaDon(maHDBan);
@@ -61,5 +62,7 @@ namespace BLL
 
 
 
+=======
+>>>>>>> d4eb1b37fb7024f9b0d935584854d581ce207fef
     }
 }
