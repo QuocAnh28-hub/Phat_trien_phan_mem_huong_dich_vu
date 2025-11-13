@@ -35,7 +35,6 @@
               .catch(function (e) {
                 lastErr = e;
                 var code = e.status;
-                // các mã 4xx do sai param thì thử tiếp biến thể khác
                 if ([400, 404, 415, 422].indexOf(code) === -1) {
                   return reject(e);
                 }
@@ -47,7 +46,6 @@
 
       function unwrapList(res) {
         var d = res && res.data;
-        // { success: true, data: [...] }
         if (d && Array.isArray(d.data)) return d.data;
         if (Array.isArray(d)) return d;
         if (d && Array.isArray(d.items)) return d.items;
@@ -80,9 +78,7 @@
         });
       };
 
-      // 🔹 RESET SỐ TIỀN THANH TOÁN THEO MÃ HÓA ĐƠN
-      // Gọi store SP_RESET_SOTIENTHANHTOAN_BY_MAHDBAN qua API:
-      // POST api-thungan/QuanLyDoiTra/reset-sotienthanhtoan-by-mahdban?maHDBan=HD001&soTienMoi=0
+      //  RESET SỐ TIỀN THANH TOÁN THEO MÃ HÓA ĐƠN
       var resetPaymentsByInvoice = function (invoiceId, amount) {
         return $http.post(API_BASE + '/reset-sotienthanhtoan-by-mahdban', null, {
           params: {
@@ -137,8 +133,8 @@
         deleteChiTietBan: deleteChiTietBan,
         deleteAllDetailsOfInvoice: deleteAllDetailsOfInvoice,
         getPaymentsByInvoice: getPaymentsByInvoice,
-        updatePaymentAmountToZero: updatePaymentAmountToZero, // optional
-        resetPaymentsByInvoice: resetPaymentsByInvoice        // 👈 dùng cái này cho đổi trả
+        updatePaymentAmountToZero: updatePaymentAmountToZero, 
+        resetPaymentsByInvoice: resetPaymentsByInvoice       
       };
     })
 
