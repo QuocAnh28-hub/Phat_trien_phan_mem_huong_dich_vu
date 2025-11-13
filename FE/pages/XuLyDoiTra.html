@@ -6,24 +6,26 @@
   <title>DAH — Xử lý Đổi/Trả</title>
 
   <!-- AngularJS -->
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <script src="../angular/angular.min.js"></script>
-  <!-- Optional nền -->
+
+
+  <!-- UI -->
+  <link rel="stylesheet" href="../style/XuLyDoiTra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <!-- Optional -->
   <script src="../script/login.js"></script>
   <script src="../script/auth.js"></script>
 
   <!-- App -->
-  <link rel="stylesheet" href="../style/XuLyDoiTra.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
   <script defer src="../script/XuLyDoiTra.js"></script>
 </head>
 
 <body ng-controller="XuLyDoiTraCtrl as vm">
   <div class="warp">
     <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <aside class="sidebar" aria-label="Thanh điều hướng">
       <div class="brand">
-        <div class="logo">DAH</div>
+        <div class="logo" aria-hidden="true">DAH</div>
         <div><div>Quản lý bán lẻ và kho DAH</div></div>
       </div>
 
@@ -39,7 +41,7 @@
 
         <div class="section-title">THU NGÂN</div>
         <a href="QuanLyBanHang.html">🧾 QUẢN LÝ BÁN HÀNG</a>
-        <a href="XuLyDoiTra.html" class="active">🔁 XỬ LÝ ĐỔI TRẢ</a>
+        <a href="XuLyDoiTra.html" class="active" aria-current="page">🔁 XỬ LÝ ĐỔI TRẢ</a>
 
         <div class="section-title" style="margin-top:20px;font-weight:700;">Thủ kho</div>
         <a href="QuanLyDanhMuc.html">📦 Quản lý Danh mục</a>
@@ -54,7 +56,6 @@
           <span>Người dùng:</span><strong>{{ vm.currentUser }}</strong>
         </div>
       </div>
-      <div class="small muted">© DAH</div>
       <div class="logout">
         <a href="index.html">Đăng xuất <i class="fa-solid fa-right-from-bracket"></i></a>
       </div>
@@ -62,81 +63,92 @@
 
     <!-- MAIN -->
     <main class="main">
-      <div class="header">
+      <header class="header">
         <div>
-          <div class="breadcrumbs">THU NGÂN / Xử lý đổi trả</div>
+          <p class="breadcrumbs">THU NGÂN / Xử lý đổi trả</p>
           <h1 class="h1">XỬ LÝ ĐỔI / TRẢ</h1>
         </div>
-        <div class="actions"><div class="pill">Ngôn ngữ: VN</div></div>
-      </div>
+        <div class="actions"><div class="small" aria-label="Ngôn ngữ hiện tại">Ngôn ngữ: VN</div></div>
+      </header>
 
       <!-- 1) Tìm hóa đơn gốc -->
-      <section class="card">
-        <h3 class="h3">Tìm hóa đơn gốc</h3>
-        <div class="row" style="gap:12px;flex-wrap:wrap;align-items:flex-end">
-          <div>
-            <div class="small muted">Mã hóa đơn</div>
-            <input class="input" placeholder="vd: HD001" ng-model="vm.search.maHD">
-          </div>
-          <div>
-            <div class="small muted">Ngày bán từ</div>
-            <input type="date" class="input" ng-model="vm.search.from">
-          </div>
-          <div>
-            <div class="small muted">đến</div>
-            <input type="date" class="input" ng-model="vm.search.to">
-          </div>
+      <section class="card" aria-labelledby="searchTitle">
+        <h3 id="searchTitle" class="h3">Tìm hóa đơn gốc</h3>
+        <form class="row" style="gap:12px;align-items:flex-end" ng-submit="vm.fetchInvoice()">
+          <label>
+            <div class="small">Mã hóa đơn</div>
+            <input class="input" placeholder="vd: HD001" ng-model="vm.search.maHD" autocomplete="off" />
+          </label>
+          <label>
+            <div class="small">Ngày bán từ</div>
+            <input type="date" class="input" ng-model="vm.search.from" />
+          </label>
+          <label>
+            <div class="small">đến</div>
+            <input type="date" class="input" ng-model="vm.search.to" />
+          </label>
           <div class="row" style="gap:8px">
-            <a class="btn" href="" ng-click="vm.fetchInvoice($event)">Tải hóa đơn</a>
-            <a class="btn secondary" href="" ng-click="vm.resetAll($event)">Làm mới</a>
+            <button class="btn" type="submit" ng-disabled="vm.loading">
+              <i class="fa-solid fa-download"></i> Tải hóa đơn
+            </button>
+            <button class="btn secondary" type="button" ng-click="vm.resetAll()" ng-disabled="vm.loading">
+              Làm mới
+            </button>
           </div>
-        </div>
+        </form>
       </section>
 
       <!-- 2) Thông tin hóa đơn gốc -->
-      <section class="card" ng-if="vm.invoice">
-        <div class="row" style="gap:16px;flex-wrap:wrap">
+      <section class="card" ng-if="vm.invoice" aria-labelledby="infoTitle">
+        <h3 id="infoTitle" class="h3">Thông tin hóa đơn gốc</h3>
+        <div class="row" style="gap:16px">
           <div style="min-width:220px">
-            <div class="small muted">Mã HĐ</div>
+            <div class="small">Mã HĐ</div>
             <strong>{{ vm.invoice.id || '—' }}</strong>
           </div>
           <div style="min-width:220px">
-            <div class="small muted">Khách hàng</div>
+            <div class="small">Khách hàng</div>
             <strong>{{ vm.invoice.customerId || '—' }}</strong>
           </div>
           <div style="min-width:220px">
-            <div class="small muted">Ngày lập</div>
+            <div class="small">Ngày lập</div>
             <strong>{{ vm.invoice.createdAt | date:'dd/MM/yyyy HH:mm' }}</strong>
           </div>
           <div style="min-width:220px">
-            <div class="small muted">Tổng tiền hàng</div>
+            <div class="small">Tổng tiền hàng</div>
             <strong>{{ vm.invoice.goodsTotal | currency:'':0 }} ₫</strong>
           </div>
         </div>
       </section>
 
       <!-- 3) Chọn hàng để đổi/trả -->
-      <section class="card" ng-if="vm.details.length">
-        <h3 class="h3">Chọn hàng để đổi / trả</h3>
-        <div class="table-wrap">
+      <section class="card" ng-if="vm.invoice" aria-labelledby="chooseTitle">
+        <div class="row" style="justify-content:space-between;align-items:center">
+          <h3 id="chooseTitle" class="h3">Chọn hàng để đổi / trả</h3>
+        </div>
+
+        <div class="table-wrap" role="region" aria-label="Danh sách chi tiết hóa đơn">
           <table>
+            <caption class="small" style="text-align:left;padding:4px 0">Chi tiết các mặt hàng đã mua</caption>
             <thead>
               <tr>
-                <th>Chọn</th>
-                <th>MÃ SP</th>
-                <th>TÊN SẢN PHẨM</th>
-                <th>SL đã mua</th>
-                <th>SL đổi/trả</th>
-                <th>Đơn giá</th>
-                <th>Lý do</th>
+                <th scope="col">Chọn</th>
+                <th scope="col">MÃ SP</th>
+                <th scope="col">TÊN SẢN PHẨM</th>
+                <th scope="col">SL đã mua</th>
+                <th scope="col">SL đổi/trả</th>
+                <th scope="col">Đơn giá</th>
+                <th scope="col">Lý do</th>
+                <th scope="col" aria-label="Thao tác"></th>
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="it in vm.details">
+              <tr ng-repeat="it in vm.details track by it.productId">
                 <td>
                   <input type="checkbox"
+                         aria-label="Chọn {{it.productId}}"
                          ng-checked="vm.retQty[it.productId] > 0"
-                         ng-click="vm.toggleReturn(it.productId)">
+                         ng-click="vm.toggleReturn(it.productId, it.qty)">
                 </td>
                 <td>{{ it.productId }}</td>
                 <td>{{ it.productName || it.productId }}</td>
@@ -148,41 +160,46 @@
                 </td>
                 <td>{{ it.price | currency:'':0 }} ₫</td>
                 <td>
-                  <select class="input" ng-model="vm.retReason[it.productId]">
+                  <select class="input" ng-model="vm.retReason[it.productId]" aria-label="Lý do {{it.productId}}">
                     <option>Không ưng</option>
                     <option>Lỗi/ hỏng</option>
                     <option>Giao nhầm</option>
                   </select>
                 </td>
+                <td class="table-actions">
+
+                </td>
               </tr>
               <tr ng-if="!vm.details.length">
-                <td colspan="7" style="text-align:center">Không có sản phẩm</td>
+                <td colspan="8" style="text-align:center">Không có sản phẩm</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- Hàng đổi -->
-        <div class="row" style="margin-top:12px;gap:8px">
-          <span class="small muted">Thêm sản phẩm đổi:</span>
-          <input class="input" placeholder="Mã/Tên SP" ng-model="vm.newEx.code">
-          <input class="input" placeholder="SL" style="width:80px" ng-model="vm.newEx.qty" type="number" min="1">
-          <input class="input" placeholder="Giá" style="width:120px" ng-model="vm.newEx.price" type="number" min="0">
-          <a class="btn secondary" href="" ng-click="vm.addExchange($event)">Thêm vào danh sách đổi</a>
-        </div>
 
         <div class="table-wrap" style="margin-top:8px" ng-if="vm.exchangeItems.length">
-          <table>
+          <table aria-label="Danh sách hàng đổi">
             <thead>
-              <tr><th>MÃ/TÊN</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th><th></th></tr>
+              <tr>
+                <th scope="col">MÃ/TÊN</th>
+                <th scope="col">SL</th>
+                <th scope="col">Đơn giá</th>
+                <th scope="col">Thành tiền</th>
+                <th scope="col"></th>
+              </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="x in vm.exchangeItems">
+              <tr ng-repeat="x in vm.exchangeItems track by $index">
                 <td>{{ x.code }}</td>
                 <td>{{ x.qty }}</td>
                 <td>{{ x.price | currency:'':0 }} ₫</td>
                 <td>{{ (x.qty * x.price) | currency:'':0 }} ₫</td>
-                <td><button class="icon-btn delete" title="Xóa" ng-click="vm.removeExchange($index)"><i class="fa-solid fa-trash"></i></button></td>
+                <td>
+                  <button class="icon-btn delete" type="button" title="Xóa" ng-click="vm.removeExchange($index)" ng-disabled="vm.loading">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -190,68 +207,192 @@
       </section>
 
       <!-- 4) Tổng kết -->
-      <section class="card" ng-if="vm.invoice">
-        <h3 class="h3">Tổng kết</h3>
-        <div class="row" style="gap:24px;flex-wrap:wrap">
+      <section class="card" ng-if="vm.invoice" aria-labelledby="sumTitle">
+        <h3 id="sumTitle" class="h3">Tổng kết</h3>
+        <div class="row" style="gap:24px">
           <div style="min-width:240px">
-            <div class="small muted">Giá trị hàng trả</div>
+            <div class="small">Giá trị hàng trả</div>
             <strong id="sumReturn">{{ vm.sumReturn | currency:'':0 }} ₫</strong>
           </div>
           <div style="min-width:240px">
-            <div class="small muted">Giá trị hàng đổi</div>
+            <div class="small">Giá trị hàng đổi</div>
             <strong id="sumExchange">{{ vm.sumExchange | currency:'':0 }} ₫</strong>
           </div>
           <div style="min-width:340px">
-            <div class="small muted">Chênh lệch (âm: hoàn, dương: thu thêm)</div>
+            <div class="small">Chênh lệch (âm: hoàn, dương: thu thêm)</div>
             <strong id="sumDiff" ng-class="{'tag-return': vm.sumDiff < 0, 'tag-exchange': vm.sumDiff >= 0}">
               {{ vm.sumDiff | currency:'':0 }} ₫
             </strong>
           </div>
         </div>
 
-        <div class="row" style="gap:12px;flex-wrap:wrap;margin-top:12px">
-          <div>
-            <div class="small muted">Hình thức hoàn/thu</div>
+        <div class="row" style="gap:12px; margin-top:12px; align-items:flex-end">
+          <label>
+            <div class="small">Hình thức hoàn/thu</div>
             <select class="input" style="min-width:200px" ng-model="vm.paymentMethod">
               <option>Tiền mặt</option>
               <option>Chuyển khoản</option>
               <option>Thẻ</option>
             </select>
-          </div>
-          <div style="flex:1;min-width:260px">
-            <div class="small muted">Ghi chú</div>
+          </label>
+          <label style="flex:1;min-width:260px">
+            <div class="small">Ghi chú</div>
             <input class="input" placeholder="Lý do chi tiết..." ng-model="vm.note">
-          </div>
+          </label>
           <div class="row" style="gap:8px; margin-left:auto">
-            <a class="btn secondary" href="" ng-click="vm.resetAll($event)">Hủy</a>
-            <a class="btn" href="" ng-click="vm.createVoucher($event)">Tạo phiếu đổi/trả</a>
+            <button class="btn secondary" type="button" ng-click="vm.resetAll()" ng-disabled="vm.loading">Hủy</button>
+            <button class="btn" type="button" ng-click="vm.createVoucher($event)" ng-disabled="vm.loading">Xác Nhận Đổi Trả</button>
           </div>
         </div>
       </section>
 
-      <!-- 5) Hóa đơn gần đây -->
-      <section class="card">
-        <h3 class="h3">Đơn bán gần đây</h3>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>MÃ HĐ</th><th>KHÁCH HÀNG</th><th>NGÀY</th><th>TỔNG TIỀN HÀNG</th></tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="inv in vm.history" ng-click="vm.pickHistory(inv)" style="cursor:pointer">
-                <td>{{ (inv.maHoaDon || inv.mahdban || inv.mahdBan || inv.id) }}</td>
-                <td>{{ inv.maKH || inv.makh }}</td>
-                <td>{{ (inv.ngayLap || inv.ngaylap) | date:'dd/MM/yyyy HH:mm' }}</td>
-                <td>{{ (inv.tongTienHang || inv.tongtienhang) | currency:'':0 }} ₫</td>
-              </tr>
-              <tr ng-if="!vm.history.length">
-                <td colspan="4" style="text-align:center">Chưa có dữ liệu</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+
+      <!-- 6) Thanh toán -->
+<section class="card" ng-if="vm.invoice" aria-labelledby="payTitle">
+
+  <div class="table-wrap">
+    <table aria-label="Danh sách thanh toán">
+      <thead>
+        <tr>
+          <th scope="col">MÃ TT</th>
+          <th scope="col">MÃ HĐ</th>
+          <th scope="col">Số tiền</th>
+          <th scope="col">Phương thức</th>
+          <th scope="col">Ngày thanh toán</th>
+          <th scope="col">Trạng thái</th>
+        </tr>
+      </thead>
+<tbody>
+  <tr ng-repeat="p in vm.payments track by p.id">
+    <!-- MÃ TT -->
+    <td>{{ p.id }}</td>
+
+    <!-- MÃ HĐ -->
+    <td>{{ p.maHoaDon }}</td>
+
+    <!-- SỐ TIỀN -->
+    <td>{{ p.soTien | currency:'':0 }} ₫</td>
+
+    <!-- PHƯƠNG THỨC -->
+    <td>{{ p.phuongThuc }}</td>
+
+    <!-- NGÀY THANH TOÁN -->
+    <td>{{ p.ngayThanhToan | date:'dd/MM/yyyy' }}</td>
+
+    <!-- TRẠNG THÁI -->
+    <td>{{ p.trangThai }}</td>
+  </tr>
+
+  <tr ng-if="!vm.payments.length">
+    <td colspan="6" style="text-align:center">Chưa có thanh toán</td>
+  </tr>
+</tbody>
+
+
+    </table>
+  </div>
+</section>
+
     </main>
+  </div>
+
+  <!-- MODAL: Sửa hóa đơn -->
+  <div class="modal-backdrop" ng-if="vm.modal.editInvoice.show" ng-click="vm.closeModals()" aria-hidden="true"></div>
+  <div class="modal" ng-if="vm.modal.editInvoice.show" role="dialog" aria-modal="true" aria-labelledby="editInvoiceTitle">
+    <div class="modal-header">
+      <h3 id="editInvoiceTitle">✏️ Sửa hóa đơn</h3>
+      <button class="icon-btn" type="button" aria-label="Đóng" ng-click="vm.closeModals()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <label class="form-row">
+        <span>Mã HĐ</span>
+        <input class="input" ng-model="vm.modal.editInvoice.data.id" disabled>
+      </label>
+      <label class="form-row">
+        <span>Khách hàng (maKH)</span>
+        <input class="input" ng-model="vm.modal.editInvoice.data.maKH">
+      </label>
+      <label class="form-row">
+        <span>Ghi chú</span>
+        <input class="input" ng-model="vm.modal.editInvoice.data.ghiChu">
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" type="button" ng-click="vm.closeModals()">Hủy</button>
+      <button class="btn" type="button" ng-click="vm.saveInvoice()" ng-disabled="vm.loading">Lưu</button>
+    </div>
+  </div>
+
+  <!-- MODAL: Sửa chi tiết -->
+  <div class="modal-backdrop" ng-if="vm.modal.editDetail.show" ng-click="vm.closeModals()" aria-hidden="true"></div>
+  <div class="modal" ng-if="vm.modal.editDetail.show" role="dialog" aria-modal="true" aria-labelledby="editDetailTitle">
+    <div class="modal-header">
+      <h3 id="editDetailTitle">✏️ Sửa chi tiết</h3>
+      <button class="icon-btn" type="button" aria-label="Đóng" ng-click="vm.closeModals()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <label class="form-row">
+        <span>Mã HĐ</span>
+        <input class="input" ng-model="vm.modal.editDetail.data.maHoaDon" disabled>
+      </label>
+      <label class="form-row">
+        <span>Mã SP</span>
+        <input class="input" ng-model="vm.modal.editDetail.data.maSP">
+      </label>
+      <label class="form-row">
+        <span>Số lượng</span>
+        <input class="input" type="number" ng-model="vm.modal.editDetail.data.soLuong">
+      </label>
+      <label class="form-row">
+        <span>Đơn giá</span>
+        <input class="input" type="number" ng-model="vm.modal.editDetail.data.donGia">
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" type="button" ng-click="vm.closeModals()">Hủy</button>
+      <button class="btn" type="button" ng-click="vm.saveDetail()" ng-disabled="vm.loading">Lưu</button>
+    </div>
+  </div>
+
+  <!-- MODAL: Sửa / Thêm thanh toán -->
+  <div class="modal-backdrop" ng-if="vm.modal.editPayment.show" ng-click="vm.closeModals()" aria-hidden="true"></div>
+  <div class="modal" ng-if="vm.modal.editPayment.show" role="dialog" aria-modal="true" aria-labelledby="editPaymentTitle">
+    <div class="modal-header">
+      <h3 id="editPaymentTitle">{{ vm.modal.editPayment.isNew ? '➕ Thêm thanh toán' : '✏️ Sửa thanh toán' }}</h3>
+      <button class="icon-btn" type="button" aria-label="Đóng" ng-click="vm.closeModals()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row" ng-if="!vm.modal.editPayment.isNew">
+        <label>Mã TT</label>
+        <input class="input" ng-model="vm.modal.editPayment.data.id" disabled>
+      </div>
+      <label class="form-row">
+        <span>Mã HĐ</span>
+        <input class="input" ng-model="vm.modal.editPayment.data.maHoaDon" disabled>
+      </label>
+      <label class="form-row">
+        <span>Số tiền</span>
+        <input class="input" type="number" ng-model="vm.modal.editPayment.data.soTien">
+      </label>
+      <label class="form-row">
+        <span>Phương thức</span>
+        <select class="input" ng-model="vm.modal.editPayment.data.phuongThuc">
+          <option>Tiền mặt</option>
+          <option>Chuyển khoản</option>
+          <option>Thẻ</option>
+        </select>
+      </label>
+      <label class="form-row">
+        <span>Ghi chú</span>
+        <input class="input" ng-model="vm.modal.editPayment.data.ghiChu">
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" type="button" ng-click="vm.closeModals()">Hủy</button>
+      <button class="btn" type="button" ng-click="vm.savePayment()" ng-disabled="vm.loading">
+        {{ vm.modal.editPayment.isNew ? 'Thêm' : 'Lưu' }}
+      </button>
+    </div>
   </div>
 </body>
 </html>

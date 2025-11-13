@@ -100,8 +100,8 @@
       vm.roleName = function (q) {
         const r = parseInt(q, 10);
         if (r === 4) return "Admin";
-        if (r === 3) return "Quản lý";
-        if (r === 2) return "Nhân viên";
+        if (r === 3) return "Thủ Kho";
+        if (r === 2) return "Thu Ngân";
         if (r === 1) return "Kế toán";
         return q ?? "";
       };

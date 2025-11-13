@@ -99,19 +99,4 @@
     AuthService.login(user, pass);
     return false;
   };
-
-  // ========= Gắn logout cho nút .logout a nếu có =========
-  document.addEventListener('DOMContentLoaded', function () {
-    var el = document.querySelector('.logout a');
-    if (el) {
-      el.addEventListener('click', function (e) {
-        e.preventDefault();
-        if (confirm('Bạn có chắc muốn đăng xuất không?')) {
-          var injector = angular.element(document.body).injector() || angular.injector(['ng', 'dahApp']);
-          injector.get('AuthService').logout();
-        }
-      });
-    }
-  });
-
 })();

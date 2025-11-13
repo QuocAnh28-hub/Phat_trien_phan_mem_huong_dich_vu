@@ -3,11 +3,11 @@
 
   /* ================== MODULE & CONFIG ================== */
   angular.module('DAHApp', [])
-    .constant('API_BASE', 'https://localhost:7107/api-thungan/QuanLyDoiTra') // đổi nếu gateway khác
+    .constant('API_BASE', 'https://localhost:7107/api-thungan/QuanLyDoiTra')
     .factory('AuthInterceptor', function () {
       return {
         request: function (cfg) {
-          const t = localStorage.getItem('token');
+          var t = localStorage.getItem('token');
           if (t) cfg.headers.Authorization = 'Bearer ' + t;
           return cfg;
         }
@@ -17,238 +17,436 @@
       $httpProvider.interceptors.push('AuthInterceptor');
     })
 
-  /* ================== SERVICE: Gateway ================== */
+    /* ================== SERVICE: Gateway ================== */
     .factory('Gateway', function ($http, API_BASE) {
 
+      // Thử GET với nhiều bộ params cho 1 path
       function tryParams(path, paramsList) {
-        const url = API_BASE + path;
-        return new Promise(async (resolve, reject) => {
-          let lastErr = null;
-          for (const p of paramsList) {
-            try { const res = await $http.get(url, { params: p }); return resolve(res); }
-            catch (e) {
-              lastErr = e;
-              const code = e.status;
-              if (![400,404,415,422].includes(code)) return reject(e);
+        var url = API_BASE + path;
+        return new Promise(function (resolve, reject) {
+          var i = 0, lastErr = null;
+
+          (function next() {
+            if (i >= paramsList.length) {
+              return reject(lastErr || new Error('Không tìm thấy'));
             }
-          }
-          reject(lastErr || new Error('Không tìm thấy'));
+            $http.get(url, { params: paramsList[i++] })
+              .then(function (res) { resolve(res); })
+              .catch(function (e) {
+                lastErr = e;
+                var code = e.status;
+                // các mã 4xx do sai param thì thử tiếp biến thể khác
+                if ([400, 404, 415, 422].indexOf(code) === -1) {
+                  return reject(e);
+                }
+                next();
+              });
+          })();
         });
       }
 
       function unwrapList(res) {
-        const d = res && res.data;
-        if (Array.isArray(d?.data)) return d.data;
+        var d = res && res.data;
+        // { success: true, data: [...] }
+        if (d && Array.isArray(d.data)) return d.data;
         if (Array.isArray(d)) return d;
+        if (d && Array.isArray(d.items)) return d.items;
         return [];
       }
 
+      // ===== HÓA ĐƠN =====
+      var getInvoiceById = function (id) {
+        return tryParams('/get-hoadonban-by-id', [
+          { maHoaDon: id }, { id: id }, { maHDB: id }, { ma: id }
+        ]);
+      };
+
+      // ===== CHI TIẾT BÁN =====
+      var getDetailsByInvoice = function (invoiceId) {
+        return tryParams('/get-chitietban-by-IDhoadon', [
+          { maHDB: invoiceId }, { id: invoiceId }, { maHoaDon: invoiceId }, { ma: invoiceId }
+        ]);
+      };
+
+      // Xoá chi tiết: backend cho 2 kiểu: theo id CT hoặc theo cặp {maHDB, maSP}
+      var deleteChiTietBan = function (params) {
+        return $http.delete(API_BASE + '/delete-chitietban', { params: params });
+      };
+
+      // ===== THANH TOÁN =====
+      var getPaymentsByInvoice = function (invoiceId) {
+        return $http.get(API_BASE + '/get-thanhtoan-by-mahdban', {
+          params: { maHDBan: invoiceId }
+        });
+      };
+
+      // 🔹 RESET SỐ TIỀN THANH TOÁN THEO MÃ HÓA ĐƠN
+      // Gọi store SP_RESET_SOTIENTHANHTOAN_BY_MAHDBAN qua API:
+      // POST api-thungan/QuanLyDoiTra/reset-sotienthanhtoan-by-mahdban?maHDBan=HD001&soTienMoi=0
+      var resetPaymentsByInvoice = function (invoiceId, amount) {
+        return $http.post(API_BASE + '/reset-sotienthanhtoan-by-mahdban', null, {
+          params: {
+            maHDBan: invoiceId,
+            soTienMoi: amount || 0
+          }
+        });
+      };
+
+      // (Hàm update từng thanh toán cũ, giờ không còn dùng nữa nhưng giữ lại nếu sau này cần)
+      var updatePaymentAmountToZero = function (payment) {
+        var body = {
+          mathanhtoan: payment.id,
+          mahdBan: payment.maHoaDon,
+          phuongThuc: payment.phuongThuc,
+          soTienThanhToan: 0,
+          ngaythanhtoan: payment.ngayThanhToan,
+          trangThai: payment.trangThai
+        };
+        return $http.post(API_BASE + '/update-thanhtoan', body);
+      };
+
+      // Xoá toàn bộ chi tiết bán của 1 hóa đơn
+      async function deleteAllDetailsOfInvoice(invoiceId) {
+        var res = await getDetailsByInvoice(invoiceId);
+        var list = unwrapList(res) || [];
+        if (!list.length) return 0;
+
+        var ok = 0;
+        for (var i = 0; i < list.length; i++) {
+          var d = list[i];
+          var idCT = d.id || d.maCT || d.maChiTiet;
+          var maSP = d.masp || d.maSP || d.productId;
+          try {
+            if (idCT) {
+              await deleteChiTietBan({ id: idCT });
+            } else {
+              await deleteChiTietBan({ maHDB: invoiceId, maSP: maSP });
+            }
+            ok++;
+          } catch (e) {
+            console.warn('Xoá chi tiết lỗi:', e, d);
+          }
+        }
+        return ok;
+      }
+
       return {
-        getAllInvoices: () => $http.get(API_BASE + '/get-all-hoadonban'),
-        getInvoiceById: (id) => tryParams('/get-hoadonban-by-id', [
-          { maHoaDon: id }, { maHDB: id }, { id }, { ma: id }
-        ]),
-        getDetailsByInvoice: (invoiceId) => tryParams('/get-chitietban-by-IDhoadon', [
-          { maHDB: invoiceId }, { maHoaDon: invoiceId }, { id: invoiceId }, { ma: invoiceId }
-        ]),
-        getAllDetails: () => $http.get(API_BASE + '/get-all-chitietban'),
-        unwrapList
+        unwrapList: unwrapList,
+        getInvoiceById: getInvoiceById,
+        getDetailsByInvoice: getDetailsByInvoice,
+        deleteChiTietBan: deleteChiTietBan,
+        deleteAllDetailsOfInvoice: deleteAllDetailsOfInvoice,
+        getPaymentsByInvoice: getPaymentsByInvoice,
+        updatePaymentAmountToZero: updatePaymentAmountToZero, // optional
+        resetPaymentsByInvoice: resetPaymentsByInvoice        // 👈 dùng cái này cho đổi trả
       };
     })
 
-  /* ================== CONTROLLER ================== */
+    /* ================== CONTROLLER ================== */
     .controller('XuLyDoiTraCtrl', function ($scope, Gateway) {
-      const vm = this;
+      var vm = this;
 
-      // user
+      /* ----- USER ----- */
       (function setUser() {
-        const u = JSON.parse(localStorage.getItem('user') || '{}');
+        var u = {};
+        try { u = JSON.parse(localStorage.getItem('user') || '{}'); } catch (e) { }
         vm.currentUser = u.userName || u.username || localStorage.getItem('username') || 'thungan';
       })();
 
-      // state
+      /* ----- STATE ----- */
+      vm.loading = false;
       vm.search = { maHD: '', from: null, to: null };
+
       vm.invoice = null;
-      vm.details = []; // normalized
-      vm.retQty = {};  // { productId: number }
+      vm.details = [];
+      vm.retQty = {};   // { productId: number }
       vm.retReason = {};
       vm.exchangeItems = [];
       vm.newEx = { code: '', qty: null, price: null };
-      vm.sumReturn = 0; vm.sumExchange = 0; vm.sumDiff = 0;
-      vm.history = [];
 
-      // helpers normalize
+      vm.sumReturn = 0;
+      vm.sumExchange = 0;
+      vm.sumDiff = 0;
+
+      vm.payments = [];
+
+      // MODAL state
+      vm.modal = {
+        editInvoice: { show: false, data: {} },
+        editDetail: { show: false, data: {} },
+        editPayment: { show: false, isNew: true, data: {} }
+      };
+
+      vm.closeModals = function () {
+        vm.modal.editInvoice.show = false;
+        vm.modal.editDetail.show = false;
+        vm.modal.editPayment.show = false;
+      };
+
+      /* ----- HELPERS ----- */
       function pickInvoiceId(x) {
-        return x?.mahdban || x?.mahdBan || x?.maHoaDon || x?.mahoadon || x?.maHD || x?.ma || x?.id || null;
+        return (x && (x.mahdban || x.mahdBan || x.maHoaDon || x.mahoadon || x.maHD || x.ma || x.id)) || null;
       }
+
       function normalizeInvoice(x) {
         if (!x) return null;
-        const id = pickInvoiceId(x);
+        var id = pickInvoiceId(x);
         return {
-          id,
-          customerId: x.makh ?? x.maKH ?? '',
-          createdAt: x.ngaylap ?? x.ngayLap ?? null,
-          goodsTotal: Number(x.tongtienhang ?? x.tongTienHang ?? 0)
+          id: id,
+          customerId: x.makh || x.maKH || '',
+          createdAt: x.ngaylap || x.ngayLap || null,
+          goodsTotal: Number(x.tongtienhang || x.tongTienHang || 0)
         };
       }
+
       function normalizeDetail(d) {
         return {
-          invoiceId: d.mahdban ?? d.maHoaDon ?? d.maHDB ?? d.id ?? '',
-          productId: d.masp ?? d.maSP ?? d.code ?? '',
-          productName: d.tensp ?? d.tenSP ?? null,
-          qty: Number(d.soluong ?? d.soLuong ?? 0),
-          price: Number(d.dongia ?? d.donGia ?? 0),
+          invoiceId: d.mahdban || d.maHoaDon || d.maHDB || d.id || '',
+          productId: d.masp || d.maSP || d.code || '',
+          productName: d.tensp || d.tenSP || d.tenSanPham || d.productName || d.name || d.ten || d['ten_sp'] || '',
+          qty: Number(d.soluong || d.soLuong || 0),
+          price: Number(d.dongia || d.donGia || 0),
           lineTotal: Number(
-            d.tongtien ?? d.tongTien ?? d.thanhtien ?? d.thanhTien ??
-            (Number(d.soluong ?? 0) * Number(d.dongia ?? 0))
+            d.tongtien || d.tongTien || d.thanhtien || d.thanhTien ||
+            (Number(d.soluong || 0) * Number(d.dongia || 0))
           )
         };
       }
 
-      // actions
-      vm.resetAll = function (e) {
-        if (e) e.preventDefault();
-        vm.search = { maHD: '', from: null, to: null };
-        vm.invoice = null;
-        vm.details = [];
+      // LOAD THANH TOÁN
+      function loadPayments(invoiceId) {
+        vm.payments = [];
+        Gateway.getPaymentsByInvoice(invoiceId)
+          .then(function (res) {
+            var list = Gateway.unwrapList(res);
+            vm.payments = list.map(function (p, idx) {
+              return {
+                id: p.mathanhtoan || p.maThanhToan || ('TMP_' + idx),
+                maHoaDon: p.mahdBan || p.maHDBan,
+                soTien: Number(p.soTienThanhToan || p.SoTienThanhToan || 0),
+                phuongThuc: p.phuongThuc || p.PhuongThuc || '',
+                ngayThanhToan: p.ngaythanhtoan || p.NgayThanhToan,
+                trangThai: p.trangThai || p.TrangThai || ''
+              };
+            });
+          })
+          .catch(function (err) {
+            console.error('Load payments error:', err);
+            vm.payments = [];
+          });
+      }
+
+      function resetReturnExchangeState() {
         vm.retQty = {};
         vm.retReason = {};
         vm.exchangeItems = [];
         vm.newEx = { code: '', qty: null, price: null };
-        vm.sumReturn = vm.sumExchange = vm.sumDiff = 0;
-      };
+        vm.sumReturn = 0;
+        vm.sumExchange = 0;
+        vm.sumDiff = 0;
+      }
 
-      vm.fetchInvoice = async function (e) {
-        if (e) e.preventDefault();
-        vm.invoice = null;
-        vm.details = []; vm.retQty = {}; vm.retReason = {};
-        vm.sumReturn = vm.sumExchange = vm.sumDiff = 0;
-
-        try {
-          let invRaw = null;
-
-          if (vm.search.maHD) {
-            const res = await Gateway.getInvoiceById(vm.search.maHD);
-            invRaw = (res.data?.data || res.data || [])[0] || null;
-          } else {
-            const res = await Gateway.getAllInvoices();
-            const list = Gateway.unwrapList(res);
-            if (!vm.search.from && !vm.search.to) {
-              invRaw = list[0] || null;
-            } else {
-              const from = vm.search.from ? new Date(vm.search.from) : null;
-              const to = vm.search.to ? new Date(vm.search.to + 'T23:59:59') : null;
-              invRaw = list.find(x => {
-                const d = new Date(x.ngaylap ?? x.ngayLap);
-                return (from ? d >= from : true) && (to ? d <= to : true);
-              }) || null;
-            }
-          }
-
-          if (!invRaw) return alert('Không tìm thấy hóa đơn phù hợp.');
-          vm.invoice = normalizeInvoice(invRaw);
-
-          // details
-          let details = [];
-          try {
-            const resCT = await Gateway.getDetailsByInvoice(vm.invoice.id);
-            details = Gateway.unwrapList(resCT).map(normalizeDetail);
-          } catch {
-            // fallback
-            const resAll = await Gateway.getAllDetails();
-            const all = Gateway.unwrapList(resAll).map(normalizeDetail);
-            details = all.filter(x => x.invoiceId === vm.invoice.id);
-          }
-          vm.details = details;
-          vm.recalc();
-          $scope.$applyAsync();
-        } catch (err) {
-          console.error('Fetch invoice error:', err);
-          alert('Không thể tải hóa đơn.');
+      function recalc() {
+        var priceMap = {};
+        for (var i = 0; i < vm.details.length; i++) {
+          var it = vm.details[i];
+          priceMap[it.productId] = it.price;
         }
-      };
 
+        vm.sumReturn = 0;
+        var keys = Object.keys(vm.retQty);
+        for (var j = 0; j < keys.length; j++) {
+          var sp = keys[j];
+          var q = Number(vm.retQty[sp] || 0);
+          var price = priceMap[sp] || 0;
+          vm.sumReturn += q * price;
+        }
+
+        vm.sumExchange = 0;
+        for (var k = 0; k < vm.exchangeItems.length; k++) {
+          var x = vm.exchangeItems[k];
+          vm.sumExchange += (x.qty || 0) * (x.price || 0);
+        }
+
+        vm.sumDiff = vm.sumExchange - vm.sumReturn;
+      }
+
+      /* ----- UI ACTIONS: CHI TIẾT ĐỔI/TRẢ ----- */
       vm.onQtyChange = function (productId, max) {
-        const v = Math.max(0, Math.min(Number(vm.retQty[productId] || 0), Number(max)));
+        var v = Math.max(0, Math.min(Number(vm.retQty[productId] || 0), Number(max)));
         vm.retQty[productId] = v;
-        vm.recalc();
+        recalc();
       };
 
-      vm.toggleReturn = function (productId) {
-        vm.retQty[productId] = vm.retQty[productId] > 0 ? 0 : 1;
-        vm.recalc();
-      };
-
-      vm.addExchange = function (e) {
-        if (e) e.preventDefault();
-        const code = (vm.newEx.code || '').trim();
-        const qty = Number(vm.newEx.qty || 0);
-        const price = Number(vm.newEx.price || 0);
-        if (!code || qty <= 0 || price < 0) return alert('Nhập Mã/Tên, SL (>0) và Giá hợp lệ.');
-        vm.exchangeItems.push({ code, qty, price });
-        vm.newEx = { code: '', qty: null, price: null };
-        vm.recalc();
+      vm.toggleReturn = function (productId, max) {
+        var cur = Number(vm.retQty[productId] || 0);
+        var next = cur > 0 ? 0 : 1;
+        vm.retQty[productId] = Math.min(next, Number(max) || 0);
+        recalc();
       };
 
       vm.removeExchange = function (i) {
         vm.exchangeItems.splice(i, 1);
-        vm.recalc();
+        recalc();
       };
 
-      vm.recalc = function () {
-        const priceMap = Object.fromEntries(vm.details.map(x => [x.productId, x.price]));
-        vm.sumReturn = Object.entries(vm.retQty)
-          .reduce((a, [sp, q]) => a + (Number(q || 0) * (priceMap[sp] || 0)), 0);
-        vm.sumExchange = vm.exchangeItems.reduce((a, x) => a + x.qty * x.price, 0);
-        vm.sumDiff = vm.sumExchange - vm.sumReturn;
+      vm.resetAll = function () {
+        vm.invoice = null;
+        vm.details = [];
+        resetReturnExchangeState();
+        vm.payments = [];
       };
 
-      vm.createVoucher = function (e) {
-        if (e) e.preventDefault();
-        if (!vm.invoice) return alert('Chưa có hóa đơn.');
-        const hasRet = Object.values(vm.retQty).some(q => Number(q) > 0);
-        const hasEx = vm.exchangeItems.length > 0;
-        if (!hasRet && !hasEx) return alert('Bạn chưa chọn hàng đổi/trả.');
+      /* ----- LOAD HÓA ĐƠN ----- */
+      vm.fetchInvoice = async function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        if (!vm.search.maHD) {
+          alert('Vui lòng nhập mã hóa đơn.');
+          return;
+        }
 
-        const hangTra = Object.entries(vm.retQty)
-          .filter(([_, q]) => Number(q) > 0)
-          .map(([productId, soLuong]) => {
-            const it = vm.details.find(r => r.productId === productId);
-            return { masp: productId, soLuong: Number(soLuong), donGia: it?.price || 0 };
-          });
+        vm.loading = true;
+        vm.resetAll();
 
-        const hangDoi = vm.exchangeItems.map(x => ({
-          masp: x.code, soLuong: Number(x.qty), donGia: Number(x.price)
-        }));
+        try {
+          var res = await Gateway.getInvoiceById(vm.search.maHD);
+          var invRaw =
+            (res.data && res.data.data) ? res.data.data[0] :
+              (Array.isArray(res.data) ? res.data[0] : res.data);
 
-        const payload = {
-          hoaDonGoc: vm.invoice.id,
-          hangTra, hangDoi,
-          hinhThuc: vm.paymentMethod || 'Tiền mặt',
+          if (!invRaw) {
+            alert('Không tìm thấy hóa đơn.');
+            return;
+          }
+
+          vm.invoice = normalizeInvoice(invRaw);
+
+          var resCT = await Gateway.getDetailsByInvoice(vm.invoice.id);
+          vm.details = Gateway.unwrapList(resCT).map(normalizeDetail);
+
+          loadPayments(vm.invoice.id);
+          recalc();
+        } catch (err) {
+          console.error('Fetch invoice error:', err);
+          alert('Không có hóa đơn đổi.');
+        } finally {
+          vm.loading = false;
+          $scope.$applyAsync();
+        }
+      };
+
+      /* ----- XÁC NHẬN ĐỔI/TRẢ ----- */
+      vm.createVoucher = async function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        if (!vm.invoice) {
+          alert('Chưa có hóa đơn.');
+          return;
+        }
+
+        if (!confirm('Xác nhận đổi / trả cho HĐ ' + vm.invoice.id + ' ?')) {
+          return;
+        }
+
+        vm.loading = true;
+
+        // cờ để biết có lỗi thật sự nghiêm trọng hay không
+        var anySuccess = false;
+        var deleteError = null;
+        var resetError = null;
+
+        // 1) Xoá chi tiết bán
+        try {
+          var deleted = await Gateway.deleteAllDetailsOfInvoice(vm.invoice.id);
+          console.log('Đã xoá', deleted, 'chi tiết bán');
+          anySuccess = true;
+        } catch (err1) {
+          console.error('Lỗi xoá chi tiết bán:', err1);
+          deleteError = err1;
+        }
+
+        // 2) Reset số tiền thanh toán theo mã hoá đơn
+        try {
+        await Gateway.resetPaymentsByInvoice(vm.invoice.id, 0);
+        vm.payments.forEach(function (p) { p.soTien = 0; });
+          console.log('Đã reset SOTIENTHANHTOAN về 0 cho HĐ', vm.invoice.id);
+          anySuccess = true;
+        } catch (err2) {
+          console.error('Lỗi reset thanh toán:', err2);
+          resetError = err2;
+        }
+
+        // 3) Cập nhật UI nếu có ít nhất 1 bước thành công
+        if (anySuccess) {
+          // Cập nhật bảng chi tiết & tổng kết trên UI
+          vm.details = [];
+          resetReturnExchangeState();
+
+          // Cập nhật bảng thanh toán: số tiền = 0
+          vm.payments.forEach(function (p) { p.soTien = 0; });
+
+          // Thông báo
+          if (deleteError || resetError) {
+            alert('Đổi / trả đã thực hiện.');
+          } else {
+            alert('Đổi / trả xong.');
+          }
+        } else {
+          // cả hai bước đều lỗi → thất bại thật sự
+          alert('Xử lý đổi trả thất bại.');
+        }
+
+        vm.loading = false;
+        $scope.$applyAsync();
+      };
+
+      /* ----- MODAL: THANH TOÁN (simple) ----- */
+      vm.openAddPayment = function () {
+        if (!vm.invoice) {
+          alert('Vui lòng tải hóa đơn trước.');
+          return;
+        }
+
+        vm.modal.editPayment.isNew = true;
+        vm.modal.editPayment.data = {
+          id: null,
+          maHoaDon: vm.invoice.id,
+          soTien: vm.sumDiff > 0 ? vm.sumDiff : 0,
+          phuongThuc: vm.paymentMethod || 'Tiền mặt',
           ghiChu: vm.note || ''
         };
-
-        console.log('Payload tạo phiếu đổi/trả:', payload);
-        alert('Đã tạo payload (mở console để xem). Khi có endpoint tạo phiếu, gọi Gateway tương ứng là xong.');
-        // Ví dụ sau này:
-        // $http.post(API_BASE + '/insert-phieu-doi-tra', payload).then(...);
+        vm.modal.editPayment.show = true;
       };
 
-      vm.pickHistory = function (raw) {
-        vm.search.maHD = pickInvoiceId(raw);
-        vm.fetchInvoice();
-      };
-
-      // recent
-      (async function init() {
-        try {
-          const res = await Gateway.getAllInvoices();
-          vm.history = Gateway.unwrapList(res).slice(0, 10);
-          $scope.$applyAsync();
-        } catch (e) {
-          vm.history = [];
+      vm.savePayment = function () {
+        var p = vm.modal.editPayment.data;
+        if (!p || !p.maHoaDon) {
+          alert('Thiếu mã hóa đơn.');
+          return;
         }
-      })();
+        if (!p.soTien || p.soTien <= 0) {
+          alert('Số tiền phải > 0');
+          return;
+        }
+
+        if (vm.modal.editPayment.isNew) {
+          var newId = p.id || ('TT_' + Date.now());
+          vm.payments.push({
+            id: newId,
+            maHoaDon: p.maHoaDon,
+            soTien: Number(p.soTien || 0),
+            phuongThuc: p.phuongThuc || '',
+            ngayThanhToan: new Date(),
+            trangThai: 'Đã thanh toán'
+          });
+        }
+
+        vm.modal.editPayment.show = false;
+      };
+
+      // stub để tránh lỗi nếu HTML có gọi
+      vm.saveInvoice = function () { vm.modal.editInvoice.show = false; };
+      vm.saveDetail = function () { vm.modal.editDetail.show = false; };
+
     });
 
 })();

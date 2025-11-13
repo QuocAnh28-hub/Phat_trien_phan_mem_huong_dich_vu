@@ -24,8 +24,16 @@ namespace DAL
         {
             try
             {
-                List<ChiTietBan> list = new List<ChiTietBan>();
-                string sql = "SELECT MAHDBAN, MASP, SOLUONG, DONGIA, TONGTIEN FROM CT_HDB";
+                var list = new List<ChiTietBan>();
+                const string sql = @"
+                    SELECT  ct.MAHDBAN,
+                            ct.MASP,
+                            sp.TENSP AS TenSP,
+                            ct.SOLUONG,
+                            ct.DONGIA,
+                            ct.TONGTIEN
+                    FROM CT_HDB ct
+                    LEFT JOIN SANPHAM sp ON sp.MASP = ct.MASP";
 
                 var dt = _dbHelper.ExecuteQuery(sql);
 
@@ -33,8 +41,9 @@ namespace DAL
                 {
                     list.Add(new ChiTietBan
                     {
-                        MAHDBAN = row["MAHDBAN"].ToString(),
-                        MASP = row["MASP"].ToString(),
+                        MAHDBAN = row["MAHDBAN"]?.ToString(),
+                        MASP = row["MASP"]?.ToString(),
+                        TenSP = row["TenSP"]?.ToString(), // <-- thêm
                         SOLUONG = Convert.ToInt32(row["SOLUONG"]),
                         DONGIA = Convert.ToDecimal(row["DONGIA"]),
                         TONGTIEN = Convert.ToDecimal(row["TONGTIEN"])
@@ -53,12 +62,21 @@ namespace DAL
         {
             try
             {
-                List<ChiTietBan> list = new List<ChiTietBan>();
-                string sql = "SELECT MAHDBAN, MASP, SOLUONG, DONGIA, TONGTIEN FROM CT_HDB WHERE MAHDBAN = @MAHDBAN";
+                var list = new List<ChiTietBan>();
+                const string sql = @"
+                    SELECT  ct.MAHDBAN,
+                            ct.MASP,
+                            sp.TENSP AS TenSP,
+                            ct.SOLUONG,
+                            ct.DONGIA,
+                            ct.TONGTIEN
+                    FROM CT_HDB ct
+                    LEFT JOIN SANPHAM sp ON sp.MASP = ct.MASP
+                    WHERE ct.MAHDBAN = @MAHDBAN";
 
-                SqlParameter[] parameters = new SqlParameter[]
+                SqlParameter[] parameters =
                 {
-                new SqlParameter("@MAHDBAN", maHDB)
+                    new SqlParameter("@MAHDBAN", maHDB)
                 };
 
                 var dt = _dbHelper.ExecuteQuery(sql, parameters);
@@ -67,8 +85,9 @@ namespace DAL
                 {
                     list.Add(new ChiTietBan
                     {
-                        MAHDBAN = row["MAHDBAN"].ToString(),
-                        MASP = row["MASP"].ToString(),
+                        MAHDBAN = row["MAHDBAN"]?.ToString(),
+                        MASP = row["MASP"]?.ToString(),
+                        TenSP = row["TenSP"]?.ToString(), // <-- thêm
                         SOLUONG = Convert.ToInt32(row["SOLUONG"]),
                         DONGIA = Convert.ToDecimal(row["DONGIA"]),
                         TONGTIEN = Convert.ToDecimal(row["TONGTIEN"])
@@ -87,8 +106,12 @@ namespace DAL
         {
             try
             {
-                string sql = "SELECT COUNT(*) AS SoLuong FROM CT_HDB WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
-                SqlParameter[] parameters = new SqlParameter[]
+                const string sql = @"
+                    SELECT COUNT(*) AS SoLuong
+                    FROM CT_HDB
+                    WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
+
+                SqlParameter[] parameters =
                 {
                     new SqlParameter("@MAHDBAN", maHDB),
                     new SqlParameter("@MASP", maSP)
@@ -116,9 +139,11 @@ namespace DAL
                 if (KiemTraTonTai(ct.MAHDBAN, ct.MASP))
                     return false;
 
-                string sql = @"INSERT INTO CT_HDB (MAHDBAN, MASP, SOLUONG, DONGIA, TONGTIEN) VALUES (@MAHDBAN, @MASP, @SOLUONG, @DONGIA, @TONGTIEN)";
+                const string sql = @"
+                    INSERT INTO CT_HDB (MAHDBAN, MASP, SOLUONG, DONGIA, TONGTIEN)
+                    VALUES (@MAHDBAN, @MASP, @SOLUONG, @DONGIA, @TONGTIEN)";
 
-                SqlParameter[] parameters = new SqlParameter[]
+                SqlParameter[] parameters =
                 {
                     new SqlParameter("@MAHDBAN", ct.MAHDBAN),
                     new SqlParameter("@MASP", ct.MASP),
@@ -143,12 +168,14 @@ namespace DAL
                 if (!KiemTraTonTai(ct.MAHDBAN, ct.MASP))
                     return false;
 
-                string sql = @"UPDATE CT_HDB
-                           SET SOLUONG = @SOLUONG,
-                               DONGIA = @DONGIA,
-                               TONGTIEN = @TONGTIEN
-                           WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
-                SqlParameter[] parameters = new SqlParameter[]
+                const string sql = @"
+                    UPDATE CT_HDB
+                    SET SOLUONG = @SOLUONG,
+                        DONGIA  = @DONGIA,
+                        TONGTIEN= @TONGTIEN
+                    WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
+
+                SqlParameter[] parameters =
                 {
                     new SqlParameter("@MAHDBAN", ct.MAHDBAN),
                     new SqlParameter("@MASP", ct.MASP),
@@ -173,8 +200,8 @@ namespace DAL
                 if (!KiemTraTonTai(maHDB, maSP))
                     return false;
 
-                string sql = "DELETE FROM CT_HDB WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
-                SqlParameter[] parameters = new SqlParameter[]
+                const string sql = "DELETE FROM CT_HDB WHERE MAHDBAN = @MAHDBAN AND MASP = @MASP";
+                SqlParameter[] parameters =
                 {
                     new SqlParameter("@MAHDBAN", maHDB),
                     new SqlParameter("@MASP", maSP)
