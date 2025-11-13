@@ -233,6 +233,7 @@ app.controller("BanHangCtrl", function ($scope, $http) {
       listjson_chitietban: mergedList.map(x => ({
         MAHDBAN: maHDBan,
         MASP: x.masp,
+        TenSP: x.tensp || "",
         SOLUONG: x.soluong,
         DONGIA: x.dongia,
         TONGTIEN: x.tongtien
