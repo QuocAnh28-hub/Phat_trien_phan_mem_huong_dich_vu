@@ -70,6 +70,20 @@
       var deleteChiTietBan = function (params) {
         return $http.delete(API_BASE + '/delete-chitietban', { params: params });
       };
+            // Cập nhật chi tiết bán: dùng cho case trả một phần (trừ số lượng)
+      var updateChiTietBan = function (detail) {
+        var body = {
+          mahdban: detail.invoiceId,                 // MAHDBAN
+          masp: detail.productId,                    // MASP
+          tenSP: detail.productName || '',           // TenSP (optional)
+          soluong: detail.qty,                       // SOLUONG MỚI (sau khi trừ)
+          dongia: detail.price,                      // DONGIA
+          tongtien: (detail.qty || 0) * (detail.price || 0) // TONGTIEN = qty * price
+        };
+
+        return $http.put(API_BASE + '/update-chitietban', body);
+      };
+
 
       // ===== THANH TOÁN =====
       var getPaymentsByInvoice = function (invoiceId) {
@@ -132,10 +146,12 @@
         getDetailsByInvoice: getDetailsByInvoice,
         deleteChiTietBan: deleteChiTietBan,
         deleteAllDetailsOfInvoice: deleteAllDetailsOfInvoice,
+        updateChiTietBan: updateChiTietBan,              // <--- THÊM
         getPaymentsByInvoice: getPaymentsByInvoice,
         updatePaymentAmountToZero: updatePaymentAmountToZero, 
         resetPaymentsByInvoice: resetPaymentsByInvoice       
       };
+
     })
 
     /* ================== CONTROLLER ================== */
@@ -331,7 +347,7 @@
         }
       };
 
-      /* ----- XÁC NHẬN ĐỔI/TRẢ ----- */
+      /* ----- XÁC NHẬN ĐỔI/TRẢ (trừ số lượng, không xoá hết) ----- */
       vm.createVoucher = async function (e) {
         if (e && e.preventDefault) e.preventDefault();
         if (!vm.invoice) {
@@ -345,55 +361,102 @@
 
         vm.loading = true;
 
-        // cờ để biết có lỗi thật sự nghiêm trọng hay không
         var anySuccess = false;
-        var deleteError = null;
+        var detailError = null;
         var resetError = null;
 
-        // 1) Xoá chi tiết bán
+        // 1) Xử lý từng dòng chi tiết: trả một phần -> UPDATE, trả hết -> DELETE
         try {
-          var deleted = await Gateway.deleteAllDetailsOfInvoice(vm.invoice.id);
-          console.log('Đã xoá', deleted, 'chi tiết bán');
+          for (var i = 0; i < vm.details.length; i++) {
+            var detail = vm.details[i];
+
+            var qtyOriginal = Number(detail.qty || 0);
+            var qtyReturn = Number(vm.retQty[detail.productId] || 0);
+
+            // Không có đổi/trả cho dòng này
+            if (!qtyReturn || qtyReturn <= 0) continue;
+
+            var qtyAfter = qtyOriginal - qtyReturn;
+
+            if (qtyAfter > 0) {
+              // Trả một phần → cập nhật chi tiết với số lượng mới
+              var updatedDetail = angular.copy(detail);
+              updatedDetail.qty = qtyAfter; // SL mới sau khi trừ
+              await Gateway.updateChiTietBan(updatedDetail);
+            } else {
+              // Trả hết → xoá chi tiết
+              await Gateway.deleteChiTietBan({
+                maHDB: detail.invoiceId,
+                maSP: detail.productId
+              });
+            }
+          }
           anySuccess = true;
         } catch (err1) {
-          console.error('Lỗi xoá chi tiết bán:', err1);
-          deleteError = err1;
+          console.error('Lỗi cập nhật chi tiết:', err1);
+          if (err1 && err1.data) {
+            console.error('Chi tiết lỗi từ server:', err1.data);
+          }
+          detailError = err1;
         }
 
-        // 2) Reset số tiền thanh toán theo mã hoá đơn
+        // 2) Cập nhật số tiền thanh toán theo giá trị hàng trả
         try {
-        await Gateway.resetPaymentsByInvoice(vm.invoice.id, 0);
-        vm.payments.forEach(function (p) { p.soTien = 0; });
-          console.log('Đã reset SOTIENTHANHTOAN về 0 cho HĐ', vm.invoice.id);
+          // Tổng số tiền đã thanh toán hiện tại
+          var totalPaid = vm.payments.reduce(function (sum, p) {
+            return sum + (Number(p.soTien) || 0);
+          }, 0);
+
+          // Tính lại số tiền thanh toán sau khi trả hàng
+          var newTotalPaid;
+          if (vm.sumReturn >= totalPaid) {
+            // Trả hàng có giá trị >= số tiền đã thanh toán → coi như hoàn hết
+            newTotalPaid = 0;
+          } else {
+            // Trả một phần → giảm số tiền thanh toán tương ứng
+            newTotalPaid = totalPaid - vm.sumReturn;
+          }
+
+          // Gọi API reset-sotienthanhtoan-by-mahdban với số tiền mới
+          await Gateway.resetPaymentsByInvoice(vm.invoice.id, newTotalPaid);
+
+          // Load lại thanh toán để UI khớp với DB
+          loadPayments(vm.invoice.id);
+
+          console.log('Đã reset SOTIENTHANHTOAN về', newTotalPaid, 'cho HĐ', vm.invoice.id);
           anySuccess = true;
         } catch (err2) {
           console.error('Lỗi reset thanh toán:', err2);
           resetError = err2;
         }
 
+
         // 3) Cập nhật UI nếu có ít nhất 1 bước thành công
         if (anySuccess) {
-          // Cập nhật bảng chi tiết & tổng kết trên UI
-          vm.details = [];
+          try {
+            // Load lại chi tiết sau khi update/delete để thấy SL mới
+            var resCT2 = await Gateway.getDetailsByInvoice(vm.invoice.id);
+            vm.details = Gateway.unwrapList(resCT2).map(normalizeDetail);
+          } catch (e3) {
+            console.warn('Không load lại chi tiết được, giữ data cũ trên UI:', e3);
+          }
+
+          // Reset vùng đổi/trả trên UI
           resetReturnExchangeState();
 
-          // Cập nhật bảng thanh toán: số tiền = 0
-          vm.payments.forEach(function (p) { p.soTien = 0; });
-
-          // Thông báo
-          if (deleteError || resetError) {
-            alert('Đổi / trả đã thực hiện.');
+          if (detailError || resetError) {
+            alert('Đổi / trả đã thực hiện nhưng có lỗi một phần, vui lòng kiểm tra lại dữ liệu.');
           } else {
             alert('Đổi / trả xong.');
           }
         } else {
-          // cả hai bước đều lỗi → thất bại thật sự
           alert('Xử lý đổi trả thất bại.');
         }
 
         vm.loading = false;
         $scope.$applyAsync();
       };
+
 
       /* ----- MODAL: THANH TOÁN (simple) ----- */
       vm.openAddPayment = function () {
