@@ -10,6 +10,7 @@ namespace Models
     {
         public string MAHDBAN { get; set; }
         public string MASP { get; set; }
+        public string TenSP { get; set; }
         public int SOLUONG { get; set; }
         public decimal DONGIA { get; set; }
         public decimal TONGTIEN { get; set; }
