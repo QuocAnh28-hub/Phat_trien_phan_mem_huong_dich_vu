@@ -221,6 +221,7 @@ app.controller("BanHangCtrl", function ($scope, $http) {
 
   // ================== 6️⃣ XÁC NHẬN THANH TOÁN ==================
   $scope.xacNhanThanhToan = async function () {
+    $scope.showPaymentModal = false;
     try {
       const payload = {
         MaThanhToan: "TT" + Date.now(),
