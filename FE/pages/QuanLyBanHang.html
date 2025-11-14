@@ -158,16 +158,18 @@
       <!-- ===== VIEW: Chi tiết hóa đơn ===== -->
       <section id="chi-tiet" class="view">
         <div class="card">
-          <h3 class="h3">Chi tiết hóa đơn</h3>
+          <h3 class="h3" style="font-size: 16pt;">Chi tiết hóa đơn</h3>
 
-          <!-- Thông tin khách hàng -->
+          <div style="margin-bottom:10px" ng-if="hoaDonDaThanhToan">
+            <strong>Mã hóa đơn:</strong> {{hoaDonDaThanhToan.maHDBan}}
+          </div>
+          
           <div style="margin-bottom:14px" ng-if="hoaDonDaThanhToan">
             <strong>Khách hàng:</strong> {{hoaDonDaThanhToan.khachhang.ten}} <br>
             <strong>SĐT:</strong> {{hoaDonDaThanhToan.khachhang.sdt}} <br>
             <strong>Mã KH:</strong> {{hoaDonDaThanhToan.khachhang.ma}}
           </div>
 
-          <!-- Bảng sản phẩm -->
           <div class="table-wrap" ng-if="hoaDonDaThanhToan">
             <table>
               <thead>

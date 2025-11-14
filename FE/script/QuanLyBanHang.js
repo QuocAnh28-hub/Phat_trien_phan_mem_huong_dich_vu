@@ -196,6 +196,7 @@ app.controller("BanHangCtrl", function ($scope, $http) {
 
       // LƯU HÓA ĐƠN ĐỂ HIỂN THỊ
       $scope.hoaDonDaThanhToan = {
+        maHDBan: maHDBan,
         khachhang: angular.copy($scope.khachHang),
         sanpham: angular.copy(mergedList),
         VAT: $scope.tongVAT,
