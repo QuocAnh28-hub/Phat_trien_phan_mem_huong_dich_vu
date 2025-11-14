@@ -378,26 +378,20 @@
         var detailError = null;
         var resetError = null;
 
-        // 1) Xử lý từng dòng chi tiết: trả một phần -> UPDATE, trả hết -> DELETE
         try {
           for (var i = 0; i < vm.details.length; i++) {
             var detail = vm.details[i];
 
             var qtyOriginal = Number(detail.qty || 0);
             var qtyReturn = Number(vm.retQty[detail.productId] || 0);
-
-            // Không có đổi/trả cho dòng này
             if (!qtyReturn || qtyReturn <= 0) continue;
 
             var qtyAfter = qtyOriginal - qtyReturn;
-
             if (qtyAfter > 0) {
-              // Trả một phần → cập nhật chi tiết với số lượng mới
               var updatedDetail = angular.copy(detail);
-              updatedDetail.qty = qtyAfter; // SL mới sau khi trừ
+              updatedDetail.qty = qtyAfter; 
               await Gateway.updateChiTietBan(updatedDetail);
             } else {
-              // Trả hết → xoá chi tiết
               await Gateway.deleteChiTietBan({
                 maHDB: detail.invoiceId,
                 maSP: detail.productId
@@ -425,8 +419,6 @@
             newTotalPaid = totalPaid - vm.sumReturn;
           }
           await Gateway.resetPaymentsByInvoice(vm.invoice.id, newTotalPaid);
-          
-          // Load lại thanh toán để UI khớp với DB
           loadPayments(vm.invoice.id);
 
           console.log('Đã reset SOTIENTHANHTOAN về', newTotalPaid, 'cho HĐ', vm.invoice.id);
@@ -457,7 +449,6 @@
         // 3) Cập nhật UI nếu có ít nhất 1 bước thành công
         if (anySuccess) {
           try {
-            // Load lại chi tiết sau khi update/delete để thấy SL mới
             var resCT2 = await Gateway.getDetailsByInvoice(vm.invoice.id);
             vm.details = Gateway.unwrapList(resCT2).map(normalizeDetail);
           } catch (e3) {
