@@ -101,6 +101,16 @@
           }
         });
       };
+            // RESET TỔNG TIỀN HÀNG THEO MÃ HÓA ĐƠN
+      var resetGoodsTotalByInvoice = function (invoiceId, amount) {
+        return $http.post(API_BASE + '/reset-tongtienhang-by-mahdban', null, {
+          params: {
+            maHDBan: invoiceId,
+            tongTienMoi: amount || 0
+          }
+        });
+      };
+
 
       // (Hàm update từng thanh toán cũ, giờ không còn dùng nữa nhưng giữ lại nếu sau này cần)
       var updatePaymentAmountToZero = function (payment) {
@@ -149,7 +159,10 @@
         updateChiTietBan: updateChiTietBan,              // <--- THÊM
         getPaymentsByInvoice: getPaymentsByInvoice,
         updatePaymentAmountToZero: updatePaymentAmountToZero, 
-        resetPaymentsByInvoice: resetPaymentsByInvoice       
+        resetPaymentsByInvoice: resetPaymentsByInvoice,
+        resetPaymentsByInvoice: resetPaymentsByInvoice,
+        resetGoodsTotalByInvoice: resetGoodsTotalByInvoice
+
       };
 
     })
@@ -402,32 +415,42 @@
 
         // 2) Cập nhật số tiền thanh toán theo giá trị hàng trả
         try {
-          // Tổng số tiền đã thanh toán hiện tại
           var totalPaid = vm.payments.reduce(function (sum, p) {
             return sum + (Number(p.soTien) || 0);
           }, 0);
-
-          // Tính lại số tiền thanh toán sau khi trả hàng
           var newTotalPaid;
           if (vm.sumReturn >= totalPaid) {
-            // Trả hàng có giá trị >= số tiền đã thanh toán → coi như hoàn hết
             newTotalPaid = 0;
           } else {
-            // Trả một phần → giảm số tiền thanh toán tương ứng
             newTotalPaid = totalPaid - vm.sumReturn;
           }
-
-          // Gọi API reset-sotienthanhtoan-by-mahdban với số tiền mới
           await Gateway.resetPaymentsByInvoice(vm.invoice.id, newTotalPaid);
-
+          
           // Load lại thanh toán để UI khớp với DB
           loadPayments(vm.invoice.id);
 
           console.log('Đã reset SOTIENTHANHTOAN về', newTotalPaid, 'cho HĐ', vm.invoice.id);
           anySuccess = true;
-        } catch (err2) {
+        } 
+        catch (err2) {
           console.error('Lỗi reset thanh toán:', err2);
           resetError = err2;
+        }
+
+        // 2b) Cập nhật TỔNG TIỀN HÀNG theo giá trị hàng trả
+        try {
+          var oldGoodsTotal = Number(vm.invoice.goodsTotal || 0);
+          var newGoodsTotal = oldGoodsTotal - vm.sumReturn;
+          if (newGoodsTotal < 0) newGoodsTotal = 0;
+
+          await Gateway.resetGoodsTotalByInvoice(vm.invoice.id, newGoodsTotal);
+
+          vm.invoice.goodsTotal = newGoodsTotal; // cập nhật UI
+          console.log('Đã reset TONGTIENHANG về', newGoodsTotal, 'cho HĐ', vm.invoice.id);
+
+          anySuccess = true;
+        } catch (errGT) {
+          console.error('Lỗi cập nhật TONGTIENHANG:', errGT);
         }
 
 

@@ -91,5 +91,11 @@ namespace BLL
 
             return hdb_dal.Delete(maHDB);
         }
+        public bool ResetTongTienHangByHoaDon(string maHDBan, decimal tongTienMoi)
+        {
+            if (string.IsNullOrEmpty(maHDBan)) return false;
+            return hdb_dal.ResetTongTienHang(maHDBan, tongTienMoi);
+        }
+
     }
 }

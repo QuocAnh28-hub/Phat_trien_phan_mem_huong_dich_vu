@@ -282,5 +282,31 @@ namespace DAL
                 throw new Exception("Lỗi: " + ex.Message);
             }
         }
+
+        public bool ResetTongTienHang(string maHDBan, decimal tongTienMoi)
+        {
+            try
+            {
+                const string sql = @"
+            UPDATE HOADONBAN
+            SET TONGTIENHANG = @TongTienMoi
+            WHERE MAHDBAN = @MaHDBan";
+
+                SqlParameter[] parameters =
+                {
+            new SqlParameter("@TongTienMoi", tongTienMoi),
+            new SqlParameter("@MaHDBan", maHDBan)
+        };
+
+                int rows = _dbHelper.ExecuteNonQuery(sql, parameters);
+                return rows > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi cập nhật TONGTIENHANG: " + ex.Message);
+            }
+        }
+
+
     }
 }

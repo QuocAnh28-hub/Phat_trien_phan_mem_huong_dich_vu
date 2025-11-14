@@ -71,14 +71,7 @@
             <div class="small">Mã hóa đơn</div>
             <input class="input" placeholder="vd: HD001" ng-model="vm.search.maHD" autocomplete="off" />
           </label>
-          <label>
-            <div class="small">Ngày bán từ</div>
-            <input type="date" class="input" ng-model="vm.search.from" />
-          </label>
-          <label>
-            <div class="small">đến</div>
-            <input type="date" class="input" ng-model="vm.search.to" />
-          </label>
+          
           <div class="row" style="gap:8px">
             <button class="btn" type="submit" ng-disabled="vm.loading">
               <i class="fa-solid fa-download"></i> Tải hóa đơn
@@ -206,16 +199,6 @@
             <div class="small">Giá trị hàng trả</div>
             <strong id="sumReturn">{{ vm.sumReturn | currency:'':0 }} ₫</strong>
           </div>
-          <div style="min-width:240px">
-            <div class="small">Giá trị hàng đổi</div>
-            <strong id="sumExchange">{{ vm.sumExchange | currency:'':0 }} ₫</strong>
-          </div>
-          <div style="min-width:340px">
-            <div class="small">Chênh lệch (âm: hoàn, dương: thu thêm)</div>
-            <strong id="sumDiff" ng-class="{'tag-return': vm.sumDiff < 0, 'tag-exchange': vm.sumDiff >= 0}">
-              {{ vm.sumDiff | currency:'':0 }} ₫
-            </strong>
-          </div>
         </div>
 
         <div class="row" style="gap:12px; margin-top:12px; align-items:flex-end">
@@ -233,7 +216,7 @@
           </label>
           <div class="row" style="gap:8px; margin-left:auto">
             <button class="btn secondary" type="button" ng-click="vm.resetAll()" ng-disabled="vm.loading">Hủy</button>
-            <button class="btn" type="button" ng-click="vm.createVoucher($event)" ng-disabled="vm.loading">Xác Nhận Đổi Trả</button>
+            <button class="btn" type="button" ng-click="vm.createVoucher($event)" ng-disabled="vm.loading">Xác Nhận Trả Hàng</button>
           </div>
         </div>
       </section>

@@ -341,6 +341,32 @@ namespace Task2_API_ThuNgan.Controllers
             }
         }
 
+        [Route("reset-tongtienhang-by-mahdban")]
+        [HttpPost]
+        public IActionResult ResetTongTienHangByHoaDon(
+        [FromQuery] string maHDBan,
+        [FromQuery] decimal tongTienMoi = 0)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(maHDBan))
+                    return BadRequest(new { success = false, message = "Thiếu mã hóa đơn bán" });
+
+                bool ok = hdb_bll.ResetTongTienHangByHoaDon(maHDBan, tongTienMoi);
+
+                return Ok(new
+                {
+                    success = ok,
+                    message = ok
+                        ? "Đã cập nhật TONGTIENHANG cho hóa đơn."
+                        : "Không cập nhật được TONGTIENHANG (kiểm tra mã hóa đơn)."
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
 
 
 
