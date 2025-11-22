@@ -188,6 +188,8 @@ app.controller("BanHangCtrl", function ($scope, $http) {
     };
 
     const res = await $http.post(`${API_BASE}/insert-hoadonban`, payload, { headers });
+    const tongThanhToan = res.data.data?.TongThanhToan 
+                   ?? ($scope.tongTien + $scope.tongVAT);
 
     if (res.data.success) {
       alert("Lưu hóa đơn thành công!");
@@ -203,19 +205,22 @@ app.controller("BanHangCtrl", function ($scope, $http) {
         TongTien: $scope.tongTien
       };
 
-      // XÓA danh sách chuẩn bị hóa đơn mới
-      $scope.danhSachCT = [];
-      $scope.capNhatTongTien();
+      // 👉 LƯU TỔNG TIỀN TRƯỚC KHI RESET
+        const tongThanhToan = $scope.tongTien + $scope.tongVAT;
 
-      // MỞ POPUP THANH TOÁN
-      $scope.$applyAsync(() => {
-        $scope.thanhToan = {
-          maHDBan: maHDBan,
-          soTienThanhToan: $scope.tongTien,
-          phuongThuc: "Tiền mặt"
-        };
-        $scope.showPaymentModal = true;
-      });
+        // Reset danh sách sau khi tính xong
+        $scope.danhSachCT = [];
+        $scope.capNhatTongTien();
+
+        $scope.$applyAsync(() => {
+          $scope.thanhToan = {
+            maHDBan: maHDBan,
+            soTienThanhToan: tongThanhToan,
+            phuongThuc: "Tiền mặt"
+          };
+          $scope.showPaymentModal = true;
+        });
+
     }
   };
 
