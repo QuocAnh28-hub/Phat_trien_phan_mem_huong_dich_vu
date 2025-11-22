@@ -218,7 +218,7 @@ app.controller("BanHangCtrl", function ($scope, $http) {
     // Sinh mã hóa đơn (ngắn) để phù hợp DB
     const maHDBan = 'HD' + Math.floor(Math.random() * 90000000 + 10000000);
     const tong = $scope.tongTien || 0;
-
+    
     // Gộp các dòng trùng MASP trước khi gửi
     const mergedList = mergeItems($scope.danhSachCT);
 
