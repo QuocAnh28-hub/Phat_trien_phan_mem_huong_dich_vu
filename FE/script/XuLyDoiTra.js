@@ -111,8 +111,6 @@
         });
       };
 
-
-      // (Hàm update từng thanh toán cũ, giờ không còn dùng nữa nhưng giữ lại nếu sau này cần)
       var updatePaymentAmountToZero = function (payment) {
         var body = {
           mathanhtoan: payment.id,
@@ -156,7 +154,7 @@
         getDetailsByInvoice: getDetailsByInvoice,
         deleteChiTietBan: deleteChiTietBan,
         deleteAllDetailsOfInvoice: deleteAllDetailsOfInvoice,
-        updateChiTietBan: updateChiTietBan,              // <--- THÊM
+        updateChiTietBan: updateChiTietBan,              
         getPaymentsByInvoice: getPaymentsByInvoice,
         updatePaymentAmountToZero: updatePaymentAmountToZero, 
         resetPaymentsByInvoice: resetPaymentsByInvoice,

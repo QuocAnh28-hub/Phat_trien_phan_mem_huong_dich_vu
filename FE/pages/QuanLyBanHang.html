@@ -8,6 +8,8 @@
   <script src="../script/auth.js"></script>
   <script src="../script/login.js"></script>
   <script src="../script/QuanLyBanHang.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
   <link rel="stylesheet" href="../style/QuanLyBanHang.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -153,36 +155,63 @@
       </section>
 
       <!-- ===== VIEW: Chi tiết hóa đơn ===== -->
+      <!-- ===== VIEW: Chi tiết hóa đơn ===== -->
       <section id="chi-tiet" class="view">
         <div class="card">
-          <h3 class="h3">Chi tiết hóa đơn</h3>
+          <h3 class="h3" style="font-size: 16pt;">Chi tiết hóa đơn</h3>
 
-          <div class="table-wrap">
+          <div style="margin-bottom:10px" ng-if="hoaDonDaThanhToan">
+            <strong>Mã hóa đơn:</strong> {{hoaDonDaThanhToan.maHDBan}}
+          </div>
+          
+          <div style="margin-bottom:14px" ng-if="hoaDonDaThanhToan">
+            <strong>Khách hàng:</strong> {{hoaDonDaThanhToan.khachhang.ten}} <br>
+            <strong>SĐT:</strong> {{hoaDonDaThanhToan.khachhang.sdt}} <br>
+            <strong>Mã KH:</strong> {{hoaDonDaThanhToan.khachhang.ma}}
+          </div>
+
+          <div class="table-wrap" ng-if="hoaDonDaThanhToan">
             <table>
               <thead>
                 <tr>
                   <th>MÃ SP</th>
                   <th>TÊN SẢN PHẨM</th>
                   <th>SL</th>
-                  <th>GIÁ</th>
-                  <th>CK</th>
+                  <th>ĐƠN GIÁ</th>
+                  <th>VAT</th>
                   <th>THÀNH TIỀN</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>SP001</td><td>Bánh quy</td><td>2</td><td>25.000</td><td>0</td><td>50.000</td>
+                <tr ng-repeat="sp in hoaDonDaThanhToan.sanpham">
+                  <td>{{sp.masp}}</td>
+                  <td>{{sp.tensp}}</td>
+                  <td>{{sp.soluong}}</td>
+                  <td>{{sp.dongia | number}} ₫</td>
+                  <td>{{sp.vat | number}} ₫</td>
+                  <td>{{sp.tongtien | number}} ₫</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
+          <!-- Tổng tiền -->
+          <div style="margin-top:14px;text-align:right" ng-if="hoaDonDaThanhToan">
+            <div>Thuế VAT: <b>{{hoaDonDaThanhToan.VAT | number}} ₫</b></div>
+            <div>Tổng tiền hàng: <b>{{hoaDonDaThanhToan.TongTien | number}} ₫</b></div>
+            <div style="font-size:16px;font-weight:700;color:#007bff;margin-top:6px">
+              Thành tiền: {{(hoaDonDaThanhToan.TongTien + hoaDonDaThanhToan.VAT) | number}} ₫
+            </div>
+          </div>
+
+          <!-- Nút -->
           <div class="row" style="justify-content:flex-end;margin-top:12px;gap:8px">
-            <a class="btn secondary" href="#hoa-don">← Quay lại</a>
-            <a class="btn" href="#">In hóa đơn</a>
+            <a class="btn secondary" href="QuanLyBanHang.html">← Quay lại</a>
+            <a class="btn" ng-click="inPDF()" style="cursor: pointer;">In hóa đơn</a>
           </div>
         </div>
       </section>
+
     </main>
   </div>
   <!-- POPUP THANH TOÁN -->
